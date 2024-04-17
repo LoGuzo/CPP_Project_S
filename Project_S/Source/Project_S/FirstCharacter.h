@@ -23,6 +23,9 @@ private:
 	int32 Type;
 	int32 Exp;
 
+protected:
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 public:
 	int32 GetLevel() { return Level; }
 	int32 GetHp() { return Hp; }
@@ -32,4 +35,7 @@ public:
 	int32 GetExp() { return Exp; }
 	void SetMyColor(int32 _MyColor);
 	void SetExp(int32 _Exp);
+
+	UPROPERTY(VisibleAnywhere)
+	class US_StatComponent* Stat;
 };

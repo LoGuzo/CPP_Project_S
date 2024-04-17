@@ -13,6 +13,7 @@
 #include "S_CharacterWidget.h"
 #include "WeaponActor.h"
 #include "SwordWeapon.h"
+
 AUserCharacter::AUserCharacter()
 {
 	// Set size for collision capsule
@@ -39,10 +40,9 @@ AUserCharacter::AUserCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	
-	Stat = CreateDefaultSubobject<US_StatComponent>(TEXT("STAT"));
+
 	Sword = CreateDefaultSubobject<ASwordWeapon>(TEXT("SWORD"));
-	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/BP_UserWidget.BP_UserWidget_C'"));
+	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
 	{
 		CharacterUI = UW.Class;
@@ -62,6 +62,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AUserCharacter::Attack);
 }
 
 void AUserCharacter::BeginPlay()
@@ -126,9 +127,15 @@ void AUserCharacter::SetMyWeapon(class AWeaponActor* _MyWeapon)
 {
 	// UserClass
 	FName WeaponSocket(TEXT("r_hand_sword"));
-	auto CurWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon->GetClass());
-	if (nullptr != CurWeapon) {
-		CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
-		CurWeapon->SetOwner(this);
+	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon->GetClass());
+	if (nullptr != MyWeapon) {
+		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
+		MyWeapon->SetOwner(this);
 	}
+}
+
+void AUserCharacter::Attack()
+{
+	if (nullptr != MyWeapon)
+		MyWeapon->AttackCheck(this);
 }

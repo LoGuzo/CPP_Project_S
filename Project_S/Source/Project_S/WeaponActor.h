@@ -21,6 +21,7 @@ protected:
 	UFUNCTION()
 	virtual void SetW_Mesh() PURE_VIRTUAL(AWeaponActor::SetW_Mesh, ;);
 
+public:
 	UFUNCTION()
 	virtual void AttackCheck(class AUserCharacter* _UserCharacter) PURE_VIRTUAL(AWeaponActor::AttackCheck, ;);
 };

@@ -47,10 +47,10 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-
 private:
 	class ASwordWeapon* Sword;
+	class AWeaponActor* MyWeapon;
+
 	// UI
 	TSubclassOf<class US_CharacterWidget> CharacterUI;
 
@@ -58,7 +58,5 @@ private:
 
 public:
 	void SetMyWeapon(class AWeaponActor* _MyWeapon);
-
-	UPROPERTY(VisibleAnywhere)
-	class US_StatComponent* Stat;
+	void Attack();
 };
