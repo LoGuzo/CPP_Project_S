@@ -6,10 +6,18 @@
 #include "FirstCharacter.h"
 #include "UserCharacter.h"
 #include "S_StatComponent.h"
+#include "C_ItemComponent.h"
 
 ASwordWeapon::ASwordWeapon() {
     PrimaryActorTick.bCanEverTick = false;
     SetW_Mesh();
+	Name = "BlackSword";
+}
+
+void ASwordWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	ItemCom->SetItem(Name);
 }
 
 void ASwordWeapon::SetW_Mesh() {

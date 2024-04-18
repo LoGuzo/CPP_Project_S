@@ -13,6 +13,7 @@
 #include "S_CharacterWidget.h"
 #include "WeaponActor.h"
 #include "SwordWeapon.h"
+#include "C_InventoryComponent.h"
 
 AUserCharacter::AUserCharacter()
 {
@@ -41,12 +42,14 @@ AUserCharacter::AUserCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Sword = CreateDefaultSubobject<ASwordWeapon>(TEXT("SWORD"));
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
 	{
 		CharacterUI = UW.Class;
 	}
+
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

@@ -58,5 +58,8 @@ private:
 
 public:
 	void SetMyWeapon(class AWeaponActor* _MyWeapon);
+
 	void Attack();
+
+	class UC_InventoryComponent* Inventory;
 };

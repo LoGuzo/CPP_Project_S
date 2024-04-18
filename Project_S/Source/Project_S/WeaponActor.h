@@ -12,14 +12,20 @@ class PROJECT_S_API AWeaponActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	//AWeaponActor();
-
+	//Sets default values for this actor's properties
+	AWeaponActor();
+	
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* Weapon;
+
+	UPROPERTY(VisibleAnywhere, Category = Component)
+	class UC_ItemComponent* ItemCom;
 protected:
 	UFUNCTION()
 	virtual void SetW_Mesh() PURE_VIRTUAL(AWeaponActor::SetW_Mesh, ;);
+	UPROPERTY(VisibleAnywhere)
+	FString Name;
+private:
 
 public:
 	UFUNCTION()

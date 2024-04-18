@@ -16,6 +16,8 @@ class PROJECT_S_API ASwordWeapon : public AWeaponActor
 	
 public:
 	ASwordWeapon();
+	virtual void BeginPlay() override;
+
 	virtual void SetW_Mesh() override;
 	virtual void AttackCheck(class AUserCharacter* _UserCharacter) override;
 };

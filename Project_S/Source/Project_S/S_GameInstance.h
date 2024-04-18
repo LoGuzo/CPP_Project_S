@@ -4,33 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "Engine/DataTable.h"
+#include "S_StructureAll.h"
 #include "S_GameInstance.generated.h"
 
-USTRUCT()
-struct FCharacterData : public FTableRowBase
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Level;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Attack;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Armor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxHp;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxMp;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxExp;
-
-};
 /**
  * 
  */
@@ -45,10 +21,14 @@ public:
 	virtual void Init() override;
 
 	FCharacterData* GetStatData(int32 _Level);
+	FS_Item* GetItemData(FString _ItemName);
 
 private:
 
 	UPROPERTY();
 	class UDataTable* MyStats;
+
+	UPROPERTY();
+	class UDataTable* Item;
 	
 };
