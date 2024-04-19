@@ -16,5 +16,13 @@ class PROJECT_S_API UInventoryMenu : public UUserWidget
 
 public:
 	UInventoryMenu(const FObjectInitializer& ObjectInitializer);
-	class UUserWidget* WBP_Inventory;
+
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	virtual void NativePreConstruct() override;
+
+	TSubclassOf<class UW_Inventory> TWBP_Inventory;
+
+	UPROPERTY(meta = (BindWidget))
+	class UW_Inventory* WBP_Inventory;
 };

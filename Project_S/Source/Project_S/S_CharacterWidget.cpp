@@ -3,8 +3,17 @@
 
 #include "S_CharacterWidget.h"
 #include "S_StatComponent.h"
+#include "InventoryMenu.h"
 #include "Components/ProgressBar.h"
 
+US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	static ConstructorHelpers::FClassFinder<UInventoryMenu>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
+	if (UW.Succeeded())
+	{
+		InventoryWidget = UW.Class;
+	}
+}
 void US_CharacterWidget::BindHp(class US_StatComponent* _StatComp)
 {
 	SStatComponent = _StatComp;
@@ -39,4 +48,23 @@ void US_CharacterWidget::UpdateExp()
 {
 	if (SStatComponent.IsValid())
 		PB_Exp->SetPercent(SStatComponent->GetExpRatio());
+}
+
+void US_CharacterWidget::ShowInventory()
+{
+	if (InventoryWidget) {
+		inventoryWidget = CreateWidget<UInventoryMenu>(GetWorld(), InventoryWidget);
+		if (inventoryWidget)
+		{
+			inventoryWidget->AddToViewport();
+		}
+	}
+}
+
+void US_CharacterWidget::RemoveInventory()
+{
+	if (inventoryWidget)
+	{
+		inventoryWidget->RemoveFromParent();
+	}
 }

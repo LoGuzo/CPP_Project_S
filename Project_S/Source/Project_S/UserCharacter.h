@@ -53,8 +53,11 @@ private:
 
 	// UI
 	TSubclassOf<class US_CharacterWidget> CharacterUI;
+	class US_CharacterWidget* HUDWidget;
 
 	int32 IWeapon;
+
+	bool bIsFlipFlopActive;
 
 public:
 	void SetMyWeapon(class AWeaponActor* _MyWeapon);
@@ -62,4 +65,6 @@ public:
 	void Attack();
 
 	class UC_InventoryComponent* Inventory;
+
+	void OnInventoryKeyPressed();
 };

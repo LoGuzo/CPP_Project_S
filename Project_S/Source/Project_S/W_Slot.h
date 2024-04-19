@@ -30,7 +30,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	FName ItemKey;
-
+	
 	UPROPERTY(VisibleAnywhere)
-	int32 Amount;
+	int32 Amount = 0;
 };

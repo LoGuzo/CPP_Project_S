@@ -15,6 +15,8 @@ class PROJECT_S_API US_CharacterWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	US_CharacterWidget(const FObjectInitializer& ObjectInitializer);
+
 	void BindHp(class US_StatComponent* _StatComp);
 	void BindMp(class US_StatComponent* _StatComp);
 	void BindExp(class US_StatComponent* _StatComp);
@@ -22,6 +24,9 @@ public:
 	void UpdateHp();
 	void UpdateMp();
 	void UpdateExp();
+
+	void ShowInventory();
+	void RemoveInventory();
 
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
@@ -34,4 +39,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_Exp;
+
+	TSubclassOf<class UInventoryMenu> InventoryWidget;
+
+	class UInventoryMenu* inventoryWidget;
+
 };

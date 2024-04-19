@@ -10,6 +10,7 @@
 
 void UW_Slot::NativePreConstruct()
 {
+	Super::NativePreConstruct();
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{

@@ -50,6 +50,7 @@ AUserCharacter::AUserCharacter()
 		CharacterUI = UW.Class;
 	}
 
+	bIsFlipFlopActive = false;
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -66,6 +67,8 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AUserCharacter::Attack);
+
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AUserCharacter::OnInventoryKeyPressed);
 }
 
 void AUserCharacter::BeginPlay()
@@ -82,7 +85,7 @@ void AUserCharacter::PostInitializeComponents()
 
 	if (CharacterUI)
 	{
-		US_CharacterWidget* HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
+		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
 		if (HUDWidget)
 		{
 			HUDWidget->BindHp(Stat);
@@ -141,4 +144,19 @@ void AUserCharacter::Attack()
 {
 	if (nullptr != MyWeapon)
 		MyWeapon->AttackCheck(this);
+}
+
+void AUserCharacter::OnInventoryKeyPressed()
+{
+
+	if (!bIsFlipFlopActive)
+	{
+		HUDWidget->ShowInventory();
+		bIsFlipFlopActive = true;
+	}
+	else
+	{
+		HUDWidget->RemoveInventory();
+		bIsFlipFlopActive = false;
+	}
 }

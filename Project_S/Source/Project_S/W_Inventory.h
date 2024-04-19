@@ -22,9 +22,11 @@ private:
 	class UC_InventoryComponent* InventoryCom;
 
 	TSubclassOf<class UW_Slot> W_Slot;
+	class UW_Slot* W_Slots;
 
 public:
-	virtual void NativeOnInitialized() override;
+	UW_Inventory(const FObjectInitializer& ObjectInitializer);
+	virtual void NativePreConstruct() override;
 
 	void ShowInventory(UC_InventoryComponent* _InventoryCom);
 	void UpdateSlots(const TArray<FS_Slot>& Slots);
