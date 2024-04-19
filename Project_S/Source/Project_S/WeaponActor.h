@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "A_Item.h"
 #include "WeaponActor.generated.h"
 
 UCLASS(Abstract)
-class PROJECT_S_API AWeaponActor : public AActor
+class PROJECT_S_API AWeaponActor : public AA_Item
 {
 	GENERATED_BODY()
 	
@@ -17,14 +17,8 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* Weapon;
-
-	UPROPERTY(VisibleAnywhere, Category = Component)
-	class UC_ItemComponent* ItemCom;
 protected:
-	UFUNCTION()
-	virtual void SetW_Mesh() PURE_VIRTUAL(AWeaponActor::SetW_Mesh, ;);
-	UPROPERTY(VisibleAnywhere)
-	FString Name;
+
 private:
 
 public:

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "InventoryMenu.h"
 #include "S_CharacterWidget.generated.h"
 
 /**
@@ -28,6 +29,8 @@ public:
 	void ShowInventory();
 	void RemoveInventory();
 
+	UInventoryMenu* GetInvetoryWidget() { return inventoryWidget; }
+
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
 
@@ -42,6 +45,6 @@ private:
 
 	TSubclassOf<class UInventoryMenu> InventoryWidget;
 
-	class UInventoryMenu* inventoryWidget;
+	UInventoryMenu* inventoryWidget;
 
 };

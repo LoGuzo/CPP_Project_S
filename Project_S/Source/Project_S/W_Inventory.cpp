@@ -36,10 +36,9 @@ void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 {
 	for (const FS_Slot& slot : _Slots)
 	{
-		W_Slots = CreateWidget<UW_Slot>(GetWorld(), W_Slot);
+		auto W_Slots = CreateWidget<UW_Slot>(GetWorld(), W_Slot);
 		if (W_Slots)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Open"));
 			W_Slots->SetItemKey(slot.ItemName);
 			W_Slots->SetAmount(slot.Amount);
 		}

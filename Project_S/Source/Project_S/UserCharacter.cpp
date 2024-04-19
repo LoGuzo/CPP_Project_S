@@ -13,6 +13,8 @@
 #include "S_CharacterWidget.h"
 #include "WeaponActor.h"
 #include "SwordWeapon.h"
+#include "InventoryMenu.h"
+#include "W_Inventory.h"
 #include "C_InventoryComponent.h"
 
 AUserCharacter::AUserCharacter()
@@ -49,7 +51,6 @@ AUserCharacter::AUserCharacter()
 	{
 		CharacterUI = UW.Class;
 	}
-
 	bIsFlipFlopActive = false;
 }
 
@@ -69,6 +70,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AUserCharacter::Attack);
 
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AUserCharacter::OnInventoryKeyPressed);
+	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
 }
 
 void AUserCharacter::BeginPlay()
@@ -129,12 +131,21 @@ void AUserCharacter::Tick(float DeltaTime)
 {
 }
 
+void AUserCharacter::PickUpItem()
+{
+	if (GetCurItem() != nullptr) {
+		GetCurItem()->GetC_ItemComponent()->Interact(this);
+		UpdateInventory();
+	}
+}
+
 void AUserCharacter::SetMyWeapon(class AWeaponActor* _MyWeapon)
 {
 	// UserClass
 	FName WeaponSocket(TEXT("r_hand_sword"));
 	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon->GetClass());
 	if (nullptr != MyWeapon) {
+		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 		MyWeapon->SetOwner(this);
 	}
@@ -158,5 +169,22 @@ void AUserCharacter::OnInventoryKeyPressed()
 	{
 		HUDWidget->RemoveInventory();
 		bIsFlipFlopActive = false;
+	}
+}
+
+void AUserCharacter::SetCurItem(AA_Item* _Curitem)
+{
+	Curitem = _Curitem;
+}
+
+void AUserCharacter::UpdateInventory()
+{
+	if (IsValid(HUDWidget->GetInvetoryWidget()))
+	{
+		HUDWidget->GetInvetoryWidget()->WBP_Inventory->ShowInventory(Inventory);
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("error"));
 	}
 }

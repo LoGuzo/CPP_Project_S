@@ -14,8 +14,8 @@ UInventoryMenu::UInventoryMenu(const FObjectInitializer& ObjectInitializer) : Su
 	if (UW.Succeeded())
 	{
 		TWBP_Inventory = UW.Class;
+		WBP_Inventory = CreateWidget<UW_Inventory>(GetWorld(), TWBP_Inventory);
 	}
-	WBP_Inventory = CreateWidget<UW_Inventory>(GetWorld(),TWBP_Inventory);
 }
 
 void UInventoryMenu::NativeConstruct()

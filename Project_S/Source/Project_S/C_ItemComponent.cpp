@@ -4,7 +4,7 @@
 #include "C_ItemComponent.h"
 #include "UserCharacter.h"
 #include "S_GameInstance.h"
-#include"C_InventoryComponent.h"
+#include "C_InventoryComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -30,10 +30,14 @@ void UC_ItemComponent::BeginPlay()
 
 void UC_ItemComponent::Interact(AUserCharacter* _UserCharacter)
 {
-	auto usercharacter = Cast<AUserCharacter>(_UserCharacter);
-	if (usercharacter)
+	if (_UserCharacter)
 	{
-		usercharacter->Inventory->AddItem(ItemAmount, RowName);
+		auto Inventory = _UserCharacter->GetInventoryCom();
+		if (Inventory)
+		{
+			Inventory->AddItem(ItemAmount, RowName);
+			GetOwner()->Destroy();
+		}
 	}
 }
 
@@ -56,4 +60,3 @@ void UC_ItemComponent::SetItem(FString _ItemName)
 		}
 	}
 }
-

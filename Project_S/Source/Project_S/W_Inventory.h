@@ -22,7 +22,7 @@ private:
 	class UC_InventoryComponent* InventoryCom;
 
 	TSubclassOf<class UW_Slot> W_Slot;
-	class UW_Slot* W_Slots;
+	class UW_Slot* W_Slots2;
 
 public:
 	UW_Inventory(const FObjectInitializer& ObjectInitializer);

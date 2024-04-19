@@ -64,7 +64,7 @@ struct FS_Slot : public FTableRowBase
 	FName ItemName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Amount;
+	int32 Amount = 0;
 };
 
 USTRUCT()

@@ -6,23 +6,22 @@
 #include "FirstCharacter.h"
 #include "UserCharacter.h"
 #include "S_StatComponent.h"
-#include "C_ItemComponent.h"
 
 ASwordWeapon::ASwordWeapon() {
     PrimaryActorTick.bCanEverTick = false;
     SetW_Mesh();
-	Name = "BlackSword";
+	SetName("BlackSword");
 }
 
 void ASwordWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	ItemCom->SetItem(Name);
+	ItemCom->SetItem(GetName());
 }
 
 void ASwordWeapon::SetW_Mesh() {
     Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
-    RootComponent = Weapon;
+	Weapon->SetupAttachment(RootComponent);
 
     static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/Weapons/Blade_BlackKnight/SK_Blade_BlackKnight.SK_Blade_BlackKnight'"));
     if (SK_WEAPON.Succeeded())
@@ -30,6 +29,7 @@ void ASwordWeapon::SetW_Mesh() {
         Weapon->SetSkeletalMesh(SK_WEAPON.Object);
     }
     Weapon->SetCollisionProfileName(TEXT("NoCollision"));
+	
 }
 
 void ASwordWeapon::AttackCheck(class AUserCharacter* _UserCharacter) {

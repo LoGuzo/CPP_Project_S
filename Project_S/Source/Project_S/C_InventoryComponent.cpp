@@ -81,7 +81,7 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		if (_ItemKey != "") {
+		if (!_ItemKey.ToString().IsEmpty()) {
 			auto ItemData = MyGameInstance->GetItemData(_ItemKey.ToString());
 			if (ItemData)
 			{
@@ -95,6 +95,7 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 void UC_InventoryComponent::IncreaseSlotStack(int32 _Index, int32 _Amount)
 {
 	TArray<FS_Slot> Slots2;
+	Slots2 = Slots;
 	Slots[_Index].Amount=Slots2[_Index].Amount + _Amount;
 }
 

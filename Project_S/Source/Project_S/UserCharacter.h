@@ -49,6 +49,7 @@ protected:
 	virtual void BeginPlay() override;
 private:
 	class ASwordWeapon* Sword;
+
 	class AWeaponActor* MyWeapon;
 
 	// UI
@@ -59,12 +60,22 @@ private:
 
 	bool bIsFlipFlopActive;
 
+	void PickUpItem();
+
+	class AA_Item* Curitem;
+
+	class UC_InventoryComponent* Inventory;
 public:
 	void SetMyWeapon(class AWeaponActor* _MyWeapon);
 
 	void Attack();
 
-	class UC_InventoryComponent* Inventory;
+	UC_InventoryComponent* GetInventoryCom() { return Inventory; }
 
 	void OnInventoryKeyPressed();
+
+	AA_Item* GetCurItem() { return Curitem; }
+	void SetCurItem(AA_Item* _Curitem);
+
+	void UpdateInventory();
 };

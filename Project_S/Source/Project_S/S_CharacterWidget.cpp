@@ -3,7 +3,6 @@
 
 #include "S_CharacterWidget.h"
 #include "S_StatComponent.h"
-#include "InventoryMenu.h"
 #include "Components/ProgressBar.h"
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

@@ -14,7 +14,11 @@ class PROJECT_S_API UW_Slot : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+
 	virtual void NativePreConstruct() override;
+
+	FName GetIName() { return ItemKey; }
+	int32 GetAmount() { return Amount; }
 
 	void SetItemKey(FName _ItemKey);
 	void SetAmount(int32 _Amount);
@@ -32,5 +36,5 @@ private:
 	FName ItemKey;
 	
 	UPROPERTY(VisibleAnywhere)
-	int32 Amount = 0;
+	int32 Amount;
 };
