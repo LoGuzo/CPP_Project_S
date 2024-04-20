@@ -51,7 +51,8 @@ AUserCharacter::AUserCharacter()
 	{
 		CharacterUI = UW.Class;
 	}
-	bIsFlipFlopActive = false;
+	bIsFlipFlopInventoryActive = false;
+	bIsFlipFlopEquipmentActive = false;
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -70,6 +71,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &AUserCharacter::Attack);
 
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AUserCharacter::OnInventoryKeyPressed);
+	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
 }
 
@@ -160,15 +162,29 @@ void AUserCharacter::Attack()
 void AUserCharacter::OnInventoryKeyPressed()
 {
 
-	if (!bIsFlipFlopActive)
+	if (!bIsFlipFlopInventoryActive)
 	{
 		HUDWidget->ShowInventory();
-		bIsFlipFlopActive = true;
+		bIsFlipFlopInventoryActive = true;
 	}
 	else
 	{
 		HUDWidget->RemoveInventory();
-		bIsFlipFlopActive = false;
+		bIsFlipFlopInventoryActive = false;
+	}
+}
+
+void AUserCharacter::OnEquipmentKeyPressed()
+{
+	if (!bIsFlipFlopEquipmentActive)
+	{
+		HUDWidget->ShowEquip();
+		bIsFlipFlopEquipmentActive = true;
+	}
+	else
+	{
+		HUDWidget->RemoveEquip();
+		bIsFlipFlopEquipmentActive = false;
 	}
 }
 
@@ -182,9 +198,5 @@ void AUserCharacter::UpdateInventory()
 	if (IsValid(HUDWidget->GetInvetoryWidget()))
 	{
 		HUDWidget->GetInvetoryWidget()->WBP_Inventory->ShowInventory(Inventory);
-	}
-	else 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("error"));
 	}
 }

@@ -21,10 +21,10 @@ void US_GameInstance::Init()
 
 FCharacterData* US_GameInstance::GetStatData(int32 _Level)
 {
-	return MyStats->FindRow<FCharacterData>(*FString::FromInt(_Level),TEXT(""));
+	return MyStats->FindRow<FCharacterData>(*FString::FromInt(_Level),TEXT(""), false);
 }
 
 FS_Item* US_GameInstance::GetItemData(FString _ItemName)
 {
-	return Item->FindRow<FS_Item>(FName(*_ItemName),TEXT(""));
+	return Item->FindRow<FS_Item>(FName(*_ItemName),TEXT(""), false);
 }

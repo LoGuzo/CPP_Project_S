@@ -7,10 +7,15 @@
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<UInventoryMenu>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
-	if (UW.Succeeded())
+	static ConstructorHelpers::FClassFinder<UInventoryMenu>UW_Inven(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
+	if (UW_Inven.Succeeded())
 	{
-		InventoryWidget = UW.Class;
+		U_InventoryWidget = UW_Inven.Class;
+	}
+	static ConstructorHelpers::FClassFinder<UUserWidget>UW_Equip(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Equip.WBP_Equip_C'"));
+	if (UW_Equip.Succeeded())
+	{
+		U_EquipmentWidget = UW_Equip.Class;
 	}
 }
 void US_CharacterWidget::BindHp(class US_StatComponent* _StatComp)
@@ -51,19 +56,40 @@ void US_CharacterWidget::UpdateExp()
 
 void US_CharacterWidget::ShowInventory()
 {
-	if (InventoryWidget) {
-		inventoryWidget = CreateWidget<UInventoryMenu>(GetWorld(), InventoryWidget);
-		if (inventoryWidget)
+	if (U_InventoryWidget) {
+		InventoryWidget = CreateWidget<UInventoryMenu>(GetWorld(), U_InventoryWidget);
+		if (InventoryWidget)
 		{
-			inventoryWidget->AddToViewport();
+			InventoryWidget->AddToViewport();
 		}
 	}
 }
 
 void US_CharacterWidget::RemoveInventory()
 {
-	if (inventoryWidget)
+	if (InventoryWidget)
 	{
-		inventoryWidget->RemoveFromParent();
+		InventoryWidget->RemoveFromParent();
 	}
 }
+
+void US_CharacterWidget::ShowEquip()
+{
+	if (U_EquipmentWidget) {
+		EquipmentWidget = CreateWidget<UUserWidget>(GetWorld(), U_EquipmentWidget);
+		if (EquipmentWidget)
+		{
+			EquipmentWidget->AddToViewport();
+		}
+	}
+}
+
+void US_CharacterWidget::RemoveEquip()
+{
+	if (EquipmentWidget)
+	{
+		EquipmentWidget->RemoveFromParent();
+	}
+}
+
+

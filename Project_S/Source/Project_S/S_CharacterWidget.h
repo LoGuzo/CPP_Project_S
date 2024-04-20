@@ -29,7 +29,10 @@ public:
 	void ShowInventory();
 	void RemoveInventory();
 
-	UInventoryMenu* GetInvetoryWidget() { return inventoryWidget; }
+	void ShowEquip();
+	void RemoveEquip();
+
+	UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
@@ -43,8 +46,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_Exp;
 
-	TSubclassOf<class UInventoryMenu> InventoryWidget;
+	TSubclassOf<class UInventoryMenu> U_InventoryWidget;
 
-	UInventoryMenu* inventoryWidget;
+	UInventoryMenu* InventoryWidget;
+
+	TSubclassOf<class UUserWidget> U_EquipmentWidget;
+
+	UUserWidget* EquipmentWidget;
 
 };

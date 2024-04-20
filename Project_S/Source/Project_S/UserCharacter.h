@@ -58,7 +58,9 @@ private:
 
 	int32 IWeapon;
 
-	bool bIsFlipFlopActive;
+	bool bIsFlipFlopInventoryActive;
+
+	bool bIsFlipFlopEquipmentActive;
 
 	void PickUpItem();
 
@@ -73,6 +75,8 @@ public:
 	UC_InventoryComponent* GetInventoryCom() { return Inventory; }
 
 	void OnInventoryKeyPressed();
+
+	void OnEquipmentKeyPressed();
 
 	AA_Item* GetCurItem() { return Curitem; }
 	void SetCurItem(AA_Item* _Curitem);
