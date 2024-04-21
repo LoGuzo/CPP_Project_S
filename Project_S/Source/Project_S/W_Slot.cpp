@@ -6,7 +6,17 @@
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
+
+UW_Slot::UW_Slot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	static ConstructorHelpers::FClassFinder<UW_Drag>UW_Drag(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Drag.WBP_Drag_C'"));
+	if (UW_Drag.Succeeded())
+	{
+		U_DragImg = UW_Drag.Class;
+	}
+}
 
 void UW_Slot::NativePreConstruct()
 {
@@ -14,7 +24,7 @@ void UW_Slot::NativePreConstruct()
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		if (!ItemKey.ToString().IsEmpty()) {
+		if (ItemKey.ToString() != "None") {
 			auto ItemData = MyGameInstance->GetItemData(ItemKey.ToString());
 			if (ItemData)
 			{
@@ -23,11 +33,11 @@ void UW_Slot::NativePreConstruct()
 				Txt_Stack->SetText(FText::FromString(FString::FromInt(Amount)));
 				Img_Item->SetVisibility(ESlateVisibility::Visible);
 			}
-			else
-			{
-				Box_Stack->SetVisibility(ESlateVisibility::Hidden);
-				Img_Item->SetVisibility(ESlateVisibility::Hidden);
-			}
+		}
+		else
+		{
+			Box_Stack->SetVisibility(ESlateVisibility::Hidden);
+			Img_Item->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
@@ -40,4 +50,71 @@ void UW_Slot::SetItemKey(FName _ItemKey)
 void UW_Slot::SetAmount(int32 _Amount)
 {
 	Amount = _Amount;
+}
+
+void UW_Slot::SetConIndex(int32 _ContentIndex)
+{
+	ContentIndex = _ContentIndex;
+}
+
+void UW_Slot::SetInvenCom(UC_InventoryComponent* _InventoryCom)
+{
+	InventoryCom = _InventoryCom;
+}
+
+FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	FEventReply reply;
+	reply.NativeReply = Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
+	if (ItemKey.ToString() != "None")
+	{
+		if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
+		{
+			reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
+			return reply.NativeReply;
+		}
+		else
+		{
+			return FReply::Unhandled();
+		}
+	}
+	else
+	{
+		return FReply::Unhandled();
+	}
+}
+
+bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	DO_Drag = Cast<UDO_DragDrop>(InOperation);
+	if (DO_Drag->GetConIndex() != ContentIndex || DO_Drag->GetInvenCom() != InventoryCom)
+	{
+		InventoryCom->MouseDrop(DO_Drag->GetConIndex(), ContentIndex ,InventoryCom);
+	}
+	return false;
+}
+
+void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+{
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+	if (OutOperation == nullptr)
+	{
+		if (U_DragImg)
+		{
+			DragImg = CreateWidget<UW_Drag>(GetWorld(), U_DragImg);
+			if (DragImg)
+			{
+				DragImg->SetItemKey(ItemKey);
+			}
+		}
+		DO_Drag = NewObject<UDO_DragDrop>();
+		OutOperation = DO_Drag;
+		if (DO_Drag)
+		{
+			InventoryCom = NewObject<UC_InventoryComponent>();
+			DO_Drag->SetConIndex(ContentIndex);
+			DO_Drag->SetInvenCom(InventoryCom);
+			DO_Drag->DefaultDragVisual = DragImg;
+		}
+	}
 }

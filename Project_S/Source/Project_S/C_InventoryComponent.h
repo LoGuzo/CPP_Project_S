@@ -7,6 +7,8 @@
 #include "S_StructureAll.h"
 #include "C_InventoryComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnInventoryUpdated);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API UC_InventoryComponent : public UActorComponent
 {
@@ -22,13 +24,19 @@ private:
 	bool IsAddFailed;
 
 	int32 AmountLeft;
+	FS_Slot LocalSlot;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
+	FOnInventoryUpdated OnInventoryUpdated;
 
 	TArray<FS_Slot> GetSlots() { return Slots; }
+
+	FS_Slot GetSlot(int32 _Index) { return Slots[_Index]; }
+
+	void SetSlot(int32 _Index, FS_Slot _Slot);
 
 	void AddItem(int32 _Amount,FName _ItemKey);
 
@@ -41,4 +49,8 @@ public:
 	FResult CheckSlotEmpty();
 
 	void AddToNewSlot(FName _ItemKey, int32 _Amount);
+
+	void ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom);
+
+	void MouseDrop(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom);
 };

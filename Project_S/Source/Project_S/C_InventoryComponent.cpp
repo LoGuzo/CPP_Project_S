@@ -27,6 +27,11 @@ void UC_InventoryComponent::BeginPlay()
 	
 }
 
+void UC_InventoryComponent::SetSlot(int32 _Index, FS_Slot _Slot)
+{
+	Slots[_Index] = _Slot;
+}
+
 void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey)
 {
 	AmountLeft = _Amount;
@@ -81,7 +86,7 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		if (!_ItemKey.ToString().IsEmpty()) {
+		if (_ItemKey.ToString() != "None") {
 			auto ItemData = MyGameInstance->GetItemData(_ItemKey.ToString());
 			if (ItemData)
 			{
@@ -124,4 +129,31 @@ void UC_InventoryComponent::AddToNewSlot(FName _ItemKey, int32 _Amount)
 	Slots[result.Index].ItemName = _ItemKey;
 	Slots[result.Index].Amount = _Amount;
 }
+
+void UC_InventoryComponent::ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom)
+{
+	LocalSlot = _BeforeInvenCom->GetSlot(_BeforeIndex);
+	if (_TargetIndex >= 0)
+	{
+		if (LocalSlot.ItemName != Slots[_TargetIndex].ItemName)
+		{
+			_BeforeInvenCom->SetSlot(_BeforeIndex,  Slots[_TargetIndex]);
+			Slots[_TargetIndex] = LocalSlot;
+		
+		}
+		else {
+			_BeforeInvenCom->SetSlot(_BeforeIndex, Slots[_TargetIndex]);
+			Slots[_TargetIndex] = LocalSlot;
+		}
+	}
+	OnInventoryUpdated.Broadcast();
+	_BeforeInvenCom->OnInventoryUpdated.Broadcast();
+}
+
+void UC_InventoryComponent::MouseDrop(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom)
+{
+	ChangeSlot(_BeforeIndex, _TargetIndex, _BeforeInvenCom);
+}
+
+
 

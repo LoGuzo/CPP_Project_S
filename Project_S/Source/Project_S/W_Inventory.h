@@ -29,5 +29,6 @@ public:
 	virtual void NativePreConstruct() override;
 
 	void ShowInventory(UC_InventoryComponent* _InventoryCom);
+	void ShowInventoryDrop();
 	void UpdateSlots(const TArray<FS_Slot>& Slots);
 };

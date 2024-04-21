@@ -30,10 +30,18 @@ void UW_Inventory::ShowInventory(UC_InventoryComponent* _InventoryCom)
 	InventoryCom = _InventoryCom;
 	Box_Wrap->ClearChildren();
 	UpdateSlots(InventoryCom->GetSlots());
+	InventoryCom->OnInventoryUpdated.AddUObject(this, &UW_Inventory::ShowInventoryDrop);
+}
+
+void UW_Inventory::ShowInventoryDrop()
+{
+	Box_Wrap->ClearChildren();
+	UpdateSlots(InventoryCom->GetSlots());
 }
 
 void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 {
+	int32 index = 0;
 	for (const FS_Slot& slot : _Slots)
 	{
 		auto W_Slots = CreateWidget<UW_Slot>(GetWorld(), W_Slot);
@@ -41,7 +49,10 @@ void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 		{
 			W_Slots->SetItemKey(slot.ItemName);
 			W_Slots->SetAmount(slot.Amount);
+			W_Slots->SetInvenCom(InventoryCom);
+			W_Slots->SetConIndex(index);
 		}
 		Box_Wrap->AddChild(W_Slots);
+		index++;
 	}
 }
