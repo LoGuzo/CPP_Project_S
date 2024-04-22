@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "InventoryMenu.h"
+#include "W_Equip.h"
 #include "S_CharacterWidget.generated.h"
 
 /**
@@ -46,12 +47,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_Exp;
 
-	TSubclassOf<class UInventoryMenu> U_InventoryWidget;
+	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 
 	UInventoryMenu* InventoryWidget;
 
-	TSubclassOf<class UUserWidget> U_EquipmentWidget;
+	TSubclassOf<UW_Equip> U_EquipmentWidget;
 
-	UUserWidget* EquipmentWidget;
+	UW_Equip* EquipmentWidget;
 
 };

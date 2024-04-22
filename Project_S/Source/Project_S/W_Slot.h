@@ -7,6 +7,7 @@
 #include "W_Drag.h"
 #include "DO_DragDrop.h"
 #include "C_InventoryComponent.h"
+#include "C_EqiupComponent.h"
 #include "W_Slot.generated.h"
 
 /**
@@ -22,13 +23,16 @@ public:
 	virtual void NativePreConstruct() override;
 
 	FName GetIName() { return ItemKey; }
+	FText GetConName() { return ContentName; }
 	int32 GetAmount() { return Amount; }
 	int32 GetConIndex() { return ContentIndex; }
 
+	void SetConName(FText _ContentName);
 	void SetItemKey(FName _ItemKey);
 	void SetAmount(int32 _Amount);
 	void SetConIndex(int32 _ContentIndex);
 	void SetInvenCom(UC_InventoryComponent* _InventoryCom);
+	void SetEquipCom(UC_EqiupComponent* _EquipCom);
 
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
@@ -56,7 +60,11 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	int32 Amount;
 
+	FText ContentName;
+
 	int32 ContentIndex;
 
 	UC_InventoryComponent* InventoryCom;
+
+	UC_EqiupComponent* EquipCom;
 };

@@ -15,6 +15,7 @@
 #include "SwordWeapon.h"
 #include "InventoryMenu.h"
 #include "W_Inventory.h"
+#include "C_EqiupComponent.h"
 #include "C_InventoryComponent.h"
 
 AUserCharacter::AUserCharacter()
@@ -45,6 +46,7 @@ AUserCharacter::AUserCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
+	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
 	Sword = CreateDefaultSubobject<ASwordWeapon>(TEXT("SWORD"));
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
@@ -80,7 +82,7 @@ void AUserCharacter::BeginPlay()
 	Super::BeginPlay();
 	Stat->SetLevel(2);
 	Stat->SetExp(10);
-	SetMyWeapon(Sword);
+	//SetMyWeapon(Sword);
 }
 
 void AUserCharacter::PostInitializeComponents()

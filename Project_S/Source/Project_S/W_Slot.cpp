@@ -28,10 +28,17 @@ void UW_Slot::NativePreConstruct()
 			auto ItemData = MyGameInstance->GetItemData(ItemKey.ToString());
 			if (ItemData)
 			{
-				Img_Item->SetBrushFromTexture(ItemData->ItemImage);
-				Box_Stack->SetVisibility(ESlateVisibility::Visible);
-				Txt_Stack->SetText(FText::FromString(FString::FromInt(Amount)));
-				Img_Item->SetVisibility(ESlateVisibility::Visible);
+				if (ItemData->ItemType == E_ItemType::E_Equip) {
+					Img_Item->SetBrushFromTexture(ItemData->ItemImage);
+					Box_Stack->SetVisibility(ESlateVisibility::Hidden);
+					Img_Item->SetVisibility(ESlateVisibility::Visible);
+				}
+				else {
+					Img_Item->SetBrushFromTexture(ItemData->ItemImage);
+					Box_Stack->SetVisibility(ESlateVisibility::Visible);
+					Txt_Stack->SetText(FText::FromString(FString::FromInt(Amount)));
+					Img_Item->SetVisibility(ESlateVisibility::Visible);
+				}
 			}
 		}
 		else
@@ -40,6 +47,11 @@ void UW_Slot::NativePreConstruct()
 			Img_Item->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+}
+
+void UW_Slot::SetConName(FText _ContentName)
+{
+	ContentName = _ContentName;
 }
 
 void UW_Slot::SetItemKey(FName _ItemKey)
@@ -61,6 +73,12 @@ void UW_Slot::SetInvenCom(UC_InventoryComponent* _InventoryCom)
 {
 	InventoryCom = _InventoryCom;
 }
+
+void UW_Slot::SetEquipCom(UC_EqiupComponent* _EquipCom)
+{
+	EquipCom = _EquipCom;
+}
+
 
 FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -111,9 +129,16 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 		OutOperation = DO_Drag;
 		if (DO_Drag)
 		{
-			InventoryCom = NewObject<UC_InventoryComponent>();
 			DO_Drag->SetConIndex(ContentIndex);
-			DO_Drag->SetInvenCom(InventoryCom);
+			if (InventoryCom != nullptr)
+			{
+				DO_Drag->SetInvenCom(InventoryCom);
+			}
+			if (EquipCom != nullptr)
+			{
+				DO_Drag->SetEquipCom(EquipCom);
+				UE_LOG(LogTemp, Warning, TEXT("Equip"));
+			}
 			DO_Drag->DefaultDragVisual = DragImg;
 		}
 	}

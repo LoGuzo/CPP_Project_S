@@ -44,15 +44,15 @@ void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 	int32 index = 0;
 	for (const FS_Slot& slot : _Slots)
 	{
-		auto W_Slots = CreateWidget<UW_Slot>(GetWorld(), W_Slot);
-		if (W_Slots)
+		W_Slots2 = CreateWidget<UW_Slot>(GetWorld(), W_Slot);
+		if (W_Slots2)
 		{
-			W_Slots->SetItemKey(slot.ItemName);
-			W_Slots->SetAmount(slot.Amount);
-			W_Slots->SetInvenCom(InventoryCom);
-			W_Slots->SetConIndex(index);
+			W_Slots2->SetItemKey(slot.ItemName);
+			W_Slots2->SetAmount(slot.Amount);
+			W_Slots2->SetInvenCom(InventoryCom);
+			W_Slots2->SetConIndex(index);
 		}
-		Box_Wrap->AddChild(W_Slots);
+		Box_Wrap->AddChild(W_Slots2);
 		index++;
 	}
 }

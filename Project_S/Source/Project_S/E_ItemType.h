@@ -10,6 +10,6 @@
 UENUM()
 enum class E_ItemType : uint8
 {
-	E_Weapon UMETA(DisplayName = "Weapon"),
+	E_Equip UMETA(DisplayName = "Equip"),
 	E_Etc UMETA(DisplayName = "Etc"),
 };

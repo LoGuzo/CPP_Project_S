@@ -12,7 +12,7 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 	{
 		U_InventoryWidget = UW_Inven.Class;
 	}
-	static ConstructorHelpers::FClassFinder<UUserWidget>UW_Equip(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Equip.WBP_Equip_C'"));
+	static ConstructorHelpers::FClassFinder<UW_Equip>UW_Equip(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Equip.WBP_Equip_C'"));
 	if (UW_Equip.Succeeded())
 	{
 		U_EquipmentWidget = UW_Equip.Class;
@@ -76,7 +76,7 @@ void US_CharacterWidget::RemoveInventory()
 void US_CharacterWidget::ShowEquip()
 {
 	if (U_EquipmentWidget) {
-		EquipmentWidget = CreateWidget<UUserWidget>(GetWorld(), U_EquipmentWidget);
+		EquipmentWidget = CreateWidget<UW_Equip>(GetWorld(), U_EquipmentWidget);
 		if (EquipmentWidget)
 		{
 			EquipmentWidget->AddToViewport();

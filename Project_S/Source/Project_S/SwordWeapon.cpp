@@ -11,6 +11,7 @@ ASwordWeapon::ASwordWeapon() {
     PrimaryActorTick.bCanEverTick = false;
     SetW_Mesh();
 	SetName("BlackSword");
+	SetType("Weapon");
 }
 
 void ASwordWeapon::BeginPlay()

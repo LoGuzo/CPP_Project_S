@@ -67,6 +67,8 @@ private:
 	class AA_Item* Curitem;
 
 	class UC_InventoryComponent* Inventory;
+
+	class UC_EqiupComponent* Equip;
 public:
 	void SetMyWeapon(class AWeaponActor* _MyWeapon);
 
