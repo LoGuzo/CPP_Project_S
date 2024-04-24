@@ -17,6 +17,8 @@
 #include "W_Inventory.h"
 #include "C_EqiupComponent.h"
 #include "C_InventoryComponent.h"
+#include "S_GameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 AUserCharacter::AUserCharacter()
 {
@@ -47,7 +49,6 @@ AUserCharacter::AUserCharacter()
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
-	Sword = CreateDefaultSubobject<ASwordWeapon>(TEXT("SWORD"));
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
 	{
@@ -82,7 +83,6 @@ void AUserCharacter::BeginPlay()
 	Super::BeginPlay();
 	Stat->SetLevel(2);
 	Stat->SetExp(10);
-	//SetMyWeapon(Sword);
 }
 
 void AUserCharacter::PostInitializeComponents()
@@ -143,15 +143,26 @@ void AUserCharacter::PickUpItem()
 	}
 }
 
-void AUserCharacter::SetMyWeapon(class AWeaponActor* _MyWeapon)
+void AUserCharacter::SetMyWeapon(TSubclassOf<class AWeaponActor>_MyWeapon)
 {
 	// UserClass
 	FName WeaponSocket(TEXT("r_hand_sword"));
-	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon->GetClass());
+	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon);
 	if (nullptr != MyWeapon) {
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 		MyWeapon->SetOwner(this);
+	}
+}
+
+void AUserCharacter::RemoveMyWeapon()
+{
+	if (MyWeapon != nullptr)
+	{
+		MyWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+		MyWeapon->SetOwner(nullptr);
+		MyWeapon->Destroy();
+		MyWeapon = nullptr;
 	}
 }
 

@@ -7,9 +7,7 @@
 #include "S_StructureAll.h"
 #include "CharacterManager.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROJECT_S_API UCharacterManager : public USInBase
 {

@@ -4,6 +4,7 @@
 #include "W_Equip.h"
 #include "W_Slot.h"
 #include "UserCharacter.h"
+#include "A_Item.h"
 #include "C_EqiupComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -16,7 +17,7 @@ UW_Equip::UW_Equip(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 		USlot_Head = UW.Class;
 		USlot_Shoes = UW.Class;
 		USlot_Armor = UW.Class;
-		USlot_Cape = UW.Class;
+		USlot_Weapon = UW.Class;
 	}
 }
 
@@ -64,7 +65,13 @@ void UW_Equip::NativePreConstruct()
 
 void UW_Equip::ShowEquip(UC_EqiupComponent* _EquipCom)
 {
+	equipCom = _EquipCom;
 	UpdateEquip(_EquipCom->GetSlots());
+	_EquipCom->OnEquipUpdated.AddUObject(this, &UW_Equip::ShowEquipDrop);
+}
+void UW_Equip::ShowEquipDrop()
+{
+	UpdateEquip(equipCom->GetSlots());
 }
 
 void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
@@ -83,6 +90,8 @@ void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
 				Slot_Weapon->SetAmount(slot.Amount);
 				Slot_Weapon->SetEquipCom(equipCom);
 				Slot_Weapon->SetConName(EquipMap.FindRef(index));
+				Slot_Weapon->SetItemConName(slot.ItemConName);
+				Slot_Weapon->SetItemClass(slot.ItemClass);
 				Slot_Weapon->SetConIndex(0);
 			}
 			Wrap_Weapon->AddChild(Slot_Weapon);
@@ -96,6 +105,8 @@ void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
 				Slot_Head->SetAmount(slot.Amount);
 				Slot_Head->SetEquipCom(equipCom);
 				Slot_Head->SetConName(EquipMap.FindRef(index));
+				Slot_Head->SetItemConName(slot.ItemConName);
+				Slot_Head->SetItemClass(slot.ItemClass);
 				Slot_Head->SetConIndex(0);
 			}
 			Wrap_Head->AddChild(Slot_Head);
@@ -109,6 +120,8 @@ void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
 				Slot_Shoes->SetAmount(slot.Amount);
 				Slot_Shoes->SetEquipCom(equipCom);
 				Slot_Shoes->SetConName(EquipMap.FindRef(index));
+				Slot_Shoes->SetItemConName(slot.ItemConName);
+				Slot_Shoes->SetItemClass(slot.ItemClass);
 				Slot_Shoes->SetConIndex(0);
 			}
 			Wrap_Shoes->AddChild(Slot_Shoes);
@@ -122,6 +135,8 @@ void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
 				Slot_Armor->SetAmount(slot.Amount);
 				Slot_Armor->SetEquipCom(equipCom);
 				Slot_Armor->SetConName(EquipMap.FindRef(index));
+				Slot_Armor->SetItemConName(slot.ItemConName);
+				Slot_Armor->SetItemClass(slot.ItemClass);
 				Slot_Armor->SetConIndex(0);
 			}
 			Wrap_Armor->AddChild(Slot_Armor);
@@ -135,6 +150,8 @@ void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
 				Slot_Cape->SetAmount(slot.Amount);
 				Slot_Cape->SetEquipCom(equipCom);
 				Slot_Cape->SetConName(EquipMap.FindRef(index));
+				Slot_Cape->SetItemConName(slot.ItemConName);
+				Slot_Cape->SetItemClass(slot.ItemClass);
 				Slot_Cape->SetConIndex(0);
 			}
 			Wrap_Cape->AddChild(Slot_Cape);

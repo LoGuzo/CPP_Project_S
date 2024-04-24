@@ -49,7 +49,17 @@ void UW_Slot::NativePreConstruct()
 	}
 }
 
-void UW_Slot::SetConName(FText _ContentName)
+void UW_Slot::SetItemClass(TSubclassOf<class AA_Item> _ItemClass)
+{
+	ItemClass = _ItemClass;
+}
+
+void UW_Slot::SetItemConName(FString _ItemConName)
+{
+	ItemConName = _ItemConName;
+}
+
+void UW_Slot::SetConName(FString _ContentName)
 {
 	ContentName = _ContentName;
 }
@@ -105,9 +115,30 @@ FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, cons
 bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	DO_Drag = Cast<UDO_DragDrop>(InOperation);
-	if (DO_Drag->GetConIndex() != ContentIndex || DO_Drag->GetInvenCom() != InventoryCom)
+	if (DO_Drag->GetConName() == "Inventory" )
 	{
-		InventoryCom->MouseDrop(DO_Drag->GetConIndex(), ContentIndex ,InventoryCom);
+		if (DO_Drag->GetConName() == GetConName())
+		{
+			if (DO_Drag->GetConIndex() != ContentIndex || DO_Drag->GetInvenCom() != InventoryCom)
+			{
+				InventoryCom->ChangeSlot(DO_Drag->GetConIndex(), ContentIndex, InventoryCom);
+			}
+		}
+		else
+		{
+			if (ItemKey.ToString() == "None" || DO_Drag->GetItemConName() == GetItemConName())
+			{
+				EquipCom->InvenToEquip(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
+			}
+		}
+	}
+	else
+	{
+		if (ItemKey.ToString() == "None" || DO_Drag->GetItemConName() == GetItemConName())
+		{
+			InventoryCom->EquipToInven(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetEquipCom());
+		}
+
 	}
 	return false;
 }
@@ -137,8 +168,9 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 			if (EquipCom != nullptr)
 			{
 				DO_Drag->SetEquipCom(EquipCom);
-				UE_LOG(LogTemp, Warning, TEXT("Equip"));
 			}
+			DO_Drag->SetConName(GetConName());
+			DO_Drag->SetItemConName(GetItemConName());
 			DO_Drag->DefaultDragVisual = DragImg;
 		}
 	}

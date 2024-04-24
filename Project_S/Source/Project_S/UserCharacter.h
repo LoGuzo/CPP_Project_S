@@ -50,7 +50,7 @@ protected:
 private:
 	class ASwordWeapon* Sword;
 
-	class AWeaponActor* MyWeapon;
+	class AWeaponActor* MyWeapon = nullptr;
 
 	// UI
 	TSubclassOf<class US_CharacterWidget> CharacterUI;
@@ -70,7 +70,9 @@ private:
 
 	class UC_EqiupComponent* Equip;
 public:
-	void SetMyWeapon(class AWeaponActor* _MyWeapon);
+	void SetMyWeapon(TSubclassOf<class AWeaponActor>_MyWeapon);
+
+	void RemoveMyWeapon();
 
 	void Attack();
 

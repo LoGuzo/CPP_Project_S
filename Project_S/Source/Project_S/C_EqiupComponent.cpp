@@ -2,6 +2,9 @@
 
 
 #include "C_EqiupComponent.h"
+#include "UserCharacter.h"
+#include "A_Item.h"
+#include "C_InventoryComponent.h"
 
 // Sets default values for this component's properties
 UC_EqiupComponent::UC_EqiupComponent()
@@ -17,12 +20,47 @@ void UC_EqiupComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Slots.SetNum(5);
-	Slots[0].ItemName = FName("BlackSword");
-	Slots[0].Amount = 1;
 }
 
 void UC_EqiupComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 {
 	Slots[_Index] = _Slot;
+}
+
+
+void UC_EqiupComponent::InvenToEquip(int32 _BeforeIndex, int32 _TargetIndex, class UC_InventoryComponent* _InvenCom)
+{
+	LocalSlot = _InvenCom->GetSlot(_BeforeIndex);
+	if (LocalSlot.ItemClass == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Chk"));
+	}
+	if (_TargetIndex >= 0)
+	{
+		_InvenCom->SetSlot(_BeforeIndex, Slots[_TargetIndex]);
+		Slots[_TargetIndex] = LocalSlot;
+		ExchangeEquip(_BeforeIndex, _TargetIndex, _InvenCom->GetSlot(_BeforeIndex).ItemClass);
+	}
+	OnEquipUpdated.Broadcast();
+	_InvenCom->OnInventoryUpdated.Broadcast();
+
+}
+
+void UC_EqiupComponent::ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TSubclassOf<class AA_Item> _ItemClass)
+{
+	auto userCharacter = Cast<AUserCharacter>(GetOwner());
+	if (_TargetIndex == 0)
+	{
+		if (_ItemClass != nullptr) {
+			UE_LOG(LogTemp, Warning, TEXT("ChangeWeapon"));
+			userCharacter->RemoveMyWeapon();
+		}
+		TSubclassOf<class AWeaponActor> Weapon = Slots[_TargetIndex].ItemClass;
+		userCharacter->SetMyWeapon(Weapon);
+	}
+	else
+	{
+
+	}
 }
 

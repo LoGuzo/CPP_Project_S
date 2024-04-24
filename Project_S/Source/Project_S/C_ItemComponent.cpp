@@ -35,7 +35,7 @@ void UC_ItemComponent::Interact(AUserCharacter* _UserCharacter)
 		auto Inventory = _UserCharacter->GetInventoryCom();
 		if (Inventory)
 		{
-			Inventory->AddItem(ItemAmount, RowName);
+			Inventory->AddItem(ItemAmount, RowName, Description.ToString(), ItemClass);
 			GetOwner()->Destroy();
 		}
 	}
@@ -56,6 +56,7 @@ void UC_ItemComponent::SetItem(FString _ItemName)
 				ItemImage = ItemData->ItemImage;
 				StackSize = ItemData->StackSize;
 				ItemType = ItemData->ItemType;
+				ItemClass = ItemData->ItemClass;
 			}
 		}
 	}

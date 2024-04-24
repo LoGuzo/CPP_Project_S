@@ -28,6 +28,7 @@ public:
 	virtual void NativePreConstruct() override;
 
 	void ShowEquip(class UC_EqiupComponent* _EquipCom);
+	void ShowEquipDrop();
 	void UpdateEquip(const TArray<FS_Slot>& _Slots);
 private:
 
@@ -56,11 +57,11 @@ private:
 
 	class UC_EqiupComponent* equipCom;
 
-	TMap<int32, FText> EquipMap = { 
-	{0, FText::FromString(TEXT("Weapon"))},
-	{1, FText::FromString(TEXT("Head"))} ,
-	{2, FText::FromString(TEXT("Armor"))} ,
-	{3, FText::FromString(TEXT("Shoes"))} ,
-	{4, FText::FromString(TEXT("Cape"))} 
+	TMap<int32, FString> EquipMap = { 
+	{0, "Weapon"},
+	{1, "Head"} ,
+	{2, "Armor"} ,
+	{3, "Shoes"} ,
+	{4, "Cape"} 
 	};
 };

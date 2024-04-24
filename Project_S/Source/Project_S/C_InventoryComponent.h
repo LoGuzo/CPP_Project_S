@@ -38,7 +38,7 @@ public:
 
 	void SetSlot(int32 _Index, FS_Slot _Slot);
 
-	void AddItem(int32 _Amount,FName _ItemKey);
+	void AddItem(int32 _Amount,FName _ItemKey, FString _ItemConName, TSubclassOf<class AA_Item> _ItemClass);
 
 	FResult FindSlot(FName _ItemKey);
 
@@ -48,9 +48,11 @@ public:
 
 	FResult CheckSlotEmpty();
 
-	void AddToNewSlot(FName _ItemKey, int32 _Amount);
+	void AddToNewSlot(FName _ItemKey, int32 _Amount, FString _ItemConName, TSubclassOf<class AA_Item> _ItemClass);
 
 	void ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom);
 
-	void MouseDrop(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom);
+	void EquipToInven(int32 _BeforeIndex, int32 _TargetIndex, class UC_EqiupComponent* _EquipCom);
+
+	void ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TSubclassOf<class AA_Item> _ItemClass);
 };

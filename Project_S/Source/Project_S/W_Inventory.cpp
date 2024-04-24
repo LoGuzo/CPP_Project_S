@@ -4,6 +4,7 @@
 #include "W_Inventory.h"
 #include "Components/WrapBox.h"
 #include "W_Slot.h"
+#include "A_Item.h"
 #include "C_InventoryComponent.h"
 
 
@@ -49,7 +50,10 @@ void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 		{
 			W_Slots2->SetItemKey(slot.ItemName);
 			W_Slots2->SetAmount(slot.Amount);
+			W_Slots2->SetItemConName(slot.ItemConName);
+			W_Slots2->SetItemClass(slot.ItemClass);
 			W_Slots2->SetInvenCom(InventoryCom);
+			W_Slots2->SetConName("Inventory");
 			W_Slots2->SetConIndex(index);
 		}
 		Box_Wrap->AddChild(W_Slots2);

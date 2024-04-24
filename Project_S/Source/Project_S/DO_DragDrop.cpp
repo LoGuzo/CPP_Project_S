@@ -3,7 +3,12 @@
 
 #include "DO_DragDrop.h"
 
-void UDO_DragDrop::SetConName(FText _ContentName)
+void UDO_DragDrop::SetItemConName(FString _ItemConName)
+{
+	ItemConName = _ItemConName;
+}
+
+void UDO_DragDrop::SetConName(FString _ContentName)
 {
 	ContentName = _ContentName;
 }

@@ -23,11 +23,14 @@ public:
 	virtual void NativePreConstruct() override;
 
 	FName GetIName() { return ItemKey; }
-	FText GetConName() { return ContentName; }
+	FString GetItemConName() { return ItemConName; }
+	FString GetConName() { return ContentName; }
 	int32 GetAmount() { return Amount; }
 	int32 GetConIndex() { return ContentIndex; }
 
-	void SetConName(FText _ContentName);
+	void SetItemClass(TSubclassOf<class AA_Item> _ItemClass);
+	void SetItemConName(FString _ItemConName);
+	void SetConName(FString _ContentName);
 	void SetItemKey(FName _ItemKey);
 	void SetAmount(int32 _Amount);
 	void SetConIndex(int32 _ContentIndex);
@@ -60,11 +63,15 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	int32 Amount;
 
-	FText ContentName;
+	FString ContentName;
+
+	FString ItemConName;
 
 	int32 ContentIndex;
 
 	UC_InventoryComponent* InventoryCom;
 
 	UC_EqiupComponent* EquipCom;
+
+	TSubclassOf<class AA_Item> ItemClass;
 };

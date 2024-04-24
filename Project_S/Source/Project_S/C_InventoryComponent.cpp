@@ -3,6 +3,9 @@
 
 #include "C_InventoryComponent.h"
 #include "S_GameInstance.h"
+#include "UserCharacter.h"
+#include "C_EqiupComponent.h"
+#include "A_Item.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
@@ -32,7 +35,7 @@ void UC_InventoryComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 	Slots[_Index] = _Slot;
 }
 
-void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey)
+void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, FString _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
 {
 	AmountLeft = _Amount;
 	FResult result;
@@ -48,7 +51,7 @@ void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey)
 			result = CheckSlotEmpty();
 			if (result.IsFindItem)
 			{
-				AddToNewSlot(_ItemKey, 1);
+				AddToNewSlot(_ItemKey, 1, _ItemConName, _ItemClass);
 				AmountLeft--;
 			}
 			else 
@@ -99,9 +102,7 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 
 void UC_InventoryComponent::IncreaseSlotStack(int32 _Index, int32 _Amount)
 {
-	TArray<FS_Slot> Slots2;
-	Slots2 = Slots;
-	Slots[_Index].Amount=Slots2[_Index].Amount + _Amount;
+	Slots[_Index].Amount = Slots[_Index].Amount + _Amount;
 }
 
 FResult UC_InventoryComponent::CheckSlotEmpty()
@@ -122,12 +123,14 @@ FResult UC_InventoryComponent::CheckSlotEmpty()
 	return result;
 }
 
-void UC_InventoryComponent::AddToNewSlot(FName _ItemKey, int32 _Amount)
+void UC_InventoryComponent::AddToNewSlot(FName _ItemKey, int32 _Amount, FString _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
 {
 	FResult result;
 	result = CheckSlotEmpty();
 	Slots[result.Index].ItemName = _ItemKey;
 	Slots[result.Index].Amount = _Amount;
+	Slots[result.Index].ItemConName = _ItemConName;
+	Slots[result.Index].ItemClass = _ItemClass;
 }
 
 void UC_InventoryComponent::ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom)
@@ -147,13 +150,32 @@ void UC_InventoryComponent::ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, U
 		}
 	}
 	OnInventoryUpdated.Broadcast();
-	_BeforeInvenCom->OnInventoryUpdated.Broadcast();
 }
 
-void UC_InventoryComponent::MouseDrop(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _BeforeInvenCom)
+void UC_InventoryComponent::EquipToInven(int32 _BeforeIndex, int32 _TargetIndex, class UC_EqiupComponent* _EquipCom)
 {
-	ChangeSlot(_BeforeIndex, _TargetIndex, _BeforeInvenCom);
+	LocalSlot = _EquipCom->GetSlot(_BeforeIndex);
+	if (_TargetIndex >= 0)
+	{
+		_EquipCom->SetSlot(_BeforeIndex, Slots[_TargetIndex]);
+		Slots[_TargetIndex] = LocalSlot;
+		ExchangeEquip(_BeforeIndex, _TargetIndex, _EquipCom->GetSlot(_BeforeIndex).ItemClass);
+	}
+
+	OnInventoryUpdated.Broadcast();
+	_EquipCom->OnEquipUpdated.Broadcast();
 }
 
-
-
+void UC_InventoryComponent::ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TSubclassOf<class AA_Item> _ItemClass)
+{
+	auto userCharacter = Cast<AUserCharacter>(GetOwner());
+	if (_BeforeIndex == 0)
+	{
+		userCharacter->RemoveMyWeapon();
+		if (_ItemClass != nullptr) {
+			UE_LOG(LogTemp, Warning, TEXT("ChangeWeapon"));
+			TSubclassOf<class AWeaponActor> Weapon = Slots[_TargetIndex].ItemClass;
+			userCharacter->SetMyWeapon(Weapon);
+		}
+	}
+}

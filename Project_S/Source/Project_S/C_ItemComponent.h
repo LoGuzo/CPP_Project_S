@@ -44,6 +44,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
 	int32 ItemAmount;
 
+	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
+	TSubclassOf<class AA_Item> ItemClass;
+
 public:	
 
 	virtual void Interact(class AUserCharacter* _UserCharacter) override;

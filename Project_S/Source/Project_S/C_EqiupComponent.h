@@ -7,6 +7,7 @@
 #include "S_StructureAll.h"
 #include "C_EqiupComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnEquipUpdated);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API UC_EqiupComponent : public UActorComponent
@@ -17,12 +18,12 @@ public:
 	// Sets default values for this component's properties
 	UC_EqiupComponent();
 
+	FOnEquipUpdated OnEquipUpdated;
 private:
 	TArray<FS_Slot> Slots;
 	bool IsAddFailed;
 
 	FS_Slot LocalSlot;
-
 protected:
 	virtual void BeginPlay() override;
 public:
@@ -32,4 +33,7 @@ public:
 
 	void SetSlot(int32 _Index, FS_Slot _Slot);
 		
+	void InvenToEquip(int32 _BeforeIndex, int32 _TargetIndex, class UC_InventoryComponent* _InvenCom);
+	
+	void ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TSubclassOf<class AA_Item> _ItemClass);
 };

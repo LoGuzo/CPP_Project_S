@@ -28,6 +28,9 @@ struct FS_Item : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	E_ItemType ItemType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AA_Item> ItemClass;
 };
 
 USTRUCT()
@@ -65,6 +68,12 @@ struct FS_Slot : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Amount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ItemConName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AA_Item> ItemClass;
 };
 
 USTRUCT()
