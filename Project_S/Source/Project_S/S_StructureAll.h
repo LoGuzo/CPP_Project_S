@@ -77,6 +77,24 @@ struct FS_Slot : public FTableRowBase
 };
 
 USTRUCT()
+struct FMyCharacterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString CharID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FS_Slot> MyEquip;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FS_Slot> MyInventory;
+};
+
+USTRUCT()
 struct FResult : public FTableRowBase {
 
 	GENERATED_BODY()
