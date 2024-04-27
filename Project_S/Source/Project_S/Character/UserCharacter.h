@@ -32,12 +32,9 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
-	void SaveCharacterData(FString _RowName, struct FMyCharacterData _NewData);
+	void SaveCharacterData();
 	void LoadCharacterData();
-	
-	void SetNowLevelData(int32 _Level);
-	void SetNowEquipData(const TArray<struct FS_Slot>&_MyEquip);
-	void SetNowInvenData(const TArray<struct FS_Slot>&_MyInven);
+
 protected:
 
 	/** Called for forwards/backward input */
@@ -59,8 +56,6 @@ protected:
 
 private:
 	class AWeaponActor* MyWeapon = nullptr;
-
-	FMyCharacterData NowCharData;
 
 	// UI
 	TSubclassOf<class US_CharacterWidget> CharacterUI;

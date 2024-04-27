@@ -76,9 +76,6 @@ void UW_Equip::ShowEquipDrop()
 void UW_Equip::UpdateEquip(const TArray<FS_Slot>& _Slots)
 {
 	int32 index = 0;
-	auto myCharacter = Cast<AUserCharacter>(GetOwningPlayerPawn());
-	myCharacter->SetNowEquipData(_Slots);
-	auto GetOwningPlayerPawn();
 	for (const FS_Slot& slot : _Slots)
 	{
 		switch (index)

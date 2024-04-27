@@ -43,8 +43,6 @@ void UW_Inventory::ShowInventoryDrop()
 void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 {
 	int32 index = 0;
-	auto myCharacter = Cast<AUserCharacter>(GetOwningPlayerPawn());
-	myCharacter->SetNowInvenData(_Slots);
 	for (const FS_Slot& slot : _Slots)
 	{
 		W_Slots2 = CreateWidget<UW_Slot>(GetWorld(), W_Slot);

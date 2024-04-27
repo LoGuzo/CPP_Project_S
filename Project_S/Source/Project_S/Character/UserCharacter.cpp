@@ -56,7 +56,6 @@ AUserCharacter::AUserCharacter()
 	bIsFlipFlopEquipmentActive = false;
 
 	SetCharID("LogH");
-	NowCharData.CharID = GetCharID();
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -89,7 +88,7 @@ void AUserCharacter::BeginPlay()
 void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	SaveCharacterData(GetCharID(),NowCharData);
+	SaveCharacterData();
 }
 
 void AUserCharacter::PostInitializeComponents()
@@ -109,13 +108,19 @@ void AUserCharacter::PostInitializeComponents()
 	}
 }
 
-void AUserCharacter::SaveCharacterData(FString _RowName, struct FMyCharacterData _NewData)
+void AUserCharacter::SaveCharacterData()
 {
+	FMyCharacterData NowCharData;
+	NowCharData.CharID = GetCharID();
+	NowCharData.Level = Stat->GetLevel();
+	NowCharData.MyEquip = Equip->GetSlots();
+	NowCharData.MyInventory = Inventory->GetSlots();
+
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
 		if (GetCharID() != "") {
-			MyGameInstance->MyDataManager.FindRef("MyCharData")->SetMyData(_RowName, _NewData);
+			MyGameInstance->MyDataManager.FindRef("MyCharData")->SetMyData(GetCharID(), NowCharData);
 		}
 	}
 }
@@ -129,38 +134,20 @@ void AUserCharacter::LoadCharacterData()
 			auto LoadData = static_cast<FMyCharacterData*>(MyGameInstance->MyDataManager.FindRef("MyCharData")->GetMyData(GetCharID()));
 			if (LoadData)
 			{
-				NowCharData.Level = LoadData->Level;
 				Stat->SetLevel(LoadData->Level);
-				NowCharData.MyEquip = LoadData->MyEquip;
 				Equip->SetSlots(LoadData->MyEquip);
-				NowCharData.MyInventory = LoadData->MyInventory;
 				Inventory->SetSlots(LoadData->MyInventory);
 			}
 
 		}
 	}
-	for (const FS_Slot& slot : NowCharData.MyEquip)
+	for (const FS_Slot& slot : Equip->GetSlots())
 	{
 		if (slot.ItemClass)
 		{
 			SetMyWeapon(slot.ItemClass);
 		}
 	}
-}
-
-void AUserCharacter::SetNowLevelData(int32 _Level)
-{
-	NowCharData.Level = _Level;
-}
-
-void AUserCharacter::SetNowEquipData(const TArray<struct FS_Slot>&_MyEquip)
-{
-	NowCharData.MyEquip = _MyEquip;
-}
-
-void AUserCharacter::SetNowInvenData(const TArray<struct FS_Slot>&_MyInven)
-{
-	NowCharData.MyInventory = _MyInven;
 }
 
 void AUserCharacter::MoveForward(float Value)
