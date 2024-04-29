@@ -20,4 +20,7 @@ public:
 
 	virtual void SetW_Mesh() override;
 	virtual void AttackCheck(class AUserCharacter* _UserCharacter) override;
+private:
+	UPROPERTY(EditAnywhere, Category = "Particles")
+	class UParticleSystem* HitParticleEffect;
 };

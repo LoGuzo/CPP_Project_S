@@ -3,15 +3,23 @@
 
 #include "SwordWeapon.h"
 #include "DrawDebugHelpers.h"
+#include "Particles/ParticleSystem.h"
 #include "Project_S/Character/FirstCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/S_StatComponent.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 ASwordWeapon::ASwordWeapon() {
     PrimaryActorTick.bCanEverTick = false;
     SetW_Mesh();
 	SetName("BlackSword");
 	SetType("Weapon");
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/ParagonGreystone/FX/Particles/Greystone/Abilities/Deflect/FX/P_Greystone_Deflect_Remove.P_Greystone_Deflect_Remove'"));
+	if (AttackP.Succeeded())
+	{
+		HitParticleEffect = AttackP.Object;
+	}
 }
 
 void ASwordWeapon::BeginPlay()
@@ -45,7 +53,7 @@ void ASwordWeapon::AttackCheck(class AUserCharacter* _UserCharacter) {
 		User->GetActorLocation(),
 		User->GetActorLocation() + (User->GetActorForwardVector()) * (AttackRange),
 		FQuat::Identity,
-		ECollisionChannel::ECC_EngineTraceChannel2,
+		ECollisionChannel::ECC_GameTraceChannel1,
 		FCollisionShape::MakeSphere(AttackRadius),
 		Params
 	);
@@ -67,6 +75,7 @@ void ASwordWeapon::AttackCheck(class AUserCharacter* _UserCharacter) {
 		auto Enemy = Cast<AFirstCharacter>(HitResult.Actor.Get());
 		if (Enemy) {
 			FDamageEvent DamageEvent;
+			UGameplayStatics::SpawnEmitterAttached(HitParticleEffect,User->GetMesh(), FName("Paticle"));
 			HitResult.Actor->TakeDamage(User->Stat->GetAttack(), DamageEvent, User->GetController(), this);
 		}
 	}

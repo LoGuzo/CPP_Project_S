@@ -75,21 +75,35 @@ private:
 	class UC_InventoryComponent* Inventory;
 
 	class UC_EqiupComponent* Equip;
+
+	class UUserAnimInstance* AnimInstance;
+
+	bool IsAttacking;
+
+	int32 AttackIndex = 0;
 public:
-	void SetMyWeapon(TSubclassOf<class AA_Item>_MyWeapon);
+	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);
 
 	void RemoveMyWeapon();
 
 	void Attack();
+	
+	void AttackMontage();
+	
+	UFUNCTION()
+	void OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 
-	UC_InventoryComponent* GetInventoryCom() { return Inventory; }
+	void AttackCheck();
+
+	UC_InventoryComponent* GetInventoryCom() const { return Inventory; }
+	UC_EqiupComponent* GetEquipCom() const { return Equip; }
 
 	void OnInventoryKeyPressed();
 
 	void OnEquipmentKeyPressed();
 
-	AA_Item* GetCurItem() { return Curitem; }
-	void SetCurItem(AA_Item* _Curitem);
+	AA_Item* GetCurItem() const { return Curitem; }
+	void SetCurItem(AA_Item *_Curitem);
 
 	void UpdateInventory();
 };

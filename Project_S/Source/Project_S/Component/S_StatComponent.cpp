@@ -48,6 +48,7 @@ void US_StatComponent::SetLevel(int32 _Level)
 			}
 		}
 	}
+	OnLvlChanged.Broadcast();
 }
 
 void US_StatComponent::SetHp(int32 _Hp)

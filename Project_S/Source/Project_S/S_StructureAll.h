@@ -88,6 +88,9 @@ struct FMyCharacterData : public FTableRowBase
 	int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Exp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FS_Slot> MyEquip;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

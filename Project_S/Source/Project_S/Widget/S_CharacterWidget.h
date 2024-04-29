@@ -22,18 +22,20 @@ public:
 	void BindHp(class US_StatComponent* _StatComp);
 	void BindMp(class US_StatComponent* _StatComp);
 	void BindExp(class US_StatComponent* _StatComp);
+	void BindLvl(class US_StatComponent* _StatComp);
 
 	void UpdateHp();
 	void UpdateMp();
 	void UpdateExp();
+	void UpdateLvl();
 
 	void ShowInventory();
-	void RemoveInventory();
+	void RemoveInventory() const;
 
 	void ShowEquip();
-	void RemoveEquip();
+	void RemoveEquip() const;
 
-	UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
+	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
@@ -46,6 +48,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_Exp;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* Txt_Lvl;
 
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 

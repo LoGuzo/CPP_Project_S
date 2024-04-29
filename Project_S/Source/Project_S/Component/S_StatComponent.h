@@ -9,6 +9,7 @@
 DECLARE_MULTICAST_DELEGATE(FOnHpChanged);
 DECLARE_MULTICAST_DELEGATE(FOnMpChanged);
 DECLARE_MULTICAST_DELEGATE(FOnExpChanged);
+DECLARE_MULTICAST_DELEGATE(FOnLvlChanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API US_StatComponent : public UActorComponent
@@ -27,6 +28,7 @@ public:
 	FOnHpChanged OnHpChanged;
 	FOnMpChanged OnMpChanged;
 	FOnExpChanged OnExpChanged;
+	FOnLvlChanged OnLvlChanged;
 
 	void SetLevel(int32 _Level);
 	void SetHp(int32 _Hp);

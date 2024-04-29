@@ -4,6 +4,7 @@
 #include "S_CharacterWidget.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -18,6 +19,19 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 		U_EquipmentWidget = UW_Equip.Class;
 	}
 }
+
+void US_CharacterWidget::BindLvl (class US_StatComponent* _StatComp)
+{
+	SStatComponent = _StatComp;
+	_StatComp->OnLvlChanged.AddUObject(this, &US_CharacterWidget::UpdateLvl);
+}
+
+void US_CharacterWidget::UpdateLvl()
+{
+	if (SStatComponent.IsValid())
+		Txt_Lvl->SetText(FText::FromString(FString::Printf(TEXT("Lv : %d"), SStatComponent->GetLevel())));
+}
+
 void US_CharacterWidget::BindHp(class US_StatComponent* _StatComp)
 {
 	SStatComponent = _StatComp;
@@ -65,7 +79,7 @@ void US_CharacterWidget::ShowInventory()
 	}
 }
 
-void US_CharacterWidget::RemoveInventory()
+void US_CharacterWidget::RemoveInventory() const
 {
 	if (InventoryWidget)
 	{
@@ -84,7 +98,7 @@ void US_CharacterWidget::ShowEquip()
 	}
 }
 
-void US_CharacterWidget::RemoveEquip()
+void US_CharacterWidget::RemoveEquip() const
 {
 	if (EquipmentWidget)
 	{
