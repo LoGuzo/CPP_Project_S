@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FirstCharacter.h"
+#include "Components/TimelineComponent.h"
 #include "Project_S/S_StructureAll.h"
 #include "UserCharacter.generated.h"
 
@@ -92,8 +93,18 @@ private:
 
 	void ResetDash();
 
+	void UseSkill();
+
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
+
+	FTimeline CurveTimeLine;
+
+	UFUNCTION()
+	void TimelineProgress(float _Value);
+
+	FRotator BeforeRot;
+
 public:
 	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);
 
@@ -121,4 +132,6 @@ public:
 	void SetCurItem(AA_Item *_Curitem);
 
 	void UpdateInventory();
+
+	void AnyMove(UCurveBase* _SkillCurve);
 };

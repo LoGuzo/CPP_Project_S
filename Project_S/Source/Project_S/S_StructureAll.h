@@ -42,19 +42,19 @@ struct FCharacterData : public FTableRowBase
 	int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Attack;
+	float Attack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Armor;
+	float Armor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxHp;
+	float MaxHp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxMp;
+	float MaxMp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 MaxExp;
+	float MaxExp;
 
 };
 
@@ -88,7 +88,7 @@ struct FMyCharacterData : public FTableRowBase
 	int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Exp;
+	float Exp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FS_Slot> MyEquip;
@@ -127,7 +127,7 @@ struct FSkillTable : public FTableRowBase
 	FText Skill_Desc;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 CoolTime;
+	float CoolTime;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Range;

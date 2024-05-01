@@ -90,6 +90,8 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
 	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
+	PlayerInputComponent->BindAction("Skill1", IE_Pressed, this, &AUserCharacter::UseSkill);
+
 }
 
 void AUserCharacter::BeginPlay()
@@ -110,6 +112,7 @@ void AUserCharacter::PostInitializeComponents()
 	AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
 	if (AnimInstance)
 	{
+		AnimInstance->SetPlayer(this);
 		AnimInstance->OnAttackHit.AddUObject(this, &AUserCharacter::AttackCheck);
 		AnimInstance->OnMontageEnded.AddDynamic(this, &AUserCharacter::OnAttackMontageEnd);
 	}
@@ -206,6 +209,8 @@ void AUserCharacter::MoveRight(float Value)
 
 void AUserCharacter::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+	CurveTimeLine.TickTimeline(DeltaTime);
 }
 
 void AUserCharacter::PickUpItem()
@@ -214,6 +219,12 @@ void AUserCharacter::PickUpItem()
 		GetCurItem()->GetC_ItemComponent()->Interact(this);
 		UpdateInventory();
 	}
+}
+
+void AUserCharacter::TimelineProgress(float _Value)
+{
+	//UE_LOG(LogTemp,Warning, TEXT("%f"), FMath::Lerp(BeforeRot.Yaw, BeforeRot.Yaw + float(360 * 12), _Value));
+	GetMesh()->SetRelativeRotation(FRotator(BeforeRot.Pitch, FMath::Lerp(BeforeRot.Yaw, BeforeRot.Yaw + float(360 * 12), _Value), BeforeRot.Roll));
 }
 
 void AUserCharacter::SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon)
@@ -333,6 +344,21 @@ void AUserCharacter::UpdateInventory()
 	}
 }
 
+void AUserCharacter::AnyMove(UCurveBase* _SkillCurve)
+{
+	BeforeRot = GetMesh()->GetRelativeRotation();
+	auto SkillCurve = Cast<UCurveFloat>(_SkillCurve);
+	if (SkillCurve)
+	{
+		FOnTimelineFloat TimelineProgress;
+		TimelineProgress.BindUFunction(this, FName("TimelineProgress"));
+		CurveTimeLine.AddInterpFloat(SkillCurve, TimelineProgress);
+		CurveTimeLine.SetLooping(false);
+
+		CurveTimeLine.PlayFromStart();
+	}
+}
+
 void AUserCharacter::Dash()
 {
 	const FRotator Rotation = Controller->GetControlRotation();
@@ -355,6 +381,16 @@ void AUserCharacter::StopDashing() {
 void AUserCharacter::ResetDash()
 {
 	AnimInstance->SetOnDash(false);
+}
+
+void AUserCharacter::UseSkill()
+{
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		auto LoadData = static_cast<FSkillTable*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
+		AnimInstance->PlaySome(*LoadData);
+	}
 }
 
 

@@ -51,7 +51,7 @@ void US_StatComponent::SetLevel(int32 _Level)
 	OnLvlChanged.Broadcast();
 }
 
-void US_StatComponent::SetHp(int32 _Hp)
+void US_StatComponent::SetHp(float _Hp)
 {
 	Hp = _Hp;
 	if (Hp < 0)
@@ -60,7 +60,7 @@ void US_StatComponent::SetHp(int32 _Hp)
 	OnHpChanged.Broadcast();
 }
 
-void US_StatComponent::SetMp(int32 _Mp)
+void US_StatComponent::SetMp(float _Mp)
 {
 	Mp = _Mp;
 	if (Mp < 0)
@@ -69,7 +69,7 @@ void US_StatComponent::SetMp(int32 _Mp)
 	OnMpChanged.Broadcast();
 }
 
-void US_StatComponent::SetExp(int32 _Exp)
+void US_StatComponent::SetExp(float _Exp)
 {
 	Exp = _Exp;
 	if (Exp >= MaxExp)
@@ -80,7 +80,7 @@ void US_StatComponent::SetExp(int32 _Exp)
 
 void US_StatComponent::OnAttacked(float DamageAmount)
 {
-	int32 hp = Hp - DamageAmount;
+	float hp = Hp - DamageAmount;
 	SetHp(hp);
 }
 

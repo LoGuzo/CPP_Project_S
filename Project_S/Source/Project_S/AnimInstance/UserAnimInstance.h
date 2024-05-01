@@ -10,6 +10,9 @@ DECLARE_MULTICAST_DELEGATE(FOnAttackHit);
 /**
  * 
  */
+class AUserCharacter;
+struct FSkillTable;
+
 UCLASS()
 class PROJECT_S_API UUserAnimInstance : public UAnimInstance
 {
@@ -29,10 +32,12 @@ private:
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	bool OnDash;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* OneHandSwordAM;
 
+	FSkillTable* NowSkill;
+
+	AUserCharacter* Player;
 public:
 	float GetSpeed() const { return Speed; }
 	bool GetHaveWeapon() const { return HaveWeapon; }
@@ -41,10 +46,15 @@ public:
 
 	void SetOnDash(const bool _OnDash);
 
+	void PlaySome(FSkillTable& _Data);
+	void ColliderNotify();
+	void AnyMoveNotify();
+
 	void OnHandSwordPlayAM();
 	void JumpToSection(int32 _SectionIndex);
 	FName GetAttackMontageName(int32 _SectionIndex);
 
+	void SetPlayer(AUserCharacter* _Player);
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();

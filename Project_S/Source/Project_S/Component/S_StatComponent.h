@@ -31,23 +31,23 @@ public:
 	FOnLvlChanged OnLvlChanged;
 
 	void SetLevel(int32 _Level);
-	void SetHp(int32 _Hp);
-	void SetMp(int32 _Mp);
-	void SetExp(int32 _Exp);
+	void SetHp(float _Hp);
+	void SetMp(float _Mp);
+	void SetExp(float _Exp);
 	void OnAttacked(float DamageAmount);
 
 	int32 GetLevel() { return Level; }
-	int32 GetHp() { return Hp; }
-	int32 GetMaxHp() { return MaxHp; }
-	float GetHpRatio() { return Hp / (float)MaxHp; }
-	int32 GetMp() { return Mp; }
-	int32 GetMaxMp() { return MaxMp; }
-	float GetMpRatio() { return Mp / (float)MaxMp; }
-	int32 GetExp() { return Exp; }
-	int32 GetMaxExp() { return MaxExp; }
-	float GetExpRatio() { return Exp / (float)MaxExp; }	
-	int32 GetArmor() { return Armor; }
-	int32 GetAttack() { return Attack; }
+	float GetHp() { return Hp; }
+	float GetMaxHp() { return MaxHp; }
+	float GetHpRatio() { return Hp / MaxHp; }
+	float GetMp() { return Mp; }
+	float GetMaxMp() { return MaxMp; }
+	float GetMpRatio() { return Mp / MaxMp; }
+	float GetExp() { return Exp; }
+	float GetMaxExp() { return MaxExp; }
+	float GetExpRatio() { return Exp / MaxExp; }	
+	float GetArmor() { return Armor; }
+	float GetAttack() { return Attack; }
 
 private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
@@ -55,30 +55,30 @@ private:
 
 	// Hp
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 Hp;
+	float Hp;
 
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 MaxHp;
+	float MaxHp;
 
 	// Mp
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 Mp;
+	float Mp;
 
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 MaxMp;
+	float MaxMp;
 
 	// Exp;
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 Exp;
+	float Exp;
 
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 MaxExp;
+	float MaxExp;
 
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 Armor;
+	float Armor;
 
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 Attack;
+	float Attack;
 
 		
 };
