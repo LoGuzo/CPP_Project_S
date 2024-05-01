@@ -7,6 +7,4 @@ public:
 	CharacterManager();
 
 	virtual FCharacterData* GetMyData(FString _Init) override;
-
-	virtual void SetMyData(FString _RowName, FMyCharacterData _NewData) override;
 };

@@ -21,7 +21,6 @@ public:
 	FOnEquipUpdated OnEquipUpdated;
 private:
 	TArray<FS_Slot> Slots;
-	bool IsAddFailed;
 
 	FS_Slot LocalSlot;
 protected:

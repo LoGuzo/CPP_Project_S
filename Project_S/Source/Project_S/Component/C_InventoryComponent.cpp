@@ -95,7 +95,7 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 	if (MyGameInstance)
 	{
 		if (_ItemKey.ToString() != "None") {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef("ItemData")->GetMyData(_ItemKey.ToString()));
+			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(_ItemKey.ToString()));
 			if (ItemData)
 			{
 				return ItemData->StackSize;

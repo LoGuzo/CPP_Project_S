@@ -23,7 +23,7 @@ public:
 
 	/*FCharacterData* GetStatData(int32 _Level);
 	FS_Item* GetItemData(FString _ItemName);*/
-	TMap<FString, SGameManagerBase*> MyDataManager;
+	TMap<E_DataType, SGameManagerBase*> MyDataManager;
 private:
 /*
 	UPROPERTY();

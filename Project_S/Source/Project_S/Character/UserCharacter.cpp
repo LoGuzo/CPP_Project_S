@@ -3,14 +3,15 @@
 
 #include "UserCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Blueprint/UserWidget.h"
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
+#include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Item/WeaponActor.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -44,6 +45,8 @@ AUserCharacter::AUserCharacter()
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetRelativeLocation(FVector(-110.f, 0.f, 212.f));
+	FollowCamera->SetRelativeRotation(FRotator(0.f, -20.f, 0.f));
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Animations/BP_UserAnimInstance.BP_UserAnimInstance_C'"));
@@ -54,6 +57,7 @@ AUserCharacter::AUserCharacter()
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
+	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
 	{
@@ -62,6 +66,7 @@ AUserCharacter::AUserCharacter()
 
 	bIsFlipFlopInventoryActive = false;
 	bIsFlipFlopEquipmentActive = false;
+	bIsFlipFlopSkillWidgetActive = false;
 	IsAttacking = false;
 	SetCharID("LogH");
 }
@@ -70,7 +75,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AUserCharacter::Dash);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUserCharacter::MoveForward);
@@ -83,6 +88,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AUserCharacter::OnInventoryKeyPressed);
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
+	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
 }
 
@@ -134,7 +140,7 @@ void AUserCharacter::SaveCharacterData()
 	if (MyGameInstance)
 	{
 		if (GetCharID() != "") {
-			MyGameInstance->MyDataManager.FindRef("MyCharData")->SetMyData(GetCharID(), NowCharData);
+			MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->SetMyData(GetCharID(), NowCharData);
 		}
 	}
 }
@@ -145,7 +151,7 @@ void AUserCharacter::LoadCharacterData()
 	if (MyGameInstance)
 	{
 		if (GetCharID() != "") {
-			auto LoadData = static_cast<FMyCharacterData*>(MyGameInstance->MyDataManager.FindRef("MyCharData")->GetMyData(GetCharID()));
+			auto LoadData = static_cast<FMyCharacterData*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->GetMyData(GetCharID()));
 			if (LoadData)
 			{
 				Stat->SetLevel(LoadData->Level);
@@ -300,6 +306,20 @@ void AUserCharacter::OnEquipmentKeyPressed()
 	}
 }
 
+void AUserCharacter::OnSkillWidgetKeyPressed()
+{
+	if (!bIsFlipFlopSkillWidgetActive)
+	{
+		HUDWidget->ShowSkillW();
+		bIsFlipFlopSkillWidgetActive = true;
+	}
+	else
+	{
+		HUDWidget->RemoveSillW();
+		bIsFlipFlopSkillWidgetActive = false;
+	}
+}
+
 void AUserCharacter::SetCurItem(AA_Item *_Curitem)
 {
 	Curitem = _Curitem;
@@ -312,3 +332,30 @@ void AUserCharacter::UpdateInventory()
 		HUDWidget->GetInvetoryWidget()->WBP_Inventory->ShowInventory(Inventory);
 	}
 }
+
+void AUserCharacter::Dash()
+{
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
+	LaunchCharacter(Direction * 5000.f, true, true);
+	AnimInstance ->SetOnDash(true);
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::StopDashing, 0.1f, false);
+}
+
+void AUserCharacter::StopDashing() {
+	GetCharacterMovement()->StopMovementImmediately();
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::ResetDash, 0.1f, false);
+	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+}
+
+void AUserCharacter::ResetDash()
+{
+	AnimInstance->SetOnDash(false);
+}
+
+
+

@@ -15,6 +15,3 @@ FCharacterData* CharacterManager::GetMyData(FString _Init)
 	return MyData->FindRow<FCharacterData>(FName(*_Init), TEXT(""), false);
 }
 
-void CharacterManager::SetMyData(FString _RowName, FMyCharacterData _NewData)
-{
-}

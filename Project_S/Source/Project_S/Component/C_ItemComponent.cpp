@@ -47,7 +47,7 @@ void UC_ItemComponent::SetItem(FString _ItemName)
 	if (MyGameInstance)
 	{
 		if (_ItemName != "") {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef("ItemData")->GetMyData(_ItemName));
+			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(_ItemName));
 			if (ItemData)
 			{
 				RowName = FName(*_ItemName);

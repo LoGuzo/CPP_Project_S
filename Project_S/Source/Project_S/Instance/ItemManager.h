@@ -13,5 +13,4 @@ public:
 	ItemManager();
 
 	virtual FS_Item* GetMyData(FString _Init) override;
-	virtual void SetMyData(FString _RowName, FMyCharacterData _NewData) override;
 };

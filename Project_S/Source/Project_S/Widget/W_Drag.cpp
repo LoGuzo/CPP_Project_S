@@ -14,7 +14,7 @@ void UW_Drag::NativePreConstruct()
 	if (MyGameInstance)
 	{
 		if (!ItemKey.ToString().IsEmpty()) {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef("ItemData")->GetMyData(ItemKey.ToString()));
+			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(ItemKey.ToString()));
 			if (ItemData)
 			{
 				Img_Drag->SetBrushFromTexture(ItemData->ItemImage);

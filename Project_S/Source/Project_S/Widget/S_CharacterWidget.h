@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "InventoryMenu.h"
 #include "W_Equip.h"
+#include "W_Skill.h"
 #include "S_CharacterWidget.generated.h"
 
 /**
@@ -35,6 +36,9 @@ public:
 	void ShowEquip();
 	void RemoveEquip() const;
 
+	void ShowSkillW();
+	void RemoveSillW() const;
+
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 
 private:
@@ -60,4 +64,7 @@ private:
 
 	UW_Equip* EquipmentWidget;
 
+	TSubclassOf<UW_Skill> U_SkillWidget;
+
+	UW_Skill* SkillWidget;
 };

@@ -15,6 +15,3 @@ FS_Item* ItemManager::GetMyData(FString _Init)
 	return MyData->FindRow<FS_Item>(FName(*_Init), TEXT(""), false);
 }
 
-void ItemManager::SetMyData(FString _RowName, FMyCharacterData _NewData)
-{
-}

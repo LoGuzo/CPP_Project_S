@@ -16,5 +16,5 @@ public:
 	SGameManagerBase() {};
 
 	virtual FTableRowBase* GetMyData(FString _Init) = 0;
-	virtual void SetMyData(FString _RowName, FMyCharacterData _NewData) = 0;
+	virtual void SetMyData(FString _RowName, FMyCharacterData _NewData){};
 };

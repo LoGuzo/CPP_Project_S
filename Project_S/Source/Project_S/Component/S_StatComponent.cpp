@@ -33,7 +33,7 @@ void US_StatComponent::SetLevel(int32 _Level)
 	if (MyGameInstance)
 	{
 		if (_Level != 0) {
-			auto StatData = static_cast<FCharacterData*>(MyGameInstance->MyDataManager.FindRef("CharData")->GetMyData(*FString::FromInt(_Level)));
+			auto StatData = static_cast<FCharacterData*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Char)->GetMyData(*FString::FromInt(_Level)));
 			if (StatData)
 			{
 				Level = StatData->Level;

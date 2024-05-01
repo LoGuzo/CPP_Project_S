@@ -68,6 +68,8 @@ private:
 
 	bool bIsFlipFlopEquipmentActive;
 
+	bool bIsFlipFlopSkillWidgetActive;
+
 	void PickUpItem();
 
 	class AA_Item* Curitem;
@@ -76,11 +78,22 @@ private:
 
 	class UC_EqiupComponent* Equip;
 
+	class UC_SkillComponent* Skill;
+
 	class UUserAnimInstance* AnimInstance;
 
 	bool IsAttacking;
 
 	int32 AttackIndex = 0;
+
+	void Dash();
+
+	void StopDashing();
+
+	void ResetDash();
+
+	UPROPERTY()
+	FTimerHandle UnusedHandle;
 public:
 	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);
 
@@ -101,6 +114,8 @@ public:
 	void OnInventoryKeyPressed();
 
 	void OnEquipmentKeyPressed();
+
+	void OnSkillWidgetKeyPressed();
 
 	AA_Item* GetCurItem() const { return Curitem; }
 	void SetCurItem(AA_Item *_Curitem);

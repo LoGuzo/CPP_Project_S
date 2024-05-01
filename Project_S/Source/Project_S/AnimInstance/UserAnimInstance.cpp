@@ -7,14 +7,13 @@
 
 UUserAnimInstance::UUserAnimInstance()
 {
-	IsInAir = false;
 	Speed = 0.0f;
 	HaveWeapon = false;
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> AM(TEXT("AnimMontage'/Game/Mannequin/Animations/OneHandSword_Attack_Montage.OneHandSword_Attack_Montage'"));
-	if (AM.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK(TEXT("AnimMontage'/Game/Mannequin/Animations/OneHandSword_Attack_Montage.OneHandSword_Attack_Montage'"));
+	if (ATTACK.Succeeded())
 	{
-		OneHandSwordAM = AM.Object;
+		OneHandSwordAM = ATTACK.Object;
 	}
 }
 
@@ -25,17 +24,7 @@ void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	if (::IsValid(Pawn))
 	{
 		Speed = Pawn->GetVelocity().Size();
-		auto MyCharacter = Cast<AUserCharacter>(Pawn);
-		if (MyCharacter)
-		{
-			IsInAir = MyCharacter->GetMovementComponent()->IsFalling();
-		}
 	}
-}
-
-void UUserAnimInstance::SetIsInAir(bool _IsInAir)
-{
-	IsInAir = _IsInAir;
 }
 
 void UUserAnimInstance::SetSpeed(float _Speed)
@@ -46,6 +35,11 @@ void UUserAnimInstance::SetSpeed(float _Speed)
 void UUserAnimInstance::SetHaveWeapon(bool _HaveWeapon)
 {
 	HaveWeapon = _HaveWeapon;
+}
+
+void UUserAnimInstance::SetOnDash(const bool _OnDash)
+{
+	OnDash = _OnDash;
 }
 
 void UUserAnimInstance::OnHandSwordPlayAM()

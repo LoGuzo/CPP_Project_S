@@ -2,9 +2,9 @@
 
 
 #include "W_Inventory.h"
+#include "W_Slot.h"
 #include "Components/WrapBox.h"
 #include "Project_S/Character/UserCharacter.h"
-#include "W_Slot.h"
 #include "Project_S/Component/C_InventoryComponent.h"
 
 

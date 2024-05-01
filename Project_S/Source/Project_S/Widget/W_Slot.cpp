@@ -25,7 +25,7 @@ void UW_Slot::NativePreConstruct()
 	if (MyGameInstance)
 	{
 		if (ItemKey.ToString() != "None") {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef("ItemData")->GetMyData(ItemKey.ToString()));
+			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(ItemKey.ToString()));
 			if (ItemData)
 			{
 				if (ItemData->ItemType == E_ItemType::E_Equip)

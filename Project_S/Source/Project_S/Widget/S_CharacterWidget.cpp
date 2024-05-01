@@ -18,6 +18,11 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 	{
 		U_EquipmentWidget = UW_Equip.Class;
 	}
+	static ConstructorHelpers::FClassFinder<UW_Skill>UW_Sk(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Skill.WBP_Skill_C'"));
+	if (UW_Sk.Succeeded())
+	{
+		U_SkillWidget = UW_Sk.Class;
+	}
 }
 
 void US_CharacterWidget::BindLvl (class US_StatComponent* _StatComp)
@@ -103,6 +108,25 @@ void US_CharacterWidget::RemoveEquip() const
 	if (EquipmentWidget)
 	{
 		EquipmentWidget->RemoveFromParent();
+	}
+}
+
+void US_CharacterWidget::ShowSkillW()
+{
+	if (U_SkillWidget) {
+		SkillWidget = CreateWidget<UW_Skill>(GetWorld(), U_SkillWidget);
+		if (SkillWidget)
+		{
+			SkillWidget->AddToViewport();
+		}
+	}
+}
+
+void US_CharacterWidget::RemoveSillW() const
+{
+	if (SkillWidget)
+	{
+		SkillWidget->RemoveFromParent();
 	}
 }
 

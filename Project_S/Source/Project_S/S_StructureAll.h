@@ -98,9 +98,58 @@ struct FMyCharacterData : public FTableRowBase
 };
 
 USTRUCT()
-struct FResult : public FTableRowBase {
-
+struct FSkillTable : public FTableRowBase
+{
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_SkillType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Req_Lvl;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Cur_Lvl;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Max_Lvl;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* Skill_Img;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName Skill_Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Skill_Desc;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 CoolTime;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Range;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Scale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimMontage* AnimMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCurveBase* AnimCurve;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class Skill> SkillClass;*/
+};
+
+
+USTRUCT()
+struct FResult : public FTableRowBase 
+{
+	GENERATED_BODY()
+
 	int Index;
 	bool IsFindItem;
 };

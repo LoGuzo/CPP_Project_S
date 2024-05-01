@@ -5,6 +5,7 @@
 #include "CharacterManager.h"
 #include "ItemManager.h"
 #include "MyCharDataManager.h"
+#include "SkillManager.h"
 
 US_GameInstance::US_GameInstance()
 {
@@ -16,9 +17,11 @@ US_GameInstance::US_GameInstance()
 
 	Item = ITEM.Object;*/
 
-	MyDataManager.Add(TEXT("CharData"), new CharacterManager());
-	MyDataManager.Add(TEXT("ItemData"), new ItemManager());
-	MyDataManager.Add(TEXT("MyCharData"), new MyCharDataManager());
+	MyDataManager.Add(E_DataType::E_Char, new CharacterManager());
+	MyDataManager.Add(E_DataType::E_Item, new ItemManager());
+	MyDataManager.Add(E_DataType::E_MyChar, new MyCharDataManager());
+	MyDataManager.Add(E_DataType::E_Skill, new SkillManager());
+
 }
 
 void US_GameInstance::Init()

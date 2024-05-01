@@ -36,10 +36,6 @@ void UC_EqiupComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 void UC_EqiupComponent::InvenToEquip(int32 _BeforeIndex, int32 _TargetIndex, class UC_InventoryComponent* _InvenCom)
 {
 	LocalSlot = _InvenCom->GetSlot(_BeforeIndex);
-	if (LocalSlot.ItemClass == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Chk"));
-	}
 	if (_TargetIndex >= 0)
 	{
 		_InvenCom->SetSlot(_BeforeIndex, Slots[_TargetIndex]);

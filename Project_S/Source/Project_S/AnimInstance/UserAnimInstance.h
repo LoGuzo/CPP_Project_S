@@ -23,23 +23,23 @@ public:
 	FOnAttackHit OnAttackHit;
 private:
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
-	bool IsInAir;
-	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	float Speed;
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	bool HaveWeapon;
+	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
+	bool OnDash;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* OneHandSwordAM;
 
 public:
-	bool GetIsInAir() const { return IsInAir; }
 	float GetSpeed() const { return Speed; }
 	bool GetHaveWeapon() const { return HaveWeapon; }
-
-	void SetIsInAir(const bool _IsInAir);
 	void SetSpeed(const float _Speed);
 	void SetHaveWeapon(const bool _HaveWeapon);
+
+	void SetOnDash(const bool _OnDash);
 
 	void OnHandSwordPlayAM();
 	void JumpToSection(int32 _SectionIndex);
