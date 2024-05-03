@@ -106,6 +106,11 @@ private:
 	FRotator BeforeRot;
 
 public:
+	void AttackCheck();
+	void MeleeAttackCheck(float _Range);
+	void ScopeAttackCheck(float _Radius);
+	void ShotAttackCheck();
+
 	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);
 
 	void RemoveMyWeapon();
@@ -116,8 +121,6 @@ public:
 	
 	UFUNCTION()
 	void OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted);
-
-	void AttackCheck();
 
 	UC_InventoryComponent* GetInventoryCom() const { return Inventory; }
 	UC_EqiupComponent* GetEquipCom() const { return Equip; }

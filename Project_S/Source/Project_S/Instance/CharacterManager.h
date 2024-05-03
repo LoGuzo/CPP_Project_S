@@ -6,5 +6,7 @@ class PROJECT_S_API CharacterManager : public SGameManagerBase
 public:
 	CharacterManager();
 
+	//virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
+
 	virtual FCharacterData* GetMyData(FString _Init) override;
 };

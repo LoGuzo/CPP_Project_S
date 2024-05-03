@@ -32,10 +32,9 @@ void UUserAnimInstance::PlaySome(FSkillTable& _Data)
 void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
-	auto Pawn = TryGetPawnOwner();
-	if (::IsValid(Pawn))
+	if (::IsValid(Player))
 	{
-		Speed = Pawn->GetVelocity().Size();
+		Speed = Player->GetVelocity().Size();
 	}
 	if (NowSkill != nullptr)
 	{
@@ -70,13 +69,12 @@ void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UUserAnimInstance::ColliderNotify()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Collider Activated"));
-
 	switch (NowSkill->Type)
 	{
 	case E_SkillType::E_Melee:
 		break;
 	case E_SkillType::E_Scope:
+		Player->ScopeAttackCheck(NowSkill->Range);
 		break;
 	case E_SkillType::E_Shot:
 		break;

@@ -15,6 +15,7 @@ UC_SkillComponent::UC_SkillComponent()
 
 void UC_SkillComponent::BeginPlay()
 {
+	Super::BeginPlay();
 	Slots.SetNum(SkillCnt);
 
 	Slots[0].ItemName = FName("SpinAttack");

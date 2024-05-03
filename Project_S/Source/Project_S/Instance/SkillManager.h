@@ -14,5 +14,7 @@ public:
 
 	SkillManager();
 
+	//virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
+
 	virtual FSkillTable* GetMyData(FString _Init) override;
 };

@@ -9,13 +9,6 @@
 
 US_GameInstance::US_GameInstance()
 {
-	/*static ConstructorHelpers::FObjectFinder<UDataTable>DATA(TEXT("DataTable'/Game/Data/S_CharacterDataTable.S_CharacterDataTable'"));
-
-	MyStats = DATA.Object;
-
-	static ConstructorHelpers::FObjectFinder<UDataTable>ITEM(TEXT("DataTable'/Game/Data/DT_ItemData.DT_ItemData'"));
-
-	Item = ITEM.Object;*/
 
 	MyDataManager.Add(E_DataType::E_Char, new CharacterManager());
 	MyDataManager.Add(E_DataType::E_Item, new ItemManager());
@@ -29,12 +22,7 @@ void US_GameInstance::Init()
 	Super::Init();
 }
 
-/*FCharacterData* US_GameInstance::GetStatData(int32 _Level)
+void US_GameInstance::Shutdown()
 {
-	return MyStats->FindRow<FCharacterData>(*FString::FromInt(_Level),TEXT(""), false);
+	Super::Shutdown();
 }
-
-FS_Item* US_GameInstance::GetItemData(FString _ItemName)
-{
-	return Item->FindRow<FS_Item>(FName(*_ItemName),TEXT(""), false);
-}*/

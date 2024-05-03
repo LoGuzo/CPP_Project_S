@@ -19,6 +19,8 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void SetW_Mesh() override;
+
+	class UParticleSystem* GetParticle() { return HitParticleEffect; }
 	virtual void AttackCheck(class AUserCharacter* _UserCharacter) override;
 private:
 	UPROPERTY(EditAnywhere, Category = "Particles")
