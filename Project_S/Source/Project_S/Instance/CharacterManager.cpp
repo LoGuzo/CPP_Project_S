@@ -9,13 +9,17 @@ CharacterManager::CharacterManager()
 
 	MyData = DATA.Object;
 }
-/*const TSharedPtr<FTableRowBase> CharacterManager::GetMyData(FString _Init)
+
+CharacterManager::~CharacterManager()
 {
-	TSharedPtr<FCharacterData> MyCharacter;
-	return MyData->FindRow<FCharacterData>(FName(*_Init), TEXT(""), false);
-}*/
-FCharacterData* CharacterManager::GetMyData(FString _Init)
+	if (MyCharacter != nullptr)
+	{
+		MyCharacter.Reset();
+	}
+}
+const TSharedPtr<FTableRowBase> CharacterManager::GetMyData(FString _Init)
 {
-	return MyData->FindRow<FCharacterData>(FName(*_Init), TEXT(""), false);
+	MyCharacter = MakeShared<FCharacterData>(*MyData->FindRow<FCharacterData>(FName(*_Init), TEXT(""), false));;
+	return MyCharacter;
 }
 

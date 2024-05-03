@@ -13,8 +13,11 @@ class PROJECT_S_API SkillManager : public SGameManagerBase
 public:
 
 	SkillManager();
+	~SkillManager();
 
-	//virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
+	TSharedPtr<FSkillTable> MyCharacter;
 
-	virtual FSkillTable* GetMyData(FString _Init) override;
+	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
+
+	virtual FSkillTable* GetData(FString _Init) override;
 };

@@ -105,6 +105,10 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	SaveCharacterData();
+	if (LoadData != nullptr)
+	{
+		LoadData.Reset();
+	}
 }
 
 void AUserCharacter::PostInitializeComponents()
@@ -155,13 +159,13 @@ void AUserCharacter::LoadCharacterData()
 	if (MyGameInstance)
 	{
 		if (GetCharID() != "") {
-			auto LoadData = static_cast<FMyCharacterData*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->GetMyData(GetCharID()));
-			if (LoadData)
+			LoadData = StaticCastSharedPtr<FMyCharacterData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->GetMyData(GetCharID()));
+			if (LoadData.IsValid())
 			{
-				Stat->SetLevel(LoadData->Level);
-				Stat->SetExp(LoadData->Exp);
-				Equip->SetSlots(LoadData->MyEquip);
-				Inventory->SetSlots(LoadData->MyInventory);
+				Stat->SetLevel(LoadData.Pin()->Level);
+				Stat->SetExp(LoadData.Pin()->Exp);
+				Equip->SetSlots(LoadData.Pin()->MyEquip);
+				Inventory->SetSlots(LoadData.Pin()->MyInventory);
 			}
 
 		}
@@ -452,11 +456,13 @@ void AUserCharacter::Dash()
 	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
 	LaunchCharacter(Direction * 5000.f, true, true);
 	AnimInstance ->SetOnDash(true);
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::StopDashing, 0.1f, false);
 }
 
 void AUserCharacter::StopDashing() {
 	GetCharacterMovement()->StopMovementImmediately();
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::ResetDash, 0.1f, false);
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
 }
@@ -471,8 +477,9 @@ void AUserCharacter::UseSkill()
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		const auto LoadData = static_cast<FSkillTable*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
-		AnimInstance->PlaySome(*LoadData);
+		const auto SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
+		//const auto SkillData = static_cast<FSkillTable*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetData((Skill->GetSlot(0).ItemName).ToString()));
+		AnimInstance->PlaySome(SkillData);
 	}
 }
 

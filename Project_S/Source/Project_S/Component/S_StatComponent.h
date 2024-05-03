@@ -11,6 +11,8 @@ DECLARE_MULTICAST_DELEGATE(FOnMpChanged);
 DECLARE_MULTICAST_DELEGATE(FOnExpChanged);
 DECLARE_MULTICAST_DELEGATE(FOnLvlChanged);
 
+struct FCharacterData;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API US_StatComponent : public UActorComponent
 {
@@ -24,6 +26,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 public:	
 	FOnHpChanged OnHpChanged;
 	FOnMpChanged OnMpChanged;
@@ -80,5 +83,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	float Attack;
 
-		
+	TWeakPtr<FCharacterData> StatData;
 };

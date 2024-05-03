@@ -9,16 +9,15 @@ MyCharDataManager::MyCharDataManager()
 
 	MyData = DATA.Object;
 }
-
-/*const TSharedPtr<FTableRowBase> MyCharDataManager::GetMyData(FString _Init)
+MyCharDataManager::~MyCharDataManager()
 {
-	TSharedPtr<FMyCharacterData> MyCharacter;
-	return MyData->FindRow<FMyCharacterData>(FName(*_Init), TEXT(""), false);
-}*/
 
-FMyCharacterData* MyCharDataManager::GetMyData(FString _Init)
+}
+
+const TSharedPtr<FTableRowBase> MyCharDataManager::GetMyData(FString _Init)
 {
-	return MyData->FindRow<FMyCharacterData>(FName(*_Init), TEXT(""), false);
+	MyCharacter = MakeShared<FMyCharacterData>(*MyData->FindRow<FMyCharacterData>(FName(*_Init), TEXT(""), false));;
+	return MyCharacter;
 }
 
 void MyCharDataManager::SetMyData(FString _RowName, FMyCharacterData _NewData)

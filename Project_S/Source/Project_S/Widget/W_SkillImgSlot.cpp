@@ -23,7 +23,7 @@ void UW_SkillImgSlot::NativePreConstruct()
 	if (MyGameInstance)
 	{
 		if (SkillKey.ToString() != "None") {
-			auto SkillData = static_cast<FSkillTable*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData(SkillKey.ToString()));
+			auto SkillData = static_cast<FSkillTable*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetData(SkillKey.ToString()));
 			if (SkillData)
 			{
 				Img_Skill->SetBrushFromTexture(SkillData->Skill_Img);

@@ -20,6 +20,7 @@ class PROJECT_S_API UUserAnimInstance : public UAnimInstance
 
 public:
 	UUserAnimInstance();
+	~UUserAnimInstance();
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
@@ -35,7 +36,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* OneHandSwordAM;
 
-	FSkillTable* NowSkill;
+	TWeakPtr<FSkillTable> NowSkill;
 
 	AUserCharacter* Player;
 public:
@@ -46,7 +47,7 @@ public:
 
 	void SetOnDash(const bool _OnDash);
 
-	void PlaySome(FSkillTable& _Data);
+	void PlaySome(TWeakPtr<FSkillTable>_Data);
 	void ColliderNotify();
 	void AnyMoveNotify();
 

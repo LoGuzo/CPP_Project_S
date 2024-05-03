@@ -9,14 +9,22 @@ SkillManager::SkillManager()
 
 	MyData = DATA.Object;
 }
-
-/*const TSharedPtr<FTableRowBase> SkillManager::GetMyData(FString _Init)
+SkillManager::~SkillManager()
 {
-	TSharedPtr<FSkillTable> MyCharacter;
-	return MyData->FindRow<FMyCharacterData>(FName(*_Init), TEXT(""), false);
-}*/
+	if (MyCharacter != nullptr)
+	{
+		MyCharacter.Reset();
+	}
+}
 
-FSkillTable* SkillManager::GetMyData(FString _Init)
+
+const TSharedPtr<FTableRowBase> SkillManager::GetMyData(FString _Init)
+{
+	MyCharacter = MakeShared<FSkillTable>(*MyData->FindRow<FSkillTable>(FName(*_Init), TEXT(""), false));;
+	return MyCharacter;
+}
+
+FSkillTable* SkillManager::GetData(FString _Init)
 {
 	return MyData->FindRow<FSkillTable>(FName(*_Init), TEXT(""), false);
 }

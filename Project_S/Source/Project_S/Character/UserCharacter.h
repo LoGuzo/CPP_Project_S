@@ -105,6 +105,8 @@ private:
 
 	FRotator BeforeRot;
 
+	TWeakPtr<FMyCharacterData> LoadData;
+
 public:
 	void AttackCheck();
 	void MeleeAttackCheck(float _Range);

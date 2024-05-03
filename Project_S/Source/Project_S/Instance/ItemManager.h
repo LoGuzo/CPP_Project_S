@@ -12,7 +12,7 @@ class PROJECT_S_API ItemManager : public SGameManagerBase
 public:
 	ItemManager();
 
-	//virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
+	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
 
-	virtual FS_Item* GetMyData(FString _Init) override;
+	virtual FS_Item* GetData(FString _Init) override;
 };

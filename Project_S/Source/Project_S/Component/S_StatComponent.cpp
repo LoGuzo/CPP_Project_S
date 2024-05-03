@@ -27,24 +27,34 @@ void US_StatComponent::BeginPlay()
 	SetLevel(Level);
 }
 
+void US_StatComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (StatData != nullptr)
+	{
+		StatData.Reset();
+	}
+}
+
 void US_StatComponent::SetLevel(int32 _Level)
 {
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
 		if (_Level != 0) {
-			auto StatData = static_cast<FCharacterData*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Char)->GetMyData(*FString::FromInt(_Level)));
-			if (StatData)
+			StatData = StaticCastSharedPtr<FCharacterData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Char)->GetMyData(*FString::FromInt(_Level)));
+			if (StatData.IsValid())
 			{
-				Level = StatData->Level;
-				SetHp(StatData->MaxHp);
-				MaxHp = StatData->MaxHp;
-				SetMp(StatData->MaxMp);
-				MaxMp = StatData->MaxMp;
-				MaxExp = StatData->MaxExp;
+				Level = StatData.Pin()->Level;
+				SetHp(StatData.Pin()->MaxHp);
+				MaxHp = StatData.Pin()->MaxHp;
+				SetMp(StatData.Pin()->MaxMp);
+				MaxMp = StatData.Pin()->MaxMp;
+				MaxExp = StatData.Pin()->MaxExp;
 				SetExp(0);
-				Attack = StatData->Attack;
-				Armor = StatData->Armor;
+				Attack = StatData.Pin()->Attack;
+				Armor = StatData.Pin()->Armor;
 			}
 		}
 	}

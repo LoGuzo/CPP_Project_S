@@ -17,14 +17,22 @@ UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 	}
 }
 
-void UUserAnimInstance::PlaySome(FSkillTable& _Data)
+UUserAnimInstance::~UUserAnimInstance()
 {
-	NowSkill = &_Data;
-	if (NowSkill->AnimMontage != nullptr)
+	if (NowSkill != nullptr)
 	{
-		if (!Montage_IsPlaying(NowSkill->AnimMontage))
+		NowSkill.Reset();
+	}
+}
+
+void UUserAnimInstance::PlaySome(TWeakPtr<FSkillTable>_Data)
+{
+	NowSkill = _Data;
+	if (NowSkill.Pin()->AnimMontage != nullptr)
+	{
+		if (!Montage_IsPlaying(NowSkill.Pin()->AnimMontage))
 		{
-			Montage_Play(NowSkill->AnimMontage);
+			Montage_Play(NowSkill.Pin()->AnimMontage);
 		}
 	}
 }
@@ -38,7 +46,7 @@ void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 	if (NowSkill != nullptr)
 	{
-		if (Montage_IsPlaying(NowSkill->AnimMontage))
+		if (Montage_IsPlaying(NowSkill.Pin()->AnimMontage))
 		{
 			int32 size = NotifyQueue.AnimNotifies.Num();
 			if (size <= 0) return;
@@ -69,12 +77,12 @@ void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UUserAnimInstance::ColliderNotify()
 {
-	switch (NowSkill->Type)
+	switch (NowSkill.Pin()->Type)
 	{
 	case E_SkillType::E_Melee:
 		break;
 	case E_SkillType::E_Scope:
-		Player->ScopeAttackCheck(NowSkill->Range);
+		Player->ScopeAttackCheck(NowSkill.Pin()->Range);
 		break;
 	case E_SkillType::E_Shot:
 		break;
@@ -85,9 +93,9 @@ void UUserAnimInstance::ColliderNotify()
 
 void UUserAnimInstance::AnyMoveNotify()
 {
-	if (NowSkill)
+	if (NowSkill.Pin())
 	{
-		Player->AnyMove(NowSkill->AnimCurve);
+		Player->AnyMove(NowSkill.Pin()->AnimCurve);
 	}
 }
 

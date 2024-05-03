@@ -8,10 +8,11 @@ class PROJECT_S_API MyCharDataManager : public SGameManagerBase
 {
 public:
 	MyCharDataManager();
+	~MyCharDataManager();
 
-	//virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
+	TSharedPtr<FMyCharacterData> MyCharacter;
 
-	virtual FMyCharacterData* GetMyData(FString _Init) override;
+	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
 
 	virtual void SetMyData(FString _RowName, FMyCharacterData _NewData) override;
 };
