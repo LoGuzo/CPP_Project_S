@@ -10,6 +10,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Project_S/UserCameraShake.h"
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
@@ -64,6 +65,14 @@ AUserCharacter::AUserCharacter()
 	{
 		CharacterUI = UW.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<UUserCameraShake>CS(TEXT("Blueprint'/Game/ThirdPersonCPP/Blueprints/BP_UserCameraShake.BP_UserCameraShake_C'"));
+	if (CS.Succeeded())
+	{
+		TCameraShake = CS.Class;
+	}
+
+	//GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(TCameraShake);
 
 	bIsFlipFlopInventoryActive = false;
 	bIsFlipFlopEquipmentActive = false;
@@ -478,7 +487,6 @@ void AUserCharacter::UseSkill()
 	if (MyGameInstance)
 	{
 		const auto SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
-		//const auto SkillData = static_cast<FSkillTable*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetData((Skill->GetSlot(0).ItemName).ToString()));
 		AnimInstance->PlaySome(SkillData);
 	}
 }

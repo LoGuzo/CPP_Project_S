@@ -11,7 +11,10 @@ MyCharDataManager::MyCharDataManager()
 }
 MyCharDataManager::~MyCharDataManager()
 {
-
+	if (MyCharacter != nullptr)
+	{
+		MyCharacter.Reset();
+	}
 }
 
 const TSharedPtr<FTableRowBase> MyCharDataManager::GetMyData(FString _Init)

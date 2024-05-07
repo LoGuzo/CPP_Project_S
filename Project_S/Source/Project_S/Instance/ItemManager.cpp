@@ -10,14 +10,17 @@ ItemManager::ItemManager()
 	MyData = ITEM.Object;
 }
 
-const TSharedPtr<FTableRowBase> ItemManager::GetMyData(FString _Init)
+ItemManager::~ItemManager()
 {
-	TSharedPtr<FS_Item> MyCharacter;
-	return MyCharacter;
+	if (MyCharacter != nullptr)
+	{
+		MyCharacter.Reset();
+	}
 }
 
-FS_Item* ItemManager::GetData(FString _Init)
+const TSharedPtr<FTableRowBase> ItemManager::GetMyData(FString _Init)
 {
-	return MyData->FindRow<FS_Item>(FName(*_Init), TEXT(""), false);
+	MyCharacter = MakeShared<FS_Item>(*MyData->FindRow<FS_Item>(FName(*_Init), TEXT(""), false));;
+	return MyCharacter;
 }
 

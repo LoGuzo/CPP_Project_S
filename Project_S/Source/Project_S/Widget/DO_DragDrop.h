@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/DragDropOperation.h"
-#include "Project_S/Component/C_InventoryComponent.h"
-#include "Project_S/Component/C_EqiupComponent.h"
 #include "DO_DragDrop.generated.h"
 
 /**
  * 
  */
+class UC_InventoryComponent;
+class UC_EqiupComponent;
+
 UCLASS()
 class PROJECT_S_API UDO_DragDrop : public UDragDropOperation
 {

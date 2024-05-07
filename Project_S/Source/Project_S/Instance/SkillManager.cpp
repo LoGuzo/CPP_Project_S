@@ -9,6 +9,7 @@ SkillManager::SkillManager()
 
 	MyData = DATA.Object;
 }
+
 SkillManager::~SkillManager()
 {
 	if (MyCharacter != nullptr)
@@ -17,16 +18,10 @@ SkillManager::~SkillManager()
 	}
 }
 
-
 const TSharedPtr<FTableRowBase> SkillManager::GetMyData(FString _Init)
 {
 	MyCharacter = MakeShared<FSkillTable>(*MyData->FindRow<FSkillTable>(FName(*_Init), TEXT(""), false));;
 	return MyCharacter;
-}
-
-FSkillTable* SkillManager::GetData(FString _Init)
-{
-	return MyData->FindRow<FSkillTable>(FName(*_Init), TEXT(""), false);
 }
 
 

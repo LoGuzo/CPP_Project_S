@@ -18,8 +18,6 @@ public:
 	virtual ~SGameManagerBase() {};
 	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) = 0;
 	//TWeakPtr 참조자 Pin으로 접근
-	
-	virtual FTableRowBase* GetData(FString _Init) { return nullptr; }
 
 	virtual void SetMyData(FString _RowName, FMyCharacterData _NewData){};
 };

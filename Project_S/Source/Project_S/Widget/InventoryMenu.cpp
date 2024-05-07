@@ -8,16 +8,6 @@
 #include "Kismet/GameplayStatics.h"
 
 
-UInventoryMenu::UInventoryMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
-{
-	static ConstructorHelpers::FClassFinder<UW_Inventory>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Inventory.WBP_Inventory_C'"));
-	if (UW.Succeeded())
-	{
-		TWBP_Inventory = UW.Class;
-		WBP_Inventory = CreateWidget<UW_Inventory>(GetWorld(), TWBP_Inventory);
-	}
-}
-
 void UInventoryMenu::NativeConstruct()
 {
 	Super::NativeConstruct();

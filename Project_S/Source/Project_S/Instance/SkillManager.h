@@ -18,6 +18,4 @@ public:
 	TSharedPtr<FSkillTable> MyCharacter;
 
 	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
-
-	virtual FSkillTable* GetData(FString _Init) override;
 };

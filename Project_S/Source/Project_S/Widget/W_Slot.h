@@ -4,15 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "W_Drag.h"
 #include "DO_DragDrop.h"
-#include "Project_S/Component/C_InventoryComponent.h"
-#include "Project_S/Component/C_EqiupComponent.h"
 #include "W_Slot.generated.h"
 
 /**
  * 
  */
+struct FS_Item;
+struct FSkillTable;
+class UW_Drag;
+class UC_InventoryComponent;
+class UC_EqiupComponent;
+
 UCLASS()
 class PROJECT_S_API UW_Slot : public UUserWidget
 {
@@ -21,13 +24,16 @@ class PROJECT_S_API UW_Slot : public UUserWidget
 public:
 	UW_Slot(const FObjectInitializer& ObjectInitializer);
 	virtual void NativePreConstruct() override;
+	virtual void NativeDestruct() override;
 
 	FName GetIName() { return ItemKey; }
 	FString GetItemConName() { return ItemConName; }
 	FString GetConName() { return ContentName; }
 	int32 GetAmount() { return Amount; }
 	int32 GetConIndex() { return ContentIndex; }
+	FName GetSkillKey() { return SkillKey; }
 
+	void SetSkillKey(FName _SkillKey);
 	void SetItemConName(FString _ItemConName);
 	void SetConName(FString _ContentName);
 	void SetItemKey(FName _ItemKey);
@@ -41,7 +47,7 @@ public:
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation);
 private:
 
-	TSubclassOf<class UW_Drag> U_DragImg;
+	TSubclassOf<UW_Drag> U_DragImg;
 
 	UW_Drag* DragImg;
 
@@ -62,6 +68,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	int32 Amount;
 
+	UPROPERTY(VisibleAnywhere)
+	FName SkillKey;
+
 	FString ContentName;
 
 	FString ItemConName;
@@ -71,4 +80,8 @@ private:
 	UC_InventoryComponent* InventoryCom;
 
 	UC_EqiupComponent* EquipCom;
+
+	TWeakPtr<FS_Item> ItemData;
+
+	TWeakPtr<FSkillTable> SkillData;
 };

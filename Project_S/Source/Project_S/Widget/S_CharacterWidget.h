@@ -56,6 +56,12 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* Txt_Lvl;
 
+	UPROPERTY(meta = (BindWidget))
+	class UW_QuickSlotMenu* SkillSlot;
+
+	UPROPERTY(meta = (BindWidget))
+	class UW_QuickSlotMenu* PotionSlot;
+
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 
 	UInventoryMenu* InventoryWidget;

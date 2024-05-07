@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "C_InventoryComponent.h"
-#include "Project_S/Instance/S_GameInstance.h"
-#include "Project_S/Character/UserCharacter.h"
 #include "C_EqiupComponent.h"
+#include "C_InventoryComponent.h"
+#include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Item/A_Item.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -28,6 +28,16 @@ void UC_InventoryComponent::BeginPlay()
 	// ...
 	Slots.SetNum(InventorySize);
 	
+}
+
+void UC_InventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (ItemData != nullptr)
+	{
+		ItemData.Reset();
+	}
 }
 
 void UC_InventoryComponent::SetSlots(const TArray<FS_Slot>& _Slots)
@@ -95,10 +105,10 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 	if (MyGameInstance)
 	{
 		if (_ItemKey.ToString() != "None") {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetData(_ItemKey.ToString()));
-			if (ItemData)
+			ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(_ItemKey.ToString()));
+			if (ItemData.IsValid())
 			{
-				return ItemData->StackSize;
+				return ItemData.Pin()->StackSize;
 			}
 		}
 	}
@@ -157,7 +167,7 @@ void UC_InventoryComponent::ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, U
 	OnInventoryUpdated.Broadcast();
 }
 
-void UC_InventoryComponent::EquipToInven(int32 _BeforeIndex, int32 _TargetIndex, class UC_EqiupComponent* _EquipCom)
+void UC_InventoryComponent::EquipToInven(int32 _BeforeIndex, int32 _TargetIndex, UC_EqiupComponent* _EquipCom)
 {
 	LocalSlot = _EquipCom->GetSlot(_BeforeIndex);
 	if (_TargetIndex >= 0)

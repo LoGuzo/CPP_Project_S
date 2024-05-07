@@ -2,12 +2,16 @@
 
 
 #include "W_Slot.h"
-#include "Project_S/Instance/S_GameInstance.h"
+#include "W_Drag.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_S/Component/C_InventoryComponent.h"
+#include "Project_S/Component/C_EqiupComponent.h"
+#include "Project_S/Instance/S_GameInstance.h"
+
 
 UW_Slot::UW_Slot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -25,22 +29,31 @@ void UW_Slot::NativePreConstruct()
 	if (MyGameInstance)
 	{
 		if (ItemKey.ToString() != "None") {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetData(ItemKey.ToString()));
-			if (ItemData)
+			ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(ItemKey.ToString()));
+			if (ItemData.IsValid())
 			{
-				if (ItemData->ItemType == E_ItemType::E_Equip)
+				if (ItemData.Pin()->ItemType == E_ItemType::E_Equip)
 				{
-					Img_Item->SetBrushFromTexture(ItemData->ItemImage);
+					Img_Item->SetBrushFromTexture(ItemData.Pin()->ItemImage);
 					Box_Stack->SetVisibility(ESlateVisibility::Hidden);
 					Img_Item->SetVisibility(ESlateVisibility::Visible);
 				}
 				else
 				{
-					Img_Item->SetBrushFromTexture(ItemData->ItemImage);
+					Img_Item->SetBrushFromTexture(ItemData.Pin()->ItemImage);
 					Box_Stack->SetVisibility(ESlateVisibility::Visible);
 					Txt_Stack->SetText(FText::FromString(FString::FromInt(Amount)));
 					Img_Item->SetVisibility(ESlateVisibility::Visible);
 				}
+			}
+		}
+		else if (SkillKey.ToString() != "None") {
+			SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData(SkillKey.ToString()));
+			if (SkillData.IsValid())
+			{
+				Img_Item->SetBrushFromTexture(SkillData.Pin()->Skill_Img);
+				Img_Item->SetVisibility(ESlateVisibility::Visible);
+				Box_Stack->SetVisibility(ESlateVisibility::Hidden);
 			}
 		}
 		else
@@ -48,6 +61,19 @@ void UW_Slot::NativePreConstruct()
 			Box_Stack->SetVisibility(ESlateVisibility::Hidden);
 			Img_Item->SetVisibility(ESlateVisibility::Hidden);
 		}
+	}
+}
+
+void UW_Slot::NativeDestruct()
+{
+	Super::NativeDestruct();
+	if (ItemData != nullptr)
+	{
+		ItemData.Reset();
+	}
+	if (SkillData != nullptr)
+	{
+		SkillData.Reset();
 	}
 }
 
@@ -91,7 +117,7 @@ FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, cons
 {
 	FEventReply reply;
 	reply.NativeReply = Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
-	if (ItemKey.ToString() != "None")
+	if (ItemKey.ToString() != "None" || SkillKey.ToString() != "None")
 	{
 		if (InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
 		{
@@ -156,7 +182,14 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 			DragImg = CreateWidget<UW_Drag>(GetWorld(), U_DragImg);
 			if (DragImg)
 			{
-				DragImg->SetItemKey(ItemKey);
+				if (ItemKey.ToString() != "None")
+				{
+					DragImg->SetItemKey(ItemKey);
+				}
+				else if (SkillKey.ToString() != "None")
+				{
+					DragImg->SetSkillKey(SkillKey);
+				}
 			}
 		}
 		DO_Drag = NewObject<UDO_DragDrop>();
@@ -177,4 +210,9 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 			DO_Drag->DefaultDragVisual = DragImg;
 		}
 	}
+}
+
+void UW_Slot::SetSkillKey(FName _SkillKey)
+{
+	SkillKey = _SkillKey;
 }

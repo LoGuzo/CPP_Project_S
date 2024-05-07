@@ -2,6 +2,8 @@
 
 
 #include "DO_DragDrop.h"
+#include "Project_S/Component/C_InventoryComponent.h"
+#include "Project_S/Component/C_EqiupComponent.h"
 
 void UDO_DragDrop::SetItemConName(FString _ItemConName)
 {

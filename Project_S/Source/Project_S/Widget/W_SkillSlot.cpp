@@ -2,7 +2,7 @@
 
 
 #include "W_SkillSlot.h"
-#include "W_SkillImgSlot.h"
+#include "W_Slot.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Components/WrapBox.h"
@@ -10,7 +10,7 @@
 
 UW_SkillSlot::UW_SkillSlot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<UW_SkillImgSlot>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Skill_ImgSlot.WBP_Skill_ImgSlot_C'"));
+	static ConstructorHelpers::FClassFinder<UW_Slot>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Slot.WBP_Slot_C'"));
 	if (UW.Succeeded())
 	{
 		TW_Slot = UW.Class;
@@ -62,7 +62,7 @@ void UW_SkillSlot::SetSkillCom(UC_SkillComponent* _SkillCom)
 void UW_SkillSlot::UpdateImg(const FName _SkillName)
 {
 	Wrap_Skill->ClearChildren();
-	W_Slot = CreateWidget<UW_SkillImgSlot>(GetWorld(), TW_Slot);
+	W_Slot = CreateWidget<UW_Slot>(GetWorld(), TW_Slot);
 	if (W_Slot)
 	{
 		W_Slot->SetSkillKey(_SkillName);

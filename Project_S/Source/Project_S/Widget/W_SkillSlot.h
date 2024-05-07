@@ -30,8 +30,8 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* Txt_Point;
 
-	TSubclassOf<class UW_SkillImgSlot> TW_Slot;
-	class UW_SkillImgSlot* W_Slot;
+	TSubclassOf<class UW_Slot> TW_Slot;
+	class UW_Slot* W_Slot;
 
 	class UC_SkillComponent* SkillCom;
 

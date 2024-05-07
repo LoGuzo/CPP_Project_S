@@ -2,9 +2,9 @@
 
 
 #include "C_EqiupComponent.h"
+#include "C_InventoryComponent.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Item/A_Item.h"
-#include "C_InventoryComponent.h"
 
 // Sets default values for this component's properties
 UC_EqiupComponent::UC_EqiupComponent()
@@ -33,7 +33,7 @@ void UC_EqiupComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 }
 
 
-void UC_EqiupComponent::InvenToEquip(int32 _BeforeIndex, int32 _TargetIndex, class UC_InventoryComponent* _InvenCom)
+void UC_EqiupComponent::InvenToEquip(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _InvenCom)
 {
 	LocalSlot = _InvenCom->GetSlot(_BeforeIndex);
 	if (_TargetIndex >= 0)

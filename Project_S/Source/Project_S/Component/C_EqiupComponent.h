@@ -8,7 +8,6 @@
 #include "C_EqiupComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnEquipUpdated);
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API UC_EqiupComponent : public UActorComponent
 {
@@ -23,8 +22,10 @@ private:
 	TArray<FS_Slot> Slots;
 
 	FS_Slot LocalSlot;
+
 protected:
 	virtual void BeginPlay() override;
+
 public:
 	TArray<FS_Slot> GetSlots() { return Slots; }
 

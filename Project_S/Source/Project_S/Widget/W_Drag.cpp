@@ -13,11 +13,23 @@ void UW_Drag::NativePreConstruct()
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		if (!ItemKey.ToString().IsEmpty()) {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetData(ItemKey.ToString()));
-			if (ItemData)
+		if (ItemKey.ToString() != "None")
+		{
+			ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(ItemKey.ToString()));
+			if (ItemData.IsValid())
 			{
-				Img_Drag->SetBrushFromTexture(ItemData->ItemImage);
+				Img_Drag->SetBrushFromTexture(ItemData.Pin()->ItemImage);
+			}
+		}
+		else if (SkillKey.ToString() != "None")
+		{
+			SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData(SkillKey.ToString()));
+			if (SkillData.IsValid())
+			{
+				if (SkillData.IsValid())
+				{
+					Img_Drag->SetBrushFromTexture(SkillData.Pin()->Skill_Img);
+				}
 			}
 		}
 	}
@@ -26,4 +38,9 @@ void UW_Drag::NativePreConstruct()
 void UW_Drag::SetItemKey(FName _ItemKey)
 {
 	ItemKey = _ItemKey;
+}
+
+void UW_Drag::SetSkillKey(FName _SkillKey)
+{
+	SkillKey = _SkillKey;
 }

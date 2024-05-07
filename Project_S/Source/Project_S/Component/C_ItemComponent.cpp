@@ -27,6 +27,16 @@ void UC_ItemComponent::BeginPlay()
 	
 }
 
+void UC_ItemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (ItemData != nullptr)
+	{
+		ItemData.Reset();
+	}
+}
+
 
 void UC_ItemComponent::Interact(AUserCharacter* _UserCharacter)
 {
@@ -47,16 +57,16 @@ void UC_ItemComponent::SetItem(FString _ItemName)
 	if (MyGameInstance)
 	{
 		if (_ItemName != "") {
-			auto ItemData = static_cast<FS_Item*>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetData(_ItemName));
-			if (ItemData)
+			ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(_ItemName));
+			if (ItemData.IsValid())
 			{
 				RowName = FName(*_ItemName);
-				ItemName = ItemData->ItemName;
-				Description = ItemData->Description;
-				ItemImage = ItemData->ItemImage;
-				StackSize = ItemData->StackSize;
-				ItemType = ItemData->ItemType;
-				ItemClass = ItemData->ItemClass;
+				ItemName = ItemData.Pin()->ItemName;
+				Description = ItemData.Pin()->Description;
+				ItemImage = ItemData.Pin()->ItemImage;
+				StackSize = ItemData.Pin()->StackSize;
+				ItemType = ItemData.Pin()->ItemType;
+				ItemClass = ItemData.Pin()->ItemClass;
 			}
 		}
 	}

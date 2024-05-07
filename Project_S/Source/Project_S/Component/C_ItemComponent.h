@@ -8,6 +8,7 @@
 #include "Project_S/E_ItemType.h"
 #include "C_ItemComponent.generated.h"
 
+struct FS_Item;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API UC_ItemComponent : public UActorComponent, public II_ItemInterface
@@ -22,6 +23,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 private:
 	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
 	FName RowName;
@@ -46,6 +48,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class AA_Item> ItemClass;
+
+	TWeakPtr<FS_Item> ItemData;
 
 public:	
 

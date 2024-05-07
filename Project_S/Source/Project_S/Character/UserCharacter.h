@@ -139,4 +139,8 @@ public:
 	void UpdateInventory();
 
 	void AnyMove(UCurveBase* _SkillCurve);
+
+	UPROPERTY(EditAnyWhere, Category = Camera)
+	TSubclassOf<class UUserCameraShake> TCameraShake;
+
 };

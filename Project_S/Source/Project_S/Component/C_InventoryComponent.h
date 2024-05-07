@@ -25,9 +25,14 @@ private:
 
 	int32 AmountLeft;
 	FS_Slot LocalSlot;
+
+	TWeakPtr<FS_Item> ItemData;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
 	FOnInventoryUpdated OnInventoryUpdated;

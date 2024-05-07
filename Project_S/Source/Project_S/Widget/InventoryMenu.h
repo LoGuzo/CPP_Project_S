@@ -15,7 +15,6 @@ class PROJECT_S_API UInventoryMenu : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UInventoryMenu(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
