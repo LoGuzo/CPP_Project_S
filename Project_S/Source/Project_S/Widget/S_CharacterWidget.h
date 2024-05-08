@@ -4,14 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "InventoryMenu.h"
-#include "W_Equip.h"
-#include "W_Skill.h"
 #include "S_CharacterWidget.generated.h"
 
 /**
  * 
  */
+
+class UInventoryMenu;
+class UW_Equip;
+class UW_Skill;
+class UW_QuickSlotMenu;
+
 UCLASS()
 class PROJECT_S_API US_CharacterWidget : public UUserWidget
 {
@@ -39,6 +42,8 @@ public:
 	void ShowSkillW();
 	void RemoveSillW() const;
 
+	void ShowQuick(class UC_QuickSlotComponent* _QuickComponent);
+
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 
 private:
@@ -57,10 +62,10 @@ private:
 	class UTextBlock* Txt_Lvl;
 
 	UPROPERTY(meta = (BindWidget))
-	class UW_QuickSlotMenu* SkillSlot;
+	UW_QuickSlotMenu* SkillSlot;
 
 	UPROPERTY(meta = (BindWidget))
-	class UW_QuickSlotMenu* PotionSlot;
+	UW_QuickSlotMenu* PotionSlot;
 
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 

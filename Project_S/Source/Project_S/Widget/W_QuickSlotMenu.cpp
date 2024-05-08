@@ -26,6 +26,7 @@ void UW_QuickSlotMenu::UpdateSkillSlots(const TArray<FS_Slot>& _Slots)
 		{
 			W_Slots2->SetItemKey(slot.ItemName);
 			W_Slots2->SetAmount(slot.Amount);
+			W_Slots2->SetConIndex(index);
 			W_Slots2->SetSlotKey(index + 1);
 
 		}
@@ -44,10 +45,12 @@ void UW_QuickSlotMenu::UpdatePotionSlots(const TArray<FS_Slot>& _Slots)
 		{
 			W_Slots2->SetItemKey(slot.ItemName);
 			W_Slots2->SetAmount(slot.Amount);
-			W_Slots2->SetSlotKey(index + 5);
+			W_Slots2->SetConIndex(index);
+			W_Slots2->SetSlotKey(index + 6);
 
 		}
 		Wrap_Quick->AddChild(W_Slots2);
 		index++;
 	}
 }
+

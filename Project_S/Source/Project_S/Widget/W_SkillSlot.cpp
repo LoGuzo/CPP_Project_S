@@ -66,6 +66,7 @@ void UW_SkillSlot::UpdateImg(const FName _SkillName)
 	if (W_Slot)
 	{
 		W_Slot->SetSkillKey(_SkillName);
+		W_Slot->SetSkillCom(SkillCom);
 	}
 	Wrap_Skill->AddChild(W_Slot);
 }

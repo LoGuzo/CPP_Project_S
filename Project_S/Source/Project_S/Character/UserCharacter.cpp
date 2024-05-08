@@ -15,6 +15,7 @@
 #include "Project_S/Component/C_EqiupComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Component/C_InventoryComponent.h"
+#include "Project_S/Component/C_QuickSlotComponent.h"
 #include "Project_S/Item/WeaponActor.h"
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Widget/S_CharacterWidget.h"
@@ -60,6 +61,7 @@ AUserCharacter::AUserCharacter()
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
 	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
+	QuickSlot = CreateDefaultSubobject<UC_QuickSlotComponent>(TEXT("QUICK"));
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
 	{
@@ -139,6 +141,7 @@ void AUserCharacter::PostInitializeComponents()
 			HUDWidget->BindHp(Stat);
 			HUDWidget->BindMp(Stat);
 			HUDWidget->BindExp(Stat);
+			HUDWidget->ShowQuick(QuickSlot);
 			HUDWidget->AddToViewport();
 		}
 	}

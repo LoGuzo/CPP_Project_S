@@ -70,6 +70,7 @@ void UW_Skill::UpdateSlots(const TArray<FS_Slot>& _Slots)
 		W_SkillSlot = CreateWidget<UW_SkillSlot>(GetWorld(), TW_SkillSlot);
 		if (W_SkillSlot) {
 			W_SkillSlot->SetTextBlock(slot.Amount);
+			W_SkillSlot->SetSkillCom(SkillCom);
 			W_SkillSlot->UpdateImg(slot.ItemName);
 			W_SkillSlot->SetSlotIndex(index);
 		}

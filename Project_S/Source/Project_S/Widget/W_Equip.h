@@ -13,6 +13,7 @@ DECLARE_MULTICAST_DELEGATE(FOnEquipUpdated);
 /**
  * 
  */
+struct FS_Slot;
 UCLASS()
 class PROJECT_S_API UW_Equip : public UUserWidget
 {

@@ -2,10 +2,10 @@
 
 
 #include "InventoryMenu.h"
-#include "Project_S/Character/UserCharacter.h"
 #include "W_Inventory.h"
+#include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/C_InventoryComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include <Kismet/GameplayStatics.h>
 
 
 void UInventoryMenu::NativeConstruct()

@@ -81,6 +81,8 @@ private:
 
 	class UC_SkillComponent* Skill;
 
+	class UC_QuickSlotComponent* QuickSlot;
+
 	class UUserAnimInstance* AnimInstance;
 
 	bool IsAttacking;

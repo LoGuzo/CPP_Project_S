@@ -2,9 +2,16 @@
 
 
 #include "S_CharacterWidget.h"
-#include "Project_S/Component/S_StatComponent.h"
+#include "InventoryMenu.h"
+#include "W_Equip.h"
+#include "W_Skill.h"
+#include "W_QuickSlotMenu.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Component/C_QuickSlotComponent.h"
+#include "Project_S/Component/S_StatComponent.h"
+#include <Kismet/GameplayStatics.h>
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -23,6 +30,12 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 	{
 		U_SkillWidget = UW_Sk.Class;
 	}
+	/*static ConstructorHelpers::FClassFinder<UW_QuickSlotMenu>UW_Quick(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_QuickSlotMenu.WBP_QuickSlotMenu_C'"));
+	if (UW_Quick.Succeeded())
+	{
+		U_QuickSlotMenu = UW_Quick.Class;
+	}*/
+
 }
 
 void US_CharacterWidget::BindLvl (class US_StatComponent* _StatComp)
@@ -127,6 +140,15 @@ void US_CharacterWidget::RemoveSillW() const
 	if (SkillWidget)
 	{
 		SkillWidget->RemoveFromParent();
+	}
+}
+
+void US_CharacterWidget::ShowQuick(UC_QuickSlotComponent* _QuickComponent)
+{
+	if (_QuickComponent)
+	{
+		SkillSlot->UpdateSkillSlots(_QuickComponent->GetSkillSlots());
+		PotionSlot->UpdatePotionSlots(_QuickComponent->GetPotionSlots());
 	}
 }
 

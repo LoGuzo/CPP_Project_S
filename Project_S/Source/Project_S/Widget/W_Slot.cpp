@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Component/C_EqiupComponent.h"
+#include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 
@@ -112,6 +113,11 @@ void UW_Slot::SetEquipCom(UC_EqiupComponent* _EquipCom)
 	EquipCom = _EquipCom;
 }
 
+void UW_Slot::SetSkillCom(UC_SkillComponent* _SkillCom)
+{
+	SkillCom = _SkillCom;
+}
+
 
 FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -204,6 +210,10 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 			if (EquipCom != nullptr)
 			{
 				DO_Drag->SetEquipCom(EquipCom);
+			}
+			if (SkillCom != nullptr)
+			{
+				DO_Drag->SetSkillCom(SkillCom);
 			}
 			DO_Drag->SetConName(GetConName());
 			DO_Drag->SetItemConName(GetItemConName());

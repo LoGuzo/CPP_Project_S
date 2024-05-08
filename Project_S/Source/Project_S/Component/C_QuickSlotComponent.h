@@ -27,6 +27,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	TArray<FS_Slot> GetSkillSlots() { return SkillSlots; }
+	TArray<FS_Slot> GetPotionSlots() { return PotionSlots; }
 	void SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, class UC_SkillComponent* _SkillCom);
 	void InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, class UC_InventoryComponent* _InvenCom);
 		

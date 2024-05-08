@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "C_InventoryComponent.h"
 #include "C_QuickSlotComponent.h"
+#include "C_InventoryComponent.h"
 #include "C_SkillComponent.h"
 
 // Sets default values for this component's properties
@@ -12,6 +12,8 @@ UC_QuickSlotComponent::UC_QuickSlotComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
+	SkillSlots.SetNum(5);
+	PotionSlots.SetNum(2);
 }
 
 
@@ -21,13 +23,12 @@ void UC_QuickSlotComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	SkillSlots.SetNum(5);
-	PotionSlots.SetNum(2);
 }
 
 void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, UC_SkillComponent* _SkillCom)
 {
 	LocalSlot = _SkillCom->GetSlot(_SkillIndex);
+	//UE_LOG(LogTemp, Warning, TEXT("chk : %d"), LocalSlot1.Amount);
 	if (_TargetIndex >= 0)
 	{
 		SkillSlots[_TargetIndex] = LocalSlot;
@@ -37,10 +38,10 @@ void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, 
 
 void UC_QuickSlotComponent::InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, UC_InventoryComponent* _InvenCom)
 {
-	LocalSlot = _InvenCom->GetSlot(_InvenIndex);
+	/*LocalSlot = _InvenCom->GetSlot(_InvenIndex);
 	if (_TargetIndex >= 0)
 	{
 		PotionSlots[_TargetIndex] = LocalSlot;
-	}
+	}*/
 
 }

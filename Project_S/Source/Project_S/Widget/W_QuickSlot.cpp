@@ -2,10 +2,12 @@
 
 
 #include "W_QuickSlot.h"
+#include "DO_DragDrop.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_S/Component/C_QuickSlotComponent.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 void UW_QuickSlot::NativePreConstruct()
@@ -56,6 +58,11 @@ void UW_QuickSlot::NativeDestruct()
 	}
 }
 
+void UW_QuickSlot::SetConIndex(int32 _ContentIndex)
+{
+	ContentIndex = _ContentIndex;
+}
+
 void UW_QuickSlot::SetItemKey(FName _ItemKey)
 {
 	ItemKey = _ItemKey;
@@ -69,4 +76,24 @@ void UW_QuickSlot::SetSlotKey(int32 _SlotKey)
 void UW_QuickSlot::SetAmount(int32 _Amount)
 {
 	Amount = _Amount;
+}
+
+void UW_QuickSlot::SetQuickSlotCom(UC_QuickSlotComponent* _QuickSlotCom)
+{
+	QuickSlotCom = _QuickSlotCom;
+}
+
+bool UW_QuickSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	DO_Drag = Cast<UDO_DragDrop>(InOperation);
+	if (DO_Drag->GetSkillCom() != nullptr)
+	{
+		QuickSlotCom->SkillToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetSkillCom());
+	}
+	else if (DO_Drag->GetInvenCom() != nullptr)
+	{
+		QuickSlotCom->InvenToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
+	}
+
+	return false;
 }

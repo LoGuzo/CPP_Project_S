@@ -21,6 +21,7 @@ public:
 	void UpdatePotionSlots(const TArray<FS_Slot>& _Slots);
 
 private:
+
 	UPROPERTY(meta = (BindWidget))
 	class UWrapBox* Wrap_Quick;
 

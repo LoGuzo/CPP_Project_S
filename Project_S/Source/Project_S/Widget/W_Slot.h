@@ -15,6 +15,7 @@ struct FSkillTable;
 class UW_Drag;
 class UC_InventoryComponent;
 class UC_EqiupComponent;
+class UC_SkillComponent;
 
 UCLASS()
 class PROJECT_S_API UW_Slot : public UUserWidget
@@ -41,6 +42,7 @@ public:
 	void SetConIndex(int32 _ContentIndex);
 	void SetInvenCom(UC_InventoryComponent* _InventoryCom);
 	void SetEquipCom(UC_EqiupComponent* _EquipCom);
+	void SetSkillCom(UC_SkillComponent* _SkillCom);
 
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
@@ -80,6 +82,8 @@ private:
 	UC_InventoryComponent* InventoryCom;
 
 	UC_EqiupComponent* EquipCom;
+
+	UC_SkillComponent* SkillCom;
 
 	TWeakPtr<FS_Item> ItemData;
 

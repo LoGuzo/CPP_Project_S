@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "C_EqiupComponent.h"
 #include "C_InventoryComponent.h"
+#include "C_EqiupComponent.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Item/A_Item.h"

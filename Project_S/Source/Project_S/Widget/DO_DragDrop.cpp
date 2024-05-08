@@ -29,3 +29,8 @@ void UDO_DragDrop::SetEquipCom(UC_EqiupComponent* _EquipCom)
 {
 	EquipCom = _EquipCom;
 }
+
+void UDO_DragDrop::SetSkillCom(UC_SkillComponent* _SkillCom)
+{
+	SkillCom = _SkillCom;
+}
