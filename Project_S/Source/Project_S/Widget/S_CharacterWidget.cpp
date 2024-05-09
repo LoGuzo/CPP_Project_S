@@ -30,11 +30,6 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 	{
 		U_SkillWidget = UW_Sk.Class;
 	}
-	/*static ConstructorHelpers::FClassFinder<UW_QuickSlotMenu>UW_Quick(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_QuickSlotMenu.WBP_QuickSlotMenu_C'"));
-	if (UW_Quick.Succeeded())
-	{
-		U_QuickSlotMenu = UW_Quick.Class;
-	}*/
 
 }
 
@@ -145,11 +140,18 @@ void US_CharacterWidget::RemoveSillW() const
 
 void US_CharacterWidget::ShowQuick(UC_QuickSlotComponent* _QuickComponent)
 {
+	QuickComponent = _QuickComponent;
 	if (_QuickComponent)
 	{
-		SkillSlot->UpdateSkillSlots(_QuickComponent->GetSkillSlots());
-		PotionSlot->UpdatePotionSlots(_QuickComponent->GetPotionSlots());
+		SkillSlot->ShowQSkillWidget(_QuickComponent);
+		PotionSlot->ShowQPotionWidget(_QuickComponent);
 	}
+	_QuickComponent->OnQuickUpdated.AddUObject(this, &US_CharacterWidget::ShowQuickDynamic);
+}
+void US_CharacterWidget::ShowQuickDynamic()
+{
+	SkillSlot->ShowQSkillWidget(QuickComponent);
+	PotionSlot->ShowQPotionWidget(QuickComponent);
 }
 
 

@@ -7,6 +7,10 @@
 #include "Project_S/S_StructureAll.h"
 #include "C_QuickSlotComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnQuickUpdated);
+
+struct FTableRowBase;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API UC_QuickSlotComponent : public UActorComponent
 {
@@ -16,6 +20,7 @@ public:
 	// Sets default values for this component's properties
 	UC_QuickSlotComponent();
 
+	FOnQuickUpdated OnQuickUpdated;
 private:
 	TArray<FS_Slot> SkillSlots;
 	TArray<FS_Slot> PotionSlots;

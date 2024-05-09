@@ -14,6 +14,7 @@ class UInventoryMenu;
 class UW_Equip;
 class UW_Skill;
 class UW_QuickSlotMenu;
+class UC_QuickSlotComponent;
 
 UCLASS()
 class PROJECT_S_API US_CharacterWidget : public UUserWidget
@@ -43,11 +44,14 @@ public:
 	void RemoveSillW() const;
 
 	void ShowQuick(class UC_QuickSlotComponent* _QuickComponent);
+	void ShowQuickDynamic();
 
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
+
+	UC_QuickSlotComponent* QuickComponent;
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_Hp;

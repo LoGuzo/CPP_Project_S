@@ -102,7 +102,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
 	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
-	PlayerInputComponent->BindAction("Skill1", IE_Pressed, this, &AUserCharacter::UseSkill);
+	PlayerInputComponent->BindAction("Quick1", IE_Pressed, this, &AUserCharacter::UseSkill);
 
 }
 

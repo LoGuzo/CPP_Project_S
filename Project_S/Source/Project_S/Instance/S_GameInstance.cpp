@@ -10,10 +10,10 @@
 US_GameInstance::US_GameInstance()
 {
 
-	MyDataManager.Add(E_DataType::E_Char, new CharacterManager());
-	MyDataManager.Add(E_DataType::E_Item, new ItemManager());
-	MyDataManager.Add(E_DataType::E_MyChar, new MyCharDataManager());
-	MyDataManager.Add(E_DataType::E_Skill, new SkillManager());
+	MyDataManager.Emplace(E_DataType::E_Char, new CharacterManager());
+	MyDataManager.Emplace(E_DataType::E_Item, new ItemManager());
+	MyDataManager.Emplace(E_DataType::E_MyChar, new MyCharDataManager());
+	MyDataManager.Emplace(E_DataType::E_Skill, new SkillManager());
 
 }
 
@@ -25,4 +25,9 @@ void US_GameInstance::Init()
 void US_GameInstance::Shutdown()
 {
 	Super::Shutdown();
+
+	if (MyDataManager.Num() != 0)
+	{
+		MyDataManager.Empty();
+	}
 }

@@ -21,27 +21,53 @@ UC_QuickSlotComponent::UC_QuickSlotComponent()
 void UC_QuickSlotComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
 }
 
 void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, UC_SkillComponent* _SkillCom)
 {
 	LocalSlot = _SkillCom->GetSlot(_SkillIndex);
-	//UE_LOG(LogTemp, Warning, TEXT("chk : %d"), LocalSlot1.Amount);
-	if (_TargetIndex >= 0)
+	if (!SkillSlots.ContainsByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; }))
 	{
-		SkillSlots[_TargetIndex] = LocalSlot;
+		if (_TargetIndex >= 0)
+		{
+			SkillSlots[_TargetIndex] = LocalSlot;
+		}
 	}
-
+	else {
+		int32 Index = SkillSlots.IndexOfByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; });
+		if (Index != INDEX_NONE)
+		{
+			if (_TargetIndex >= 0)
+			{
+				SkillSlots[Index] = SkillSlots[_TargetIndex];
+				SkillSlots[_TargetIndex] = LocalSlot;
+			}
+		}
+	}
+	OnQuickUpdated.Broadcast();
 }
 
 void UC_QuickSlotComponent::InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, UC_InventoryComponent* _InvenCom)
 {
-	/*LocalSlot = _InvenCom->GetSlot(_InvenIndex);
-	if (_TargetIndex >= 0)
+	LocalSlot = _InvenCom->GetSlot(_InvenIndex);
+	if (!PotionSlots.ContainsByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; }))
 	{
-		PotionSlots[_TargetIndex] = LocalSlot;
-	}*/
-
+		if (_TargetIndex >= 0)
+		{
+			PotionSlots[_TargetIndex] = LocalSlot;
+		}
+	}
+	else {
+		int32 Index = PotionSlots.IndexOfByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; });
+		if (Index != INDEX_NONE)
+		{
+			if (_TargetIndex >= 0)
+			{
+				PotionSlots[Index] = PotionSlots[_TargetIndex];
+				PotionSlots[_TargetIndex] = LocalSlot;
+			}
+		}
+	}
+	OnQuickUpdated.Broadcast();
 }

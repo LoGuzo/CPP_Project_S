@@ -26,11 +26,15 @@ public:
 
 	int32 GetSlotKey() { return SlotKey; }
 	FName GetIName() { return ItemKey; }
+	FName GetSName() { return SkillKey; }
+	FString GetConName() { return ContentName; }
 	int32 GetContentIndex() { return ContentIndex; }
 	int32 GetAmount() { return Amount; }
 	UC_QuickSlotComponent* GetQuickSlotCom() { return QuickSlotCom; }
 
 	void SetItemKey(FName _ItemKey);
+	void SetSkillKey(FName _SkillKey);
+	void SetConName(FString _ContentName);
 	void SetSlotKey(int32 _SlotKey);
 	void SetConIndex(int32 _ContentIndex);
 	void SetAmount(int32 _Amount);
@@ -69,6 +73,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere)
 	int32 ContentIndex;
+
+	UPROPERTY(VisibleAnywhere)
+	FString ContentName;
 
 	TWeakPtr<FS_Item> ItemData;
 

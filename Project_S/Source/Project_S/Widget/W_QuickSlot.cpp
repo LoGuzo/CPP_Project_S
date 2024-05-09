@@ -68,6 +68,16 @@ void UW_QuickSlot::SetItemKey(FName _ItemKey)
 	ItemKey = _ItemKey;
 }
 
+void UW_QuickSlot::SetSkillKey(FName _SkillKey)
+{
+	SkillKey = _SkillKey;
+}
+
+void UW_QuickSlot::SetConName(FString _ContentName)
+{
+	ContentName = _ContentName;
+}
+
 void UW_QuickSlot::SetSlotKey(int32 _SlotKey)
 {
 	SlotKey = _SlotKey;
@@ -86,13 +96,25 @@ void UW_QuickSlot::SetQuickSlotCom(UC_QuickSlotComponent* _QuickSlotCom)
 bool UW_QuickSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	DO_Drag = Cast<UDO_DragDrop>(InOperation);
-	if (DO_Drag->GetSkillCom() != nullptr)
+	if (DO_Drag->GetConName() == GetConName())
 	{
-		QuickSlotCom->SkillToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetSkillCom());
-	}
-	else if (DO_Drag->GetInvenCom() != nullptr)
-	{
-		QuickSlotCom->InvenToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
+		if (DO_Drag->GetConName() == "Inventory")
+		{
+			if (DO_Drag->GetItemConName() == "Potion")
+			{
+				if (DO_Drag->GetInvenCom() != nullptr)
+				{
+					QuickSlotCom->InvenToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
+				}
+			}
+		}
+		else if (DO_Drag->GetConName() == "Skill")
+		{
+			if (DO_Drag->GetSkillCom() != nullptr)
+			{
+				QuickSlotCom->SkillToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetSkillCom());
+			}
+		}
 	}
 
 	return false;

@@ -73,10 +73,13 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	FName SkillKey;
 
+	UPROPERTY(VisibleAnywhere)
 	FString ContentName;
 
+	UPROPERTY(VisibleAnywhere)
 	FString ItemConName;
 
+	UPROPERTY(VisibleAnywhere)
 	int32 ContentIndex;
 
 	UC_InventoryComponent* InventoryCom;
