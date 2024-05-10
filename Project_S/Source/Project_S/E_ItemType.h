@@ -11,6 +11,7 @@ UENUM()
 enum class E_ItemType : uint8
 {
 	E_Equip UMETA(DisplayName = "Equip"),
+	E_Cunsumalbe UMETA(DisplayName = "Cunsum"),
 	E_Etc UMETA(DisplayName = "Etc"),
 };
 

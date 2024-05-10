@@ -2,6 +2,7 @@
 
 
 #include "EnemyCharacter.h"
+#include "Project_S/EnemyAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -23,6 +24,8 @@ AEnemyCharacter::AEnemyCharacter()
 		HpBar->SetWidgetClass(UW.Class);
 		HpBar->SetDrawSize(FVector2D(200.f, 500.f));
 	}
+	AIControllerClass = AEnemyAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
