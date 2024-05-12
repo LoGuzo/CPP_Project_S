@@ -2,7 +2,7 @@
 
 
 #include "EnemyCharacter.h"
-#include "Project_S/EnemyAIController.h"
+#include "Project_S/Controllers/EnemyAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
