@@ -120,6 +120,7 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		LoadData.Reset();
 	}
+	GetWorldTimerManager().ClearTimer(UnusedHandle);
 }
 
 void AUserCharacter::PostInitializeComponents()

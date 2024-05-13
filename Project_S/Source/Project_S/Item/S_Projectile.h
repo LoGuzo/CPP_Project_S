@@ -22,6 +22,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
+	class USphereComponent* CollisionComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Movement")
+	class UProjectileMovementComponent* ProjectileMovementComponent;
 
 private:
 	int32 Cnt;
@@ -29,6 +34,8 @@ private:
 	int32 Type;
 
 public:
+
+	void FireInDirection(const FVector& Direction);
 	virtual void SetProjectile();
 
 };

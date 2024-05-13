@@ -52,15 +52,7 @@ void AEnemyAIController::Tick(float DeltaTime)
 		}
 	}
 }
-void AEnemyAIController::Attack()
-{
-	//EnemyAttack
-	AEnemyCharacter* Enemy = Cast<AEnemyCharacter>(GetOwner());
-	if(Enemy)
-	{
-	//Enemy->Attack();
-	}
-}
+
 void AEnemyAIController::ResetFirst()
 {
 	// Reset Location , Rotator;

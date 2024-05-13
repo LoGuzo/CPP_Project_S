@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "EnemyAIController.h"
+#include "Project_S/SUtils.h"
 #include "AggressiveAIController.generated.h"
-
+using namespace SUtils;
 /**
  * 
  */

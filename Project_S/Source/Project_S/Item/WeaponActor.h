@@ -17,6 +17,10 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* Weapon;
+
+	/*UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	TSubclassOf<class AS_Projectile> ProjectileClass;*/
+
 protected:
 
 private:

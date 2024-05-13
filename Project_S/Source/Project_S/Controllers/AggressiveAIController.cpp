@@ -22,56 +22,57 @@ void AAggressiveAIController::PreInitializeComponents()
 void AAggressiveAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (SDistance(FirstLocation, GetPawn()->GetActorLocation()) > 1000.f)
+	{
+		ChkState = E_State::E_Reset;
+	}
 }
 
 void AAggressiveAIController::AISerach()
 {
+	auto CurrentPawn = GetPawn();
+	if (CurrentPawn == nullptr)
+		return;
+	UWorld* World = CurrentPawn->GetWorld();
+	FVector Center = CurrentPawn->GetActorLocation();
+	float SearchRadius = 500.f;
 
-	if (CountSearch < 5)
+	if (World == nullptr)
+		return;
+	TArray<FHitResult>HItResults;
+	FCollisionQueryParams QueryParams(NAME_None, false, CurrentPawn);
+	bool bResult = World->SweepMultiByChannel(
+		HItResults,
+		Center,
+		Center,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(SearchRadius),
+		QueryParams);
+
+	if (bResult)
 	{
-		auto CurrentPawn = GetPawn();
-		if (CurrentPawn == nullptr)
-			return;
-		UWorld* World = CurrentPawn->GetWorld();
-		FVector Center = CurrentPawn->GetActorLocation();
-		float SearchRadius = 500.f;
-
-		if (World == nullptr)
-			return;
-
-		TArray<FOverlapResult>OverlapResults;
-		FCollisionQueryParams QueryParams(NAME_None, false, CurrentPawn);
-
-		bool bResult = World->OverlapMultiByChannel(
-			OverlapResults,
-			Center,
-			FQuat::Identity,
-			ECollisionChannel::ECC_EngineTraceChannel2,
-			FCollisionShape::MakeSphere(SearchRadius),
-			QueryParams);
-
-		if (bResult)
-		{
-			for (auto& OverlapResult : OverlapResults) {
-				User = Cast<AUserCharacter>(OverlapResult.GetActor());
-				if (User && User->GetController()->IsPlayerController())
-				{
-					CountSearch = 0;
-					DrawDebugSphere(World, Center, SearchRadius, 16, FColor::Green, false, 0.2f);
-					ChkState = E_State::E_Move;
-					return;
-				}
+		for (auto& HItResult : HItResults) {
+			User = Cast<AUserCharacter>(HItResult.GetActor());
+			if (User && User->GetController()->IsPlayerController())
+			{
+				CountSearch = 0;
+				DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Green, false, 0.2f);
+				ChkState = E_State::E_Move;
+				return;
 			}
 		}
-		if (IsMoveAtFirst)
+	}
+	if (IsMoveAtFirst)
+	{
+		CountSearch++;
+		if (CountSearch > 4)
 		{
-			CountSearch++;
+			ChkState = E_State::E_Reset;
 		}
-		DrawDebugSphere(World, Center, SearchRadius, 16, FColor::Red, false, 0.2f);
 	}
-	else {
-		ChkState = E_State::E_Reset;
-	}
+	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
+
 }
 
 void AAggressiveAIController::AIMove()

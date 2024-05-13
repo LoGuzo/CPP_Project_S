@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Project_S/EnumClass.h"
 #include "EnemyAIController.generated.h"
 
 /**
@@ -20,14 +21,6 @@ public:
 		TargetVector = _TargetVector;
 		TargetRotator = _TargetRotator;
 	}
-};
-
-enum class E_State
-{
-	E_Search,
-	E_Move,
-	E_Attack,
-	E_Reset,
 };
 
 UCLASS()
@@ -65,7 +58,7 @@ public:
 
 	virtual void AISerach() {}; // 적탐색
 	virtual void AIMove() {}; // 이동
-	void Attack(); // 공격
+	virtual void Attack() {}; // 공격
 	void ResetFirst(); // 초기화
 
 	void FSMState();
