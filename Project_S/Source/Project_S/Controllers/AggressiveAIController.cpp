@@ -75,6 +75,11 @@ void AAggressiveAIController::AISerach()
 
 }
 
+void AAggressiveAIController::Attack()
+{
+	
+}
+
 void AAggressiveAIController::AIMove()
 {
 	if (IsMoving == true)

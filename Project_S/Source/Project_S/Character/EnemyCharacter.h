@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FirstCharacter.h"
+#include "Project_S/S_StructureAll.h"
 #include "EnemyCharacter.generated.h"
 
 /**
@@ -22,6 +23,8 @@ private:
 	class UWidgetComponent* HpBar;
 
 	class UOnlyHpBar* OnlyHpBar;
+
+	class UMonsterAnimInstance* AnimInstance;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 

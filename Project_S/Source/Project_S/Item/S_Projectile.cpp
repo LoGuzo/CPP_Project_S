@@ -4,6 +4,7 @@
 #include "S_Projectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Misc/OutputDeviceNull.h"
 
 // Sets default values
 AS_Projectile::AS_Projectile()
@@ -41,9 +42,41 @@ void AS_Projectile::Tick(float DeltaTime)
 
 void AS_Projectile::FireInDirection(const FVector& Direction)
 {
+	FString str = "test";
+	FOutputDeviceNull ar;
+	CallFunctionByNameWithArguments(*str, ar, NULL, true);
 }
 
 void AS_Projectile::SetProjectile()
 {
+	// 블루프린트 클래스
+	/*if (ProjectileClass == nullptr)
+		return;*/
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	FVector Offset;
+
+	GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+	FVector SpawnLocation = CameraLocation + FTransform(CameraRotation).TransformVector(Offset);
+
+	FRotator SpawnRotator = CameraRotation;
+	SpawnRotator.Pitch += 10.f;
+	UWorld* world = GetWorld();
+
+	if (world)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		/*SpawnParams.Instigator = this;
+
+		AS_Projectile* Projectile = world->SpawnActor<AS_Projectile>(ProjectilClass, SpawnLocation, SpawnRotator, SpawnParams);
+
+		if (Projectile)
+		{
+			FVector Direction = SpawnRotator.Vector();
+			Projectile->FireInDirection(Direction);
+		}*/
+	}
 }
 

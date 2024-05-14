@@ -28,6 +28,8 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Movement")
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	//Decal 마법진과 같은 것을 사용할때
+
 private:
 	int32 Cnt;
 	int32 MaxCnt;

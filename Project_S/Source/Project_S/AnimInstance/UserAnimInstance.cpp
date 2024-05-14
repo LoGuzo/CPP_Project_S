@@ -19,7 +19,7 @@ UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 
 UUserAnimInstance::~UUserAnimInstance()
 {
-	if (NowSkill != nullptr)
+	if (NowSkill.IsValid())
 	{
 		NowSkill.Reset();
 	}

@@ -36,7 +36,9 @@ protected :
 	virtual void PreInitializeComponents() override;
 
 	TArray<TSharedPtr<FLocationAndRotator>> PathNode;
+	TArray<TWeakPtr<FLocationAndRotator>> WeakPathNode;
 	int32 PathIndex;
+
 	bool IsMoveAtFirst;
 	bool IsMoving;
 	E_State ChkState;

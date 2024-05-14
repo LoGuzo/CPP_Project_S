@@ -2,9 +2,10 @@
 
 
 #include "EnemyCharacter.h"
+#include "Components/WidgetComponent.h"
+#include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
-#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Project_S/Widget/OnlyHpBar.h"
 
@@ -24,6 +25,13 @@ AEnemyCharacter::AEnemyCharacter()
 		HpBar->SetWidgetClass(UW.Class);
 		HpBar->SetDrawSize(FVector2D(200.f, 500.f));
 	}
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Monster/Animations/BP_MutantAnimInstance.BP_MutantAnimInstance_C'"));
+	if (ANIM.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(ANIM.Class);
+	}
+
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -52,5 +60,11 @@ void AEnemyCharacter::PostInitializeComponents()
 	{
 		OnlyHpBar->BindHp(Stat);
 		OnlyHpBar->SetRenderOpacity(0.f);
+	}
+
+	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->SetMonster(this);
 	}
 }

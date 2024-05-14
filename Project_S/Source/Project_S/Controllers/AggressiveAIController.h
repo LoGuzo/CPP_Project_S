@@ -29,4 +29,5 @@ public:
 
 	virtual void AISerach() override; // 적탐색
 	virtual void AIMove() override; // 이동
+	virtual void Attack() override; // 공격
 };
