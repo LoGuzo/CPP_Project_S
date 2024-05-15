@@ -6,8 +6,11 @@
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "Project_S/Component/C_SkillComponent.h"
+#include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Widget/OnlyHpBar.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include <Kismet/GameplayStatics.h>
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -18,7 +21,7 @@ AEnemyCharacter::AEnemyCharacter()
 	HpBar->SetupAttachment(GetMesh());
 	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	HpBar->SetWidgetSpace(EWidgetSpace::Screen);
-
+	MyCharType = E_CharacterType::E_Monster;
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_OnlyHpBar.WBP_OnlyHpBar_C'"));
 	if (UW.Succeeded())
 	{
@@ -66,5 +69,15 @@ void AEnemyCharacter::PostInitializeComponents()
 	if (AnimInstance)
 	{
 		AnimInstance->SetMonster(this);
+	}
+}
+
+void AEnemyCharacter::UseSkill()
+{
+	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		const auto PatternData = StaticCastSharedPtr<FMonsterPattern>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterPattern)->GetMyData((Pattern->GetSlot(0).ItemName).ToString()));
+		AnimInstance->PlaySome(PatternData);
 	}
 }

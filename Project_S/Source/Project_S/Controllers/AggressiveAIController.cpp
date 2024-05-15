@@ -30,6 +30,7 @@ void AAggressiveAIController::Tick(float DeltaTime)
 
 void AAggressiveAIController::AISerach()
 {
+	SetMaxSpeed(150.f);
 	auto CurrentPawn = GetPawn();
 	if (CurrentPawn == nullptr)
 		return;
@@ -57,6 +58,7 @@ void AAggressiveAIController::AISerach()
 			if (User && User->GetController()->IsPlayerController())
 			{
 				CountSearch = 0;
+				IsMoveAtFirst = false;
 				DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Green, false, 0.2f);
 				ChkState = E_State::E_Move;
 				return;
@@ -69,6 +71,7 @@ void AAggressiveAIController::AISerach()
 		if (CountSearch > 4)
 		{
 			ChkState = E_State::E_Reset;
+			return;
 		}
 	}
 	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
@@ -84,9 +87,10 @@ void AAggressiveAIController::AIMove()
 {
 	if (IsMoving == true)
 		return;
-	MoveToActor(User);
+	SetMaxSpeed(600.f);
 	IsMoving = true;
 	IsMoveAtFirst = true;
+	MoveToActor(User);
 }
 
 void AAggressiveAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {

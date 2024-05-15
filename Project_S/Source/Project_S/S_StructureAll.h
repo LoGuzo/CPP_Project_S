@@ -140,10 +140,41 @@ struct FSkillTable : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCurveBase* AnimCurve;
+
 	/*UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class Skill> SkillClass;*/
 };
 
+
+USTRUCT()
+struct FMonsterPattern : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_SkillType PatternType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName Skill_Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CoolTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Range;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Scale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimMontage* AnimMontage;
+};
 
 USTRUCT()
 struct FResult : public FTableRowBase 

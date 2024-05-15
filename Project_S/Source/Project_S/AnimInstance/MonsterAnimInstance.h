@@ -10,7 +10,7 @@
  * 
  */
 class AEnemyCharacter;
-struct FSkillTable;
+struct FMonsterPattern;
 
 UCLASS()
 class PROJECT_S_API UMonsterAnimInstance : public UAnimInstance
@@ -25,7 +25,7 @@ private:
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 		float Speed;
 
-	TWeakPtr<FSkillTable> NowSkill;
+	TWeakPtr<FMonsterPattern> NowPattern;
 
 	AEnemyCharacter* Monster;
 
@@ -33,7 +33,7 @@ public:
 	float GetSpeed() const { return Speed; }
 	void SetSpeed(const float _Speed);
 
-	void PlaySome(TWeakPtr<FSkillTable>_Data);
+	void PlaySome(TWeakPtr<FMonsterPattern>_Data);
 	void ColliderNotify();
 
 	void SetMonster(AEnemyCharacter* _Monster);

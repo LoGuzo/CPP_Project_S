@@ -54,6 +54,7 @@ public:
 	int32 CountSearch;
 	virtual void Tick(float DeltaTime) override;
 
+	// 시간
 	float StartTime;
 	float EndTime;
 	float PlayTime;
@@ -63,5 +64,6 @@ public:
 	virtual void Attack() {}; // 공격
 	void ResetFirst(); // 초기화
 
-	void FSMState();
+	void FSMState(); // 상태 변경
+	void SetMaxSpeed(float NewMaxSpeed); // MaxSpeed 조정
 };

@@ -17,7 +17,7 @@ class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 	
 public:
 	AEnemyCharacter();
-
+	virtual void UseSkill() override;
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
@@ -32,5 +32,7 @@ private:
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
+
+	class UC_SkillComponent* Pattern;
 
 };

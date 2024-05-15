@@ -7,6 +7,13 @@
 #include "Project_S/Component/S_StatComponent.h"
 #include "FirstCharacter.generated.h"
 
+enum class E_CharacterType
+{
+	E_Monster,
+	E_User,
+	E_Npc,
+};
+
 UCLASS()
 class PROJECT_S_API AFirstCharacter : public ACharacter
 {
@@ -22,8 +29,14 @@ private:
 
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
+	E_CharacterType MyCharType;
 public:
+	virtual void UseSkill() {};
+
+	void MeleeAttackCheck(float _Range);
+	void ScopeAttackCheck(float _Range);
+	void ShotAttackCheck();
+
 	int32 GetMyColor() { return MyColor; }
 	FString GetCharID() { return CharID; }
 	void SetMyColor(int32 _MyColor);

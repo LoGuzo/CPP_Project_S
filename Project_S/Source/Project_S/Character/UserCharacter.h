@@ -35,7 +35,7 @@ public:
 
 	void SaveCharacterData();
 	void LoadCharacterData();
-
+	virtual void UseSkill() override;
 protected:
 
 	/** Called for forwards/backward input */
@@ -95,8 +95,6 @@ private:
 
 	void ResetDash();
 
-	void UseSkill();
-
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
 
@@ -111,9 +109,6 @@ private:
 
 public:
 	void AttackCheck();
-	void MeleeAttackCheck(float _Range);
-	void ScopeAttackCheck(float _Radius);
-	void ShotAttackCheck();
 
 	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);
 

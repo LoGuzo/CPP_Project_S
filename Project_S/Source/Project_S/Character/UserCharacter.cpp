@@ -2,7 +2,6 @@
 
 
 #include "UserCharacter.h"
-#include "DrawDebugHelpers.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
@@ -21,10 +20,11 @@
 #include "Project_S/Widget/S_CharacterWidget.h"
 #include "Project_S/Widget/InventoryMenu.h"
 #include "Project_S/Widget/W_Inventory.h"
-#include "Kismet/GameplayStatics.h"
+#include <Kismet/GameplayStatics.h>
 
 AUserCharacter::AUserCharacter()
 {
+	MyCharType = E_CharacterType::E_User;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -304,88 +304,6 @@ void AUserCharacter::AttackCheck()
 {
 	if (nullptr != MyWeapon)
 		MyWeapon->AttackCheck(this);
-}
-
-void AUserCharacter::MeleeAttackCheck(float _Range)
-{
-	FHitResult HitResult;
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	float AttackRange = _Range;
-	float AttackRadius = 50.f;
-	bool bResult = GetWorld()->SweepSingleByChannel(
-		OUT HitResult,
-		this->GetActorLocation(),
-		this->GetActorLocation() + (this->GetActorForwardVector()) * (AttackRange),
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel1,
-		FCollisionShape::MakeSphere(AttackRadius),
-		Params
-	);
-
-	FVector Vec = this->GetActorForwardVector() * AttackRange;
-	FVector Center = this->GetActorLocation() + Vec * 0.5f;
-	float HalfHeight = AttackRange * 0.5f + AttackRadius;
-	FQuat Rotation = FRotationMatrix::MakeFromZ(Vec).ToQuat();
-	FColor DrawColor;
-	if (bResult)
-		DrawColor = FColor::Green;
-	else
-		DrawColor = FColor::Red;
-
-	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius, Rotation, DrawColor, false, 2.f);
-
-	if (bResult && HitResult.Actor.IsValid())
-	{
-		auto Enemy = Cast<AFirstCharacter>(HitResult.Actor.Get());
-		if (Enemy) {
-			FDamageEvent DamageEvent;
-			HitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);
-		}
-	}
-}
-
-void AUserCharacter::ScopeAttackCheck(float _Range)
-{
-	TArray<FHitResult> HitResult;
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	float AttackRange = _Range;
-	bool bResult = GetWorld()->SweepMultiByChannel(
-		OUT HitResult,
-		this->GetActorLocation(),
-		this->GetActorLocation(),
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel1,
-		FCollisionShape::MakeSphere(AttackRange),
-		Params
-	);
-
-	FVector Center = this->GetActorLocation();
-	FColor DrawColor;
-	if (bResult)
-		DrawColor = FColor::Green;
-	else
-		DrawColor = FColor::Red;
-
-	DrawDebugSphere(GetWorld(), Center, AttackRange, 10, DrawColor, false, 2.f);
-
-	for (FHitResult hitResult : HitResult)
-	{
-		if (bResult && hitResult.Actor.IsValid())
-		{
-			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
-			if (Enemy) {
-				FDamageEvent DamageEvent;
-				hitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);
-			}
-		}
-	}
-}
-
-void AUserCharacter::ShotAttackCheck()
-{
-
 }
 
 void AUserCharacter::OnInventoryKeyPressed()

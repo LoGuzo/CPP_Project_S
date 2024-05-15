@@ -2,7 +2,8 @@
 
 
 #include "EnemyAIController.h"
-#include "Project_S/Character/EnemyCharacter.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include <Kismet/GameplayStatics.h>
 
 void AEnemyAIController::BeginPlay()
@@ -56,6 +57,7 @@ void AEnemyAIController::Tick(float DeltaTime)
 void AEnemyAIController::ResetFirst()
 {
 	// Reset Location , Rotator;
+	SetMaxSpeed(1200.f);
 	MoveToLocation(FirstLocation, 10);
 	IsMoving = true;
 	IsMoveAtFirst = false;
@@ -81,5 +83,17 @@ void AEnemyAIController::FSMState()
 		break;
 	}
 }
-
+void AEnemyAIController::SetMaxSpeed(float NewMaxSpeed)
+{
+	// 제어하는 Pawn이 유효한지 확인
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		// 제어하는 Pawn이 ACharacter인지 확인
+		if (ACharacter* ControlledCharacter = Cast<ACharacter>(ControlledPawn))
+		{
+			// CharacterMovementComponent를 통해 최대 속도를 설정
+			ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxSpeed;
+		}
+	}
+}
 

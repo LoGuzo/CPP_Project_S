@@ -4,16 +4,16 @@
 #include "MonsterAnimInstance.h"
 #include "Project_S/Character/EnemyCharacter.h"
 
-UMonsterAnimInstance::UMonsterAnimInstance() : NowSkill(nullptr), Monster(nullptr)
+UMonsterAnimInstance::UMonsterAnimInstance() : NowPattern(nullptr), Monster(nullptr)
 {
 	Speed = 0.0f;
 }
 
 UMonsterAnimInstance::~UMonsterAnimInstance()
 {
-	if (NowSkill.IsValid())
+	if (NowPattern.IsValid())
 	{
-		NowSkill.Reset();
+		NowPattern.Reset();
 	}
 }
 
@@ -23,9 +23,9 @@ void UMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Speed = Monster->GetVelocity().Size();
 	}
-	if (NowSkill != nullptr)
+	if (NowPattern != nullptr)
 	{
-		if (Montage_IsPlaying(NowSkill.Pin()->AnimMontage))
+		if (Montage_IsPlaying(NowPattern.Pin()->AnimMontage))
 		{
 			int32 size = NotifyQueue.AnimNotifies.Num();
 			if (size <= 0) return;
@@ -42,29 +42,31 @@ void UMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			}
 		}
 		else
-			NowSkill = nullptr;
+			NowPattern = nullptr;
 	}
 }
 
-void UMonsterAnimInstance::PlaySome(TWeakPtr<FSkillTable>_Data)
+void UMonsterAnimInstance::PlaySome(TWeakPtr<FMonsterPattern>_Data)
 {
-	NowSkill = _Data;
-	if (NowSkill.Pin()->AnimMontage != nullptr)
+	NowPattern = _Data;
+	if (NowPattern.Pin()->AnimMontage != nullptr)
 	{
-		if (!Montage_IsPlaying(NowSkill.Pin()->AnimMontage))
+		if (!Montage_IsPlaying(NowPattern.Pin()->AnimMontage))
 		{
-			Montage_Play(NowSkill.Pin()->AnimMontage);
+			Montage_Play(NowPattern.Pin()->AnimMontage);
 		}
 	}
 }
 
 void UMonsterAnimInstance::ColliderNotify()
 {
-	switch (NowSkill.Pin()->Type)
+	switch (NowPattern.Pin()->PatternType)
 	{
 	case E_SkillType::E_Melee:
+		Monster->MeleeAttackCheck(NowPattern.Pin()->Range);
 		break;
 	case E_SkillType::E_Scope:
+		Monster->ScopeAttackCheck(NowPattern.Pin()->Range);
 		break;
 	case E_SkillType::E_Shot:
 		break;
