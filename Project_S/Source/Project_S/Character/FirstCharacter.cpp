@@ -31,13 +31,13 @@ void AFirstCharacter::SetCharID(FString _CharID)
 }
 void AFirstCharacter::MeleeAttackCheck(float _Range)
 {
-	FHitResult HitResult;
+	TArray<FHitResult> HitResults;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	float AttackRange = _Range;
 	float AttackRadius = 50.f;
-	bool bResult = GetWorld()->SweepSingleByChannel(
-		OUT HitResult,
+	bool bResult = GetWorld()->SweepMultiByChannel(
+		HitResults,
 		this->GetActorLocation(),
 		this->GetActorLocation() + (this->GetActorForwardVector()) * (AttackRange),
 		FQuat::Identity,
@@ -50,22 +50,37 @@ void AFirstCharacter::MeleeAttackCheck(float _Range)
 	FVector Center = this->GetActorLocation() + Vec * 0.5f;
 	float HalfHeight = AttackRange * 0.5f + AttackRadius;
 	FQuat Rotation = FRotationMatrix::MakeFromZ(Vec).ToQuat();
-	FColor DrawColor;
-	if (bResult)
-		DrawColor = FColor::Green;
-	else
-		DrawColor = FColor::Red;
+	FColor DrawColor = FColor::Red;
 
-	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius, Rotation, DrawColor, false, 2.f);
-
-	if (bResult && HitResult.Actor.IsValid())
+	for (FHitResult hitResult : HitResults)
 	{
-		auto Enemy = Cast<AFirstCharacter>(HitResult.Actor.Get());
-		if (Enemy) {
-			FDamageEvent DamageEvent;
-			HitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);
+		if (bResult && hitResult.Actor.IsValid())
+		{
+			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
+			if (Enemy)
+			{
+				if (MyCharType == E_CharacterType::E_Monster)
+				{
+					if (Enemy->MyCharType == E_CharacterType::E_User) {
+						FDamageEvent DamageEvent;
+						hitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);
+						DrawColor = FColor::Green;
+						break;
+					}
+				}
+				else if (MyCharType == E_CharacterType::E_User)
+				{
+					if (Enemy->MyCharType == E_CharacterType::E_Monster) {
+						FDamageEvent DamageEvent;
+						hitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);
+						DrawColor = FColor::Green;
+						break;
+					}
+				}
+			}
 		}
 	}
+	DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius, Rotation, DrawColor, false, 2.f);
 }
 
 void AFirstCharacter::ScopeAttackCheck(float _Range)
@@ -86,8 +101,6 @@ void AFirstCharacter::ScopeAttackCheck(float _Range)
 
 	FVector Center = this->GetActorLocation();
 	FColor DrawColor = FColor::Red;
-
-	//DrawDebugSphere(GetWorld(), Center, AttackRange, 10, DrawColor, false, 2.f);
 
 	for (FHitResult hitResult : HitResults)
 	{

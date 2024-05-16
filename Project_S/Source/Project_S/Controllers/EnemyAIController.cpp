@@ -17,7 +17,7 @@ void AEnemyAIController::BeginPlay()
 	FirstLocation = GetPawn()->GetActorLocation();
 	StartTime = GetWorld()->GetDeltaSeconds();
 	EndTime = GetWorld()->GetDeltaSeconds();
-	PlayTime = 3.f;
+	PlayTime = 1.f;
 }
 
 void AEnemyAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -62,6 +62,7 @@ void AEnemyAIController::ResetFirst()
 	IsMoving = true;
 	IsMoveAtFirst = false;
 	CountSearch = 0;
+	ChkState = E_State::E_Search;
 }
 void AEnemyAIController::FSMState()
 {

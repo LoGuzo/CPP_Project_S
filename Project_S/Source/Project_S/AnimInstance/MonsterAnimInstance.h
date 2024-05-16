@@ -23,7 +23,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 private:
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
-		float Speed;
+	float Speed;
 
 	TWeakPtr<FMonsterPattern> NowPattern;
 
@@ -37,4 +37,10 @@ public:
 	void ColliderNotify();
 
 	void SetMonster(AEnemyCharacter* _Monster);
+
+	UFUNCTION()
+	void AnimNotify_Collider();
+
+	UFUNCTION()
+	void AnimNotify_AttackEnd();
 };

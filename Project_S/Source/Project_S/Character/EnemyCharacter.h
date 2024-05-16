@@ -10,6 +10,7 @@
 /**
  * 
  */
+class UC_SkillComponent;
 UCLASS()
 class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 {
@@ -17,7 +18,8 @@ class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 	
 public:
 	AEnemyCharacter();
-	virtual void UseSkill() override;
+	virtual void UseSkill(FString _SkillName) override;
+	UC_SkillComponent* GetPattern() { return Pattern; }
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
@@ -33,6 +35,6 @@ private:
 
 	virtual void PostInitializeComponents() override;
 
-	class UC_SkillComponent* Pattern;
+	UC_SkillComponent* Pattern;
 
 };

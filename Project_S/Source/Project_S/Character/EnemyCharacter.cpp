@@ -49,7 +49,7 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	Stat->SetLevel(2);
+	Stat->SetLevel(1);
 }
 
 void AEnemyCharacter::PostInitializeComponents()
@@ -72,12 +72,12 @@ void AEnemyCharacter::PostInitializeComponents()
 	}
 }
 
-void AEnemyCharacter::UseSkill()
+void AEnemyCharacter::UseSkill(FString _SkillName)
 {
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		const auto PatternData = StaticCastSharedPtr<FMonsterPattern>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterPattern)->GetMyData((Pattern->GetSlot(0).ItemName).ToString()));
+		const auto PatternData = StaticCastSharedPtr<FMonsterPattern>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterPattern)->GetMyData(_SkillName));
 		AnimInstance->PlaySome(PatternData);
 	}
 }

@@ -35,7 +35,7 @@ public:
 
 	void SaveCharacterData();
 	void LoadCharacterData();
-	virtual void UseSkill() override;
+	virtual void UseSkill(FString _SkillName) override;
 protected:
 
 	/** Called for forwards/backward input */

@@ -23,27 +23,6 @@ void UMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Speed = Monster->GetVelocity().Size();
 	}
-	if (NowPattern != nullptr)
-	{
-		if (Montage_IsPlaying(NowPattern.Pin()->AnimMontage))
-		{
-			int32 size = NotifyQueue.AnimNotifies.Num();
-			if (size <= 0) return;
-			for (int32 i = 0; i < size; i++)
-			{
-				FName name = NotifyQueue.AnimNotifies[i].GetNotify()->NotifyName;
-				if (name == TEXT("Collider"))
-				{
-					if (Monster != nullptr)
-					{
-						ColliderNotify();
-					}
-				}
-			}
-		}
-		else
-			NowPattern = nullptr;
-	}
 }
 
 void UMonsterAnimInstance::PlaySome(TWeakPtr<FMonsterPattern>_Data)
@@ -53,7 +32,7 @@ void UMonsterAnimInstance::PlaySome(TWeakPtr<FMonsterPattern>_Data)
 	{
 		if (!Montage_IsPlaying(NowPattern.Pin()->AnimMontage))
 		{
-			Montage_Play(NowPattern.Pin()->AnimMontage);
+			Montage_Play(NowPattern.Pin()->AnimMontage, 1.f);
 		}
 	}
 }
@@ -83,4 +62,18 @@ void UMonsterAnimInstance::SetSpeed(const float _Speed)
 void UMonsterAnimInstance::SetMonster(AEnemyCharacter* _Monster)
 {
 	Monster = _Monster;
+}
+
+void UMonsterAnimInstance::AnimNotify_Collider()
+{
+	if (NowPattern != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Chk1"));
+		//ColliderNotify();
+	}
+}
+
+void UMonsterAnimInstance::AnimNotify_AttackEnd()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Chk"));
 }

@@ -3,6 +3,7 @@
 
 #include "AggressiveAIController.h"
 #include "DrawDebugHelpers.h"
+#include "Project_S/Character/FirstCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
 void AAggressiveAIController::BeginPlay()
 {
@@ -80,7 +81,21 @@ void AAggressiveAIController::AISerach()
 
 void AAggressiveAIController::Attack()
 {
-	
+	if (User)
+	{
+		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
+		{
+			const auto Enemy = Cast<AFirstCharacter>(GetPawn());
+			if (Enemy) {
+				SetFocus(User);
+				Enemy->UseSkill("Mutant_Attack");
+				ChkState = E_State::E_None;
+				return;
+			}
+		}
+	}
+	SetFocus(nullptr);
+	ChkState = E_State::E_Search;
 }
 
 void AAggressiveAIController::AIMove()
@@ -90,12 +105,12 @@ void AAggressiveAIController::AIMove()
 	SetMaxSpeed(600.f);
 	IsMoving = true;
 	IsMoveAtFirst = true;
-	MoveToActor(User);
+	MoveToActor(User,100.f);
 }
 
 void AAggressiveAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
 	if (Result.IsSuccess()) {
 		IsMoving = false;
-		ChkState = E_State::E_Search;
+		ChkState = E_State::E_Attack;
 	}
 }
