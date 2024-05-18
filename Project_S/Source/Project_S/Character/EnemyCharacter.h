@@ -18,8 +18,15 @@ class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 	
 public:
 	AEnemyCharacter();
+
 	virtual void UseSkill(FString _SkillName) override;
-	UC_SkillComponent* GetPattern() { return Pattern; }
+
+	void DiedEnemy();
+
+	virtual void ResetStat() override;
+protected:
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
@@ -28,13 +35,22 @@ private:
 
 	class UMonsterAnimInstance* AnimInstance;
 
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void PostInitializeComponents() override;
 
 	UC_SkillComponent* Pattern;
+
+	TWeakPtr<FMonsterPattern> NowPattern;
+
+	UPROPERTY()
+	FTimerHandle UnusedHandle;
+
+	virtual void SetMesh() override;
+
+	class AAggressiveAIController* NowAIController;
 
 };

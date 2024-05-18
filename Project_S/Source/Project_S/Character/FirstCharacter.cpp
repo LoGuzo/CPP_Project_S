@@ -16,7 +16,6 @@ AFirstCharacter::AFirstCharacter()
 float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Stat->OnAttacked(DamageAmount);
-
 	return DamageAmount;
 }
 

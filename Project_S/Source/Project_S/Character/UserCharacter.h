@@ -55,8 +55,13 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	virtual void ResetStat() override;
 private:
 	class AWeaponActor* MyWeapon = nullptr;
+
+	TWeakPtr<FSkillTable> NowSkill;
 
 	// UI
 	TSubclassOf<class US_CharacterWidget> CharacterUI;

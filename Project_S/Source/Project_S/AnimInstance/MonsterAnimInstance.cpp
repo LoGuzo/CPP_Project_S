@@ -11,9 +11,9 @@ UMonsterAnimInstance::UMonsterAnimInstance() : NowPattern(nullptr), Monster(null
 
 UMonsterAnimInstance::~UMonsterAnimInstance()
 {
-	if (NowPattern.IsValid())
+	if (NowPattern != nullptr)
 	{
-		NowPattern.Reset();
+		NowPattern = nullptr;
 	}
 }
 
@@ -25,27 +25,27 @@ void UMonsterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
-void UMonsterAnimInstance::PlaySome(TWeakPtr<FMonsterPattern>_Data)
+void UMonsterAnimInstance::PlaySome(TSharedPtr<FMonsterPattern>_Data)
 {
-	NowPattern = _Data;
-	if (NowPattern.Pin()->AnimMontage != nullptr)
+	NowPattern = _Data.Get();
+	if (NowPattern->AnimMontage != nullptr)
 	{
-		if (!Montage_IsPlaying(NowPattern.Pin()->AnimMontage))
+		if (!Montage_IsPlaying(NowPattern->AnimMontage))
 		{
-			Montage_Play(NowPattern.Pin()->AnimMontage, 1.f);
+			Montage_Play(NowPattern->AnimMontage, 1.f);
 		}
 	}
 }
 
 void UMonsterAnimInstance::ColliderNotify()
 {
-	switch (NowPattern.Pin()->PatternType)
+	switch (NowPattern->PatternType)
 	{
 	case E_SkillType::E_Melee:
-		Monster->MeleeAttackCheck(NowPattern.Pin()->Range);
+		Monster->MeleeAttackCheck(NowPattern->Range);
 		break;
 	case E_SkillType::E_Scope:
-		Monster->ScopeAttackCheck(NowPattern.Pin()->Range);
+		Monster->ScopeAttackCheck(NowPattern->Range);
 		break;
 	case E_SkillType::E_Shot:
 		break;
@@ -66,14 +66,18 @@ void UMonsterAnimInstance::SetMonster(AEnemyCharacter* _Monster)
 
 void UMonsterAnimInstance::AnimNotify_Collider()
 {
-	if (NowPattern != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Chk1"));
-		//ColliderNotify();
-	}
+	ColliderNotify();
 }
 
 void UMonsterAnimInstance::AnimNotify_AttackEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Chk"));
+	//UE_LOG(LogTemp, Warning, TEXT("Chk"));
+}
+
+void UMonsterAnimInstance::AnimNotify_Died()
+{
+	if (Monster != nullptr)
+	{
+		Monster->DiedEnemy();
+	}
 }

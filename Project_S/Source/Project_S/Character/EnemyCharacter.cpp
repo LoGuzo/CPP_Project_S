@@ -5,6 +5,7 @@
 #include "Components/WidgetComponent.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
+#include "Project_S/Controllers/AggressiveAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -35,6 +36,8 @@ AEnemyCharacter::AEnemyCharacter()
 		GetMesh()->SetAnimInstanceClass(ANIM.Class);
 	}
 
+	SetMesh();
+
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -43,6 +46,10 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	OnlyHpBar->SetRenderOpacity(1.f);
+	if (Stat->GetHp() <= 0)
+	{
+		UseSkill("Mutant_Die");
+	}
 	return DamageAmount;
 }
 
@@ -50,6 +57,19 @@ void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	Stat->SetLevel(1);
+	NowAIController = Cast<AAggressiveAIController>(GetController());
+	SaveLocation = GetActorLocation();
+}
+
+void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (NowPattern.IsValid())
+	{
+		NowPattern.Reset();
+	}
+	GetWorldTimerManager().ClearTimer(UnusedHandle);
 }
 
 void AEnemyCharacter::PostInitializeComponents()
@@ -72,12 +92,47 @@ void AEnemyCharacter::PostInitializeComponents()
 	}
 }
 
+void AEnemyCharacter::SetMesh()
+{
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/Mannequin/Monster/Character/Mesh/Mutant_UE.Mutant_UE'"));
+	if (SK_WEAPON.Succeeded())
+	{
+		GetMesh()->SetSkeletalMesh(SK_WEAPON.Object);
+	}
+	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+	FVector MeshLocation = FVector(-20.f, 0.f, -90.f);
+	FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
+	GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
+}
+
 void AEnemyCharacter::UseSkill(FString _SkillName)
 {
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
 		const auto PatternData = StaticCastSharedPtr<FMonsterPattern>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterPattern)->GetMyData(_SkillName));
+		NowPattern = PatternData;
 		AnimInstance->PlaySome(PatternData);
 	}
 }
+
+void AEnemyCharacter::DiedEnemy()
+{	
+	GetCharacterMovement()->GravityScale = 0.f;
+	GetController()->UnPossess();
+	GetMesh()->SetSkeletalMesh(nullptr);
+	OnlyHpBar->SetRenderOpacity(0.f);
+	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 1000.f));
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
+}
+
+void AEnemyCharacter::ResetStat()
+{
+	GetMesh()->SetEnableGravity(true);
+	Stat->SetHp(Stat->GetMaxHp());
+	SetActorLocation(SaveLocation);
+	GetCharacterMovement()->GravityScale = 1.f;
+	SetMesh();
+	NowAIController->Possess(this);
+}
+

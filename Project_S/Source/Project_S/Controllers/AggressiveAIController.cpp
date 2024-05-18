@@ -5,15 +5,6 @@
 #include "DrawDebugHelpers.h"
 #include "Project_S/Character/FirstCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
-void AAggressiveAIController::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void AAggressiveAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-}
 
 void AAggressiveAIController::PreInitializeComponents()
 {

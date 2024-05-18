@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 class AEnemyCharacter;
 struct FMonsterPattern;
 
@@ -25,7 +26,7 @@ private:
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	float Speed;
 
-	TWeakPtr<FMonsterPattern> NowPattern;
+	FMonsterPattern* NowPattern;
 
 	AEnemyCharacter* Monster;
 
@@ -33,7 +34,7 @@ public:
 	float GetSpeed() const { return Speed; }
 	void SetSpeed(const float _Speed);
 
-	void PlaySome(TWeakPtr<FMonsterPattern>_Data);
+	void PlaySome(TSharedPtr<FMonsterPattern>_Data);
 	void ColliderNotify();
 
 	void SetMonster(AEnemyCharacter* _Monster);
@@ -43,4 +44,7 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
+
+	UFUNCTION()
+	void AnimNotify_Died();
 };

@@ -6,10 +6,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include <Kismet/GameplayStatics.h>
 
-void AEnemyAIController::BeginPlay()
+void AEnemyAIController::OnPossess(APawn* InPawn)
 {
-	Super::BeginPlay();
-
+	Super::OnPossess(InPawn);
+	SetActorTickEnabled(true);
 	ChkState = E_State::E_Search;
 	CountSearch = 0;
 	IsMoving = false;
@@ -20,9 +20,11 @@ void AEnemyAIController::BeginPlay()
 	PlayTime = 1.f;
 }
 
-void AEnemyAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AEnemyAIController::OnUnPossess()
 {
-	Super::EndPlay(EndPlayReason);
+	Super::OnUnPossess();
+	SetActorTickEnabled(false);
+	SetFocus(nullptr);
 	if (Location.Num() != 0)
 	{
 		Location.Reset();

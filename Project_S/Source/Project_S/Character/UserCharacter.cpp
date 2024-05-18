@@ -110,17 +110,37 @@ void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	LoadCharacterData();
+	SaveLocation = GetActorLocation();
 }
 
 void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	SaveCharacterData();
-	if (LoadData != nullptr)
+	if (LoadData.IsValid())
 	{
 		LoadData.Reset();
 	}
+	if (NowSkill.IsValid())
+	{
+		NowSkill.Reset();
+	}
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
+}
+
+float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (Stat->GetHp() <= 0)
+	{
+		//AnimInstance->PlaySome();
+	}
+	return DamageAmount;
+}
+
+void AUserCharacter::ResetStat()
+{
+	Stat->SetHp(Stat->GetMaxHp());
 }
 
 void AUserCharacter::PostInitializeComponents()
@@ -409,9 +429,11 @@ void AUserCharacter::UseSkill(FString _SkillName)
 	if (MyGameInstance)
 	{
 		const auto SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
+		NowSkill = SkillData;
 		AnimInstance->PlaySome(SkillData);
 	}
 }
+
 
 
 

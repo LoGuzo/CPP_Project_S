@@ -19,20 +19,20 @@ UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 
 UUserAnimInstance::~UUserAnimInstance()
 {
-	if (NowSkill.IsValid())
+	if (NowSkill != nullptr)
 	{
-		NowSkill.Reset();
+		NowSkill = nullptr;
 	}
 }
 
-void UUserAnimInstance::PlaySome(TWeakPtr<FSkillTable>_Data)
+void UUserAnimInstance::PlaySome(TSharedPtr<FSkillTable>_Data)
 {
-	NowSkill = _Data;
-	if (NowSkill.Pin()->AnimMontage != nullptr)
+	NowSkill = _Data.Get();
+	if (NowSkill->AnimMontage != nullptr)
 	{
-		if (!Montage_IsPlaying(NowSkill.Pin()->AnimMontage))
+		if (!Montage_IsPlaying(NowSkill->AnimMontage))
 		{
-			Montage_Play(NowSkill.Pin()->AnimMontage);
+			Montage_Play(NowSkill->AnimMontage);
 		}
 	}
 }
@@ -44,45 +44,16 @@ void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Speed = Player->GetVelocity().Size();
 	}
-	if (NowSkill != nullptr)
-	{
-		if (Montage_IsPlaying(NowSkill.Pin()->AnimMontage))
-		{
-			int32 size = NotifyQueue.AnimNotifies.Num();
-			if (size <= 0) return;
-			for (int32 i = 0; i < size; i++)
-			{
-				FName name = NotifyQueue.AnimNotifies[i].GetNotify()->NotifyName;
-				if (name == TEXT("Collider"))
-				{
-					if (Player != nullptr)
-					{
-						ColliderNotify();
-					}
-				}
-				else if (name == TEXT("AnyMove"))
-				{
-					if (Player != nullptr)
-					{
-						AnyMoveNotify();
-					}
-				}
-			}
-		}
-		else
-			NowSkill = nullptr;
-	}
-
 }
 
 void UUserAnimInstance::ColliderNotify()
 {
-	switch (NowSkill.Pin()->Type)
+	switch (NowSkill->Type)
 	{
 	case E_SkillType::E_Melee:
 		break;
 	case E_SkillType::E_Scope:
-		Player->ScopeAttackCheck(NowSkill.Pin()->Range);
+		Player->ScopeAttackCheck(NowSkill->Range);
 		break;
 	case E_SkillType::E_Shot:
 		break;
@@ -93,9 +64,9 @@ void UUserAnimInstance::ColliderNotify()
 
 void UUserAnimInstance::AnyMoveNotify()
 {
-	if (NowSkill.Pin())
+	if (NowSkill)
 	{
-		Player->AnyMove(NowSkill.Pin()->AnimCurve);
+		Player->AnyMove(NowSkill->AnimCurve);
 	}
 }
 
@@ -141,4 +112,14 @@ void UUserAnimInstance::SetPlayer(AUserCharacter* _Player)
 void UUserAnimInstance::AnimNotify_AttackHit()
 {
 	OnAttackHit.Broadcast();
+}
+
+void UUserAnimInstance::AnimNotify_Collider()
+{
+	ColliderNotify();
+}
+
+void UUserAnimInstance::AnimNotify_AnyMove()
+{
+	AnyMoveNotify();
 }

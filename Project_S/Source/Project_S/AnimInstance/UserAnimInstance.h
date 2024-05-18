@@ -36,7 +36,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* OneHandSwordAM;
 
-	TWeakPtr<FSkillTable> NowSkill;
+	FSkillTable* NowSkill;
 
 	AUserCharacter* Player;
 public:
@@ -47,7 +47,7 @@ public:
 
 	void SetOnDash(const bool _OnDash);
 
-	void PlaySome(TWeakPtr<FSkillTable>_Data);
+	void PlaySome(TSharedPtr<FSkillTable>_Data);
 	void ColliderNotify();
 	void AnyMoveNotify();
 
@@ -59,4 +59,11 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AttackHit();
+
+	UFUNCTION()
+	void AnimNotify_Collider();
+
+	UFUNCTION()
+	void AnimNotify_AnyMove();
+
 };

@@ -16,9 +16,6 @@ class PROJECT_S_API AAggressiveAIController : public AEnemyAIController
 	GENERATED_BODY()
 
 protected:
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
 	virtual void PreInitializeComponents() override;
 

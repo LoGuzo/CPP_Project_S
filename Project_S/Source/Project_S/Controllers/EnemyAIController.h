@@ -29,9 +29,8 @@ class PROJECT_S_API AEnemyAIController : public AAIController
 	GENERATED_BODY()
 
 protected :
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void OnUnPossess() override;
 
 	virtual void PreInitializeComponents() override;
 
@@ -41,7 +40,6 @@ protected :
 
 	bool IsMoveAtFirst;
 	bool IsMoving;
-	E_State ChkState;
 	FVector FirstLocation;
 
 	TArray<TSharedPtr<FVector>> Location;
@@ -50,6 +48,7 @@ protected :
 	class AUserCharacter* User;
 
 public:
+	E_State ChkState;
 	bool IsBackToTheHome;
 	int32 CountSearch;
 	virtual void Tick(float DeltaTime) override;
