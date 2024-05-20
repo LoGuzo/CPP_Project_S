@@ -10,11 +10,8 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 ASwordWeapon::ASwordWeapon() {
-    PrimaryActorTick.bCanEverTick = false;
-    SetW_Mesh();
-	SetName("BlackSword");
-	SetType("Weapon");
-
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
+	Weapon->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/ParagonGreystone/FX/Particles/Greystone/Abilities/Deflect/FX/P_Greystone_Deflect_Remove.P_Greystone_Deflect_Remove'"));
 	if (AttackP.Succeeded())
 	{
@@ -25,17 +22,18 @@ ASwordWeapon::ASwordWeapon() {
 void ASwordWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	ItemCom->SetItem(GetName());
+	ItemCom->SetItem("BlackSword");
+	SetName(ItemCom->GetItemName());
+	SetW_Mesh(ItemCom->GetItemMesh());
+	SetType(ItemCom->GetType());
+
 }
 
-void ASwordWeapon::SetW_Mesh() {
-    Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
-	Weapon->SetupAttachment(RootComponent);
-
-    static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/Weapons/Blade_BlackKnight/SK_Blade_BlackKnight.SK_Blade_BlackKnight'"));
-    if (SK_WEAPON.Succeeded())
+void ASwordWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {
+	USkeletalMesh* MeshPath =  Cast<USkeletalMesh>(_ItemMesh.LoadSynchronous());
+    if (MeshPath)
     {
-        Weapon->SetSkeletalMesh(SK_WEAPON.Object);
+        Weapon->SetSkeletalMesh(MeshPath);
     }
     Weapon->SetCollisionProfileName(TEXT("NoCollision"));
 	

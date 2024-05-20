@@ -50,7 +50,7 @@ void UC_InventoryComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 	Slots[_Index] = _Slot;
 }
 
-void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, FString _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
+void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, E_ItemType _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
 {
 	AmountLeft = _Amount;
 	FResult result;
@@ -138,7 +138,7 @@ FResult UC_InventoryComponent::CheckSlotEmpty()
 	return result;
 }
 
-void UC_InventoryComponent::AddToNewSlot(FName _ItemKey, int32 _Amount, FString _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
+void UC_InventoryComponent::AddToNewSlot(FName _ItemKey, int32 _Amount, E_ItemType _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
 {
 	FResult result;
 	result = CheckSlotEmpty();

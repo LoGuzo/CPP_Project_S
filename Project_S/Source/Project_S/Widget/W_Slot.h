@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "DO_DragDrop.h"
+#include <Project_S/E_ItemType.h>
 #include "W_Slot.generated.h"
 
 /**
@@ -28,14 +29,14 @@ public:
 	virtual void NativeDestruct() override;
 
 	FName GetIName() { return ItemKey; }
-	FString GetItemConName() { return ItemConName; }
+	E_ItemType GetItemConName() { return ItemConName; }
 	FString GetConName() { return ContentName; }
 	int32 GetAmount() { return Amount; }
 	int32 GetConIndex() { return ContentIndex; }
 	FName GetSkillKey() { return SkillKey; }
 
 	void SetSkillKey(FName _SkillKey);
-	void SetItemConName(FString _ItemConName);
+	void SetItemConName(E_ItemType _ItemConName);
 	void SetConName(FString _ContentName);
 	void SetItemKey(FName _ItemKey);
 	void SetAmount(int32 _Amount);
@@ -77,7 +78,7 @@ private:
 	FString ContentName;
 
 	UPROPERTY(VisibleAnywhere)
-	FString ItemConName;
+	E_ItemType ItemConName;
 
 	UPROPERTY(VisibleAnywhere)
 	int32 ContentIndex;

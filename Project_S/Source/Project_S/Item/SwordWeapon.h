@@ -18,7 +18,7 @@ public:
 	ASwordWeapon();
 	virtual void BeginPlay() override;
 
-	virtual void SetW_Mesh() override;
+	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) override;
 
 	class UParticleSystem* GetParticle() { return HitParticleEffect; }
 	virtual void AttackCheck(class AUserCharacter* _UserCharacter) override;

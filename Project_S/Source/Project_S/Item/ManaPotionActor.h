@@ -14,4 +14,5 @@ class PROJECT_S_API AManaPotionActor : public AA_Item
 {
 	GENERATED_BODY()
 	
+public:
 };

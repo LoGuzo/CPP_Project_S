@@ -72,7 +72,7 @@ void AAggressiveAIController::AISerach()
 
 void AAggressiveAIController::Attack()
 {
-	if (User)
+	if (User && !IsDead)
 	{
 		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
 		{
@@ -80,7 +80,6 @@ void AAggressiveAIController::Attack()
 			if (Enemy) {
 				SetFocus(User);
 				Enemy->UseSkill("Mutant_Attack");
-				ChkState = E_State::E_None;
 				return;
 			}
 		}

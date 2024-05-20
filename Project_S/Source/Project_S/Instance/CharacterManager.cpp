@@ -5,7 +5,7 @@
 
 CharacterManager::CharacterManager()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable>DATA(TEXT("DataTable'/Game/Data/S_CharacterDataTable.S_CharacterDataTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable>DATA(TEXT("DataTable'/Game/Data/DT_CharacterDataTable.DT_CharacterDataTable'"));
 
 	MyData = DATA.Object;
 }

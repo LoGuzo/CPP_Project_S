@@ -18,17 +18,17 @@ public:
 	AA_Item();
 protected:
 	UFUNCTION()
-	virtual void SetW_Mesh() PURE_VIRTUAL(AWeaponActor::SetW_Mesh, ;);
+	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) PURE_VIRTUAL(AA_Item::SetW_Mesh, ;);
 
 	UFUNCTION()
 	void SetName(FString _Name);
 
 	UFUNCTION()
-	void SetType(FString _Type);
+	void SetType(E_ItemType _Type);
 
 	FString GetName() { return Name; }
 
-	FString GetType() { return Type; }
+	E_ItemType GetType() { return Type; }
 
 	UPROPERTY(VisibleAnywhere, Category = Component)
 	UC_ItemComponent* ItemCom;
@@ -47,7 +47,7 @@ private:
 	FString Name;
 
 	UPROPERTY(VisibleAnywhere)
-	FString Type;
+	E_ItemType Type;
 
 public:	
 	// Called every frame

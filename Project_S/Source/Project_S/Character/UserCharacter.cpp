@@ -205,7 +205,7 @@ void AUserCharacter::LoadCharacterData()
 	}
 	for (const FS_Slot& slot : Equip->GetSlots())
 	{
-		if (slot.ItemClass)
+		if (slot.ItemClass != nullptr)
 		{
 			SetMyWeapon(slot.ItemClass);
 		}

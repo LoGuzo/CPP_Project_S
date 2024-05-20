@@ -100,7 +100,7 @@ bool UW_QuickSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	{
 		if (DO_Drag->GetConName() == "Inventory")
 		{
-			if (DO_Drag->GetItemConName() == "Potion")
+			if (DO_Drag->GetItemConName() == E_ItemType::E_Cunsumalbe)
 			{
 				if (DO_Drag->GetInvenCom() != nullptr)
 				{

@@ -31,6 +31,9 @@ struct FS_Item : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AA_Item> ItemClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UStreamableRenderAsset> ItemMesh;
 };
 
 USTRUCT()
@@ -70,7 +73,7 @@ struct FS_Slot : public FTableRowBase
 	int32 Amount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ItemConName;
+	E_ItemType ItemConName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AA_Item> ItemClass;

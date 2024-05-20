@@ -5,7 +5,7 @@
 #include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Component/C_EqiupComponent.h"
 
-void UDO_DragDrop::SetItemConName(FString _ItemConName)
+void UDO_DragDrop::SetItemConName(E_ItemType _ItemConName)
 {
 	ItemConName = _ItemConName;
 }

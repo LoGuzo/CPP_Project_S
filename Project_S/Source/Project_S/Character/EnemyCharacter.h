@@ -42,6 +42,8 @@ private:
 
 	virtual void PostInitializeComponents() override;
 
+	bool IsDead;
+
 	UC_SkillComponent* Pattern;
 
 	TWeakPtr<FMonsterPattern> NowPattern;

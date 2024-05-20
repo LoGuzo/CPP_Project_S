@@ -48,6 +48,7 @@ protected :
 	class AUserCharacter* User;
 
 public:
+	bool IsDead;
 	E_State ChkState;
 	bool IsBackToTheHome;
 	int32 CountSearch;

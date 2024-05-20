@@ -31,9 +31,13 @@ void UC_ItemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	if (ItemData != nullptr)
+	if (ItemData.IsValid())
 	{
 		ItemData.Reset();
+	}
+	if (ItemMesh.IsValid())
+	{
+		ItemMesh.Reset();
 	}
 }
 
@@ -45,7 +49,7 @@ void UC_ItemComponent::Interact(AUserCharacter* _UserCharacter)
 		auto Inventory = _UserCharacter->GetInventoryCom();
 		if (Inventory)
 		{
-			Inventory->AddItem(ItemAmount, RowName, Description.ToString(), ItemClass);
+			Inventory->AddItem(ItemAmount, RowName, ItemType, ItemClass);
 			GetOwner()->Destroy();
 		}
 	}
@@ -67,6 +71,7 @@ void UC_ItemComponent::SetItem(FString _ItemName)
 				StackSize = ItemData.Pin()->StackSize;
 				ItemType = ItemData.Pin()->ItemType;
 				ItemClass = ItemData.Pin()->ItemClass;
+				ItemMesh = ItemData.Pin()->ItemMesh;
 			}
 		}
 	}

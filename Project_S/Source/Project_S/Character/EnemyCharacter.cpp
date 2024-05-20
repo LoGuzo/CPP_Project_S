@@ -38,6 +38,8 @@ AEnemyCharacter::AEnemyCharacter()
 
 	SetMesh();
 
+	IsDead = false;
+
 	AIControllerClass = AEnemyAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -46,8 +48,10 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	OnlyHpBar->SetRenderOpacity(1.f);
-	if (Stat->GetHp() <= 0)
+	if (Stat->GetHp() <= 0 && !IsDead)
 	{
+		IsDead = true;
+		NowAIController->IsDead = true;
 		UseSkill("Mutant_Die");
 	}
 	return DamageAmount;
@@ -56,6 +60,7 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	UseSkill("Mutant_Ready");
 	Stat->SetLevel(1);
 	NowAIController = Cast<AAggressiveAIController>(GetController());
 	SaveLocation = GetActorLocation();
@@ -117,22 +122,25 @@ void AEnemyCharacter::UseSkill(FString _SkillName)
 }
 
 void AEnemyCharacter::DiedEnemy()
-{	
+{
+	NowAIController->UnPossess();
 	GetCharacterMovement()->GravityScale = 0.f;
-	GetController()->UnPossess();
 	GetMesh()->SetSkeletalMesh(nullptr);
 	OnlyHpBar->SetRenderOpacity(0.f);
-	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 1000.f));
+	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 5000.f));
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
 }
 
 void AEnemyCharacter::ResetStat()
 {
+	IsDead = false;
+	NowAIController->IsDead = false;
 	GetMesh()->SetEnableGravity(true);
-	Stat->SetHp(Stat->GetMaxHp());
+	Stat->SetLevel(1);
 	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;
 	SetMesh();
+	UseSkill("Mutant_Ready");
 	NowAIController->Possess(this);
 }
 

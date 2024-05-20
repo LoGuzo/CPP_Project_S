@@ -14,4 +14,13 @@ class PROJECT_S_API ARedPotionActor : public AA_Item
 {
 	GENERATED_BODY()
 	
+public:
+	ARedPotionActor();
+
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	UStaticMeshComponent* ItemMesh;
+
+	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) override;
 };

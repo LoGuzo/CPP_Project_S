@@ -49,11 +49,18 @@ private:
 	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
 	TSubclassOf<class AA_Item> ItemClass;
 
+	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
+	TSoftObjectPtr<UStreamableRenderAsset> ItemMesh;
+
 	TWeakPtr<FS_Item> ItemData;
 
 public:	
 
 	virtual void Interact(class AUserCharacter* _UserCharacter) override;
 	void SetItem(FString _ItemName);
+
+	FString GetItemName() { return ItemName.ToString(); }
+	TSoftObjectPtr<UStreamableRenderAsset> GetItemMesh() { return ItemMesh; }
+	E_ItemType GetType() { return ItemType; }
 		
 };

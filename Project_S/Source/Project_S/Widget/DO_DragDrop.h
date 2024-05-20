@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/DragDropOperation.h"
+#include <Project_S/E_ItemType.h>
 #include "DO_DragDrop.generated.h"
+
 
 /**
  * 
@@ -20,7 +22,7 @@ class PROJECT_S_API UDO_DragDrop : public UDragDropOperation
 	
 private:
 	FString ContentName;
-	FString ItemConName;
+	E_ItemType ItemConName;
 	int32 ContentIndex;
 	UC_InventoryComponent* InventoryCom;
 	UC_EqiupComponent* EquipCom;
@@ -28,12 +30,12 @@ private:
 
 public:
 	FString GetConName() { return ContentName; }
-	FString GetItemConName() { return ItemConName; }
+	E_ItemType GetItemConName() { return ItemConName; }
 	int32 GetConIndex() { return ContentIndex; }
 	UC_InventoryComponent* GetInvenCom(){ return InventoryCom; }
 	UC_EqiupComponent* GetEquipCom() { return EquipCom; }
 	UC_SkillComponent* GetSkillCom() { return SkillCom; }
-	void SetItemConName(FString _ItemConName);
+	void SetItemConName(E_ItemType _ItemConName);
 	void SetConName(FString _ContentName);
 	void SetConIndex(int32 _ContentIndex);
 	void SetInvenCom(UC_InventoryComponent* _InventoryCom);

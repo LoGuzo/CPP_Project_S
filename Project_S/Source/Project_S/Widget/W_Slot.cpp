@@ -78,7 +78,7 @@ void UW_Slot::NativeDestruct()
 	}
 }
 
-void UW_Slot::SetItemConName(FString _ItemConName)
+void UW_Slot::SetItemConName(E_ItemType _ItemConName)
 {
 	ItemConName = _ItemConName;
 }
