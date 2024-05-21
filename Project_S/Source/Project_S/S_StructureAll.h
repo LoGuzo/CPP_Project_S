@@ -62,6 +62,48 @@ struct FCharacterData : public FTableRowBase
 };
 
 USTRUCT()
+struct FMonsterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_MonsterType Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Attack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Armor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxMp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxExp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FString> MonsterSkill;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<USkeletalMesh> MonsterMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UMaterial> MonsterMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<UMaterialInstance> MonsterMaterialInstance;
+};
+
+USTRUCT()
 struct FS_Slot : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -98,6 +140,12 @@ struct FMyCharacterData : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FS_Slot> MyInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FS_Slot>	MySkillQuick;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FS_Slot>	MyPotionQuick;
 };
 
 USTRUCT()

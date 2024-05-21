@@ -24,6 +24,16 @@ void UC_QuickSlotComponent::BeginPlay()
 	// ...
 }
 
+void UC_QuickSlotComponent::SetSkillSlots(const TArray<FS_Slot>& _Slots)
+{
+	SkillSlots = _Slots;
+}
+
+void UC_QuickSlotComponent::SetPotionSlots(const TArray<FS_Slot>& _Slots)
+{
+	PotionSlots = _Slots;
+}
+
 void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, UC_SkillComponent* _SkillCom)
 {
 	LocalSlot = _SkillCom->GetSlot(_SkillIndex);
@@ -56,6 +66,7 @@ void UC_QuickSlotComponent::InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, 
 		if (_TargetIndex >= 0)
 		{
 			PotionSlots[_TargetIndex] = LocalSlot;
+			BindTarget.Emplace(_TargetIndex, _InvenIndex);
 		}
 	}
 	else {
@@ -66,6 +77,7 @@ void UC_QuickSlotComponent::InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, 
 			{
 				PotionSlots[Index] = PotionSlots[_TargetIndex];
 				PotionSlots[_TargetIndex] = LocalSlot;
+				BindTarget.Emplace(_TargetIndex, _InvenIndex);
 			}
 		}
 	}

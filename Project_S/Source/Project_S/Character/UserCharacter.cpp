@@ -102,7 +102,13 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
 	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
-	//PlayerInputComponent->BindAction("Quick1", IE_Pressed, this, &AUserCharacter::UseSkill);
+	PlayerInputComponent->BindAction("Quick1", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
+	PlayerInputComponent->BindAction("Quick2", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
+	PlayerInputComponent->BindAction("Quick3", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
+	PlayerInputComponent->BindAction("Quick4", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
+	PlayerInputComponent->BindAction("Quick5", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
+	PlayerInputComponent->BindAction("Quick6", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
+	PlayerInputComponent->BindAction("Quick7", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
 
 }
 
@@ -176,6 +182,8 @@ void AUserCharacter::SaveCharacterData()
 	NowCharData.Exp = Stat->GetExp();
 	NowCharData.MyEquip = Equip->GetSlots();
 	NowCharData.MyInventory = Inventory->GetSlots();
+	NowCharData.MySkillQuick = QuickSlot->GetSkillSlots();
+	NowCharData.MyPotionQuick = QuickSlot->GetPotionSlots();
 
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
@@ -199,6 +207,8 @@ void AUserCharacter::LoadCharacterData()
 				Stat->SetExp(LoadData.Pin()->Exp);
 				Equip->SetSlots(LoadData.Pin()->MyEquip);
 				Inventory->SetSlots(LoadData.Pin()->MyInventory);
+				QuickSlot->SetSkillSlots(LoadData.Pin()->MySkillQuick);
+				QuickSlot->SetPotionSlots(LoadData.Pin()->MyPotionQuick);
 			}
 
 		}
@@ -210,6 +220,7 @@ void AUserCharacter::LoadCharacterData()
 			SetMyWeapon(slot.ItemClass);
 		}
 	}
+	QuickSlot->OnQuickUpdated.Broadcast();
 }
 
 void AUserCharacter::MoveForward(float Value)
@@ -312,7 +323,6 @@ void AUserCharacter::AttackMontage()
 	AnimInstance->OnHandSwordPlayAM();
 	AnimInstance->JumpToSection(AttackIndex);
 	AttackIndex = (AttackIndex + 1) % 3;
-
 }
 
 void AUserCharacter::OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted)
@@ -320,10 +330,79 @@ void AUserCharacter::OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted
 	IsAttacking = false;
 }
 
+void AUserCharacter::UseQuickSlot()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		if (PlayerController->IsInputKeyDown(EKeys::One))
+		{
+			if (QuickSlot->GetSkillSlot(0) != "None")
+			{
+				UseSkill(QuickSlot->GetSkillSlot(0));
+			}
+		}
+		if (PlayerController->IsInputKeyDown(EKeys::Two))
+		{
+			if (QuickSlot->GetSkillSlot(1) != "None")
+			{
+				UseSkill(QuickSlot->GetSkillSlot(1));
+			}
+		}
+		if (PlayerController->IsInputKeyDown(EKeys::Three))
+		{
+			if (QuickSlot->GetSkillSlot(2) != "None")
+			{
+				UseSkill(QuickSlot->GetSkillSlot(2));
+			}
+		}
+		if (PlayerController->IsInputKeyDown(EKeys::Four))
+		{
+			if (QuickSlot->GetSkillSlot(3) != "None")
+			{
+				UseSkill(QuickSlot->GetSkillSlot(3));
+			}
+		}
+		if (PlayerController->IsInputKeyDown(EKeys::Five))
+		{
+			if (QuickSlot->GetSkillSlot(4) != "None")
+			{
+				UseSkill(QuickSlot->GetSkillSlot(4));
+			}
+		}
+		if (PlayerController->IsInputKeyDown(EKeys::Six))
+		{
+			if (Stat->GetHp() <= Stat->GetMaxHp())
+			{
+				if (QuickSlot->GetPotionSlot(0) != "None")
+				{
+					QuickSlot->UsePotionSlot(0);
+					Inventory->UsePotionSlot(QuickSlot->BindTarget.FindRef(0));
+					QuickSlot->OnQuickUpdated.Broadcast();
+					Inventory->OnInventoryUpdated.Broadcast();
+				}
+			}
+		}
+		if (PlayerController->IsInputKeyDown(EKeys::Seven))
+		{
+			if (Stat->GetMp() <= Stat->GetMaxMp())
+			{
+				if (QuickSlot->GetPotionSlot(1) != "None")
+				{
+					QuickSlot->UsePotionSlot(1);
+					Inventory->UsePotionSlot(QuickSlot->BindTarget.FindRef(1));
+					QuickSlot->OnQuickUpdated.Broadcast();
+					Inventory->OnInventoryUpdated.Broadcast();
+				}
+			}
+		}
+	}
+}
+
 void AUserCharacter::AttackCheck()
 {
 	if (nullptr != MyWeapon)
-		MyWeapon->AttackCheck(this);
+		MeleeAttackCheck(150.f);
 }
 
 void AUserCharacter::OnInventoryKeyPressed()
@@ -433,6 +512,8 @@ void AUserCharacter::UseSkill(FString _SkillName)
 		AnimInstance->PlaySome(SkillData);
 	}
 }
+
+
 
 
 

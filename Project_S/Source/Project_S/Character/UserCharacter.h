@@ -113,6 +113,8 @@ private:
 	TWeakPtr<FMyCharacterData> LoadData;
 
 public:
+	void UseQuickSlot();
+	
 	void AttackCheck();
 
 	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);

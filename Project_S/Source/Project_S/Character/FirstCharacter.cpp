@@ -28,6 +28,7 @@ void AFirstCharacter::SetCharID(FString _CharID)
 {
 	CharID = _CharID;
 }
+
 void AFirstCharacter::MeleeAttackCheck(float _Range)
 {
 	TArray<FHitResult> HitResults;
@@ -67,8 +68,9 @@ void AFirstCharacter::MeleeAttackCheck(float _Range)
 						break;
 					}
 				}
-				else if (MyCharType == E_CharacterType::E_User)
+				if (MyCharType == E_CharacterType::E_User)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *hitResult.Actor->GetName());
 					if (Enemy->MyCharType == E_CharacterType::E_Monster) {
 						FDamageEvent DamageEvent;
 						hitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);

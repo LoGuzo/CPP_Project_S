@@ -26,6 +26,4 @@ protected:
 private:
 
 public:
-	UFUNCTION()
-	virtual void AttackCheck(class AUserCharacter* _UserCharacter) PURE_VIRTUAL(AWeaponActor::AttackCheck, ;);
 };

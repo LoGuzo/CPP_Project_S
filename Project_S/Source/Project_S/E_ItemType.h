@@ -24,6 +24,16 @@ enum class E_SkillType : uint8
 	E_Shot UMETA(DisplayName = "Shot"),
 };
 
+UENUM()
+enum class E_MonsterType : uint8
+{
+	E_Normal UMETA(DisplayName = "Normal"),
+	E_Aggressive UMETA(DisplayName = "Aggressive"),
+	E_Patrol UMETA(DisplayName = "Patrol"),
+	E_MiddleBoss UMETA(DisplayName = "MiddleBoss"),
+	E_LastBoss UMETA(DisplayName = "LastBoss"),
+};
+
 enum class E_DataType : uint8
 {
 	E_Char,

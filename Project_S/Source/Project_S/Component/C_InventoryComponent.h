@@ -45,6 +45,8 @@ public:
 
 	void SetSlot(int32 _Index, FS_Slot _Slot);
 
+	void UsePotionSlot(int32 _Index) { Slots[_Index].Amount -= 1; }
+
 	void AddItem(int32 _Amount,FName _ItemKey, E_ItemType _ItemConName, TSubclassOf<class AA_Item> _ItemClass);
 
 	FResult FindSlot(FName _ItemKey);

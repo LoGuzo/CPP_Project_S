@@ -21,7 +21,6 @@ public:
 	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) override;
 
 	class UParticleSystem* GetParticle() { return HitParticleEffect; }
-	virtual void AttackCheck(class AUserCharacter* _UserCharacter) override;
 private:
 	UPROPERTY(EditAnywhere, Category = "Particles")
 	class UParticleSystem* HitParticleEffect;
