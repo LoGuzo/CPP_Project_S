@@ -10,7 +10,6 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	SetActorTickEnabled(true);
-	ChkState = E_State::E_Search;
 	CountSearch = 0;
 	IsMoving = false;
 	IsBackToTheHome = false;

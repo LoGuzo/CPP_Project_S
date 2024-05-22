@@ -5,7 +5,7 @@
 
 MonsterMananger::MonsterMananger()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable>DATA(TEXT("DataTable'/Game/Data/DT_MonsterPattern.DT_MonsterPattern'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable>DATA(TEXT("DataTable'/Game/Data/DT_MonsterData.DT_MonsterData'"));
 
 	MyData = DATA.Object;
 }
@@ -24,16 +24,12 @@ const TSharedPtr<FTableRowBase> MonsterMananger::GetMyData(FString _Init)
 	return MyMonster;
 }
 
-void MonsterMananger::AddMonsterManage(int32 Key)
+void MonsterMananger::InsertMonsterManage(int32 Key, FMonsterData Data)
 {
 	if (MonsterMap.Contains(Key))
 		return;
 
-	FMonsterData data;
-
-	//int32 Key = data.ID;
-
-	MonsterMap.Emplace(Key, data);
+	MonsterMap.Emplace(Key, Data);
 }
 
 FMonsterData MonsterMananger::GetMonsterData(int32 Key)

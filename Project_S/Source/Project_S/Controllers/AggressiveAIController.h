@@ -16,6 +16,7 @@ class PROJECT_S_API AAggressiveAIController : public AEnemyAIController
 	GENERATED_BODY()
 
 protected:
+	virtual void OnPossess(APawn* InPawn) override;
 
 	virtual void PreInitializeComponents() override;
 

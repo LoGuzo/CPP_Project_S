@@ -13,6 +13,7 @@
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
+#include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Component/C_QuickSlotComponent.h"
 #include "Project_S/Item/WeaponActor.h"
@@ -60,7 +61,6 @@ AUserCharacter::AUserCharacter()
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
-	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
 	QuickSlot = CreateDefaultSubobject<UC_QuickSlotComponent>(TEXT("QUICK"));
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
@@ -272,7 +272,6 @@ void AUserCharacter::PickUpItem()
 
 void AUserCharacter::TimelineProgress(float _Value)
 {
-	//UE_LOG(LogTemp,Warning, TEXT("%f"), FMath::Lerp(BeforeRot.Yaw, BeforeRot.Yaw + float(360 * 12), _Value));
 	GetMesh()->SetRelativeRotation(FRotator(BeforeRot.Pitch, FMath::Lerp(BeforeRot.Yaw, BeforeRot.Yaw + float(360 * 12), _Value), BeforeRot.Roll));
 }
 

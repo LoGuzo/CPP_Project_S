@@ -21,8 +21,7 @@ public:
 
 	virtual void Init() override;
 	virtual void Shutdown() override;
-	/*FCharacterData* GetStatData(int32 _Level);
-	FS_Item* GetItemData(FString _ItemName);*/
+
 	TMap<E_DataType, SGameManagerBase*> MyDataManager;
 	
 };

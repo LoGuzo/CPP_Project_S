@@ -62,6 +62,24 @@ struct FCharacterData : public FTableRowBase
 };
 
 USTRUCT()
+struct FS_Slot : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName ItemName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Amount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_ItemType ItemConName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AA_Item> ItemClass;
+};
+
+USTRUCT()
 struct FMonsterData : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -91,34 +109,13 @@ struct FMonsterData : public FTableRowBase
 	float MaxExp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FString> MonsterSkill;
+	TArray<FS_Slot> MonsterSkill;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<USkeletalMesh> MonsterMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<UMaterial> MonsterMaterial;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<UMaterialInstance> MonsterMaterialInstance;
-};
-
-USTRUCT()
-struct FS_Slot : public FTableRowBase
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ItemName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Amount = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	E_ItemType ItemConName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AA_Item> ItemClass;
+	TSoftObjectPtr<UMaterialInterface> MonsterMaterial;
 };
 
 USTRUCT()
@@ -196,7 +193,6 @@ struct FSkillTable : public FTableRowBase
 	TSubclassOf<class Skill> SkillClass;*/
 };
 
-
 USTRUCT()
 struct FMonsterPattern : public FTableRowBase
 {
@@ -228,11 +224,47 @@ struct FMonsterPattern : public FTableRowBase
 };
 
 USTRUCT()
+struct FSpawnMonsterData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_MonsterType MonsterType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SpawnLocation;
+
+};
+
+USTRUCT()
+struct FSpawnData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SpawnerLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FSpawnMonsterData> SpawnMonster;
+};
+
+
+
+USTRUCT()
 struct FResult : public FTableRowBase 
 {
 	GENERATED_BODY()
 
-	int Index;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Index;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsFindItem;
 };
 

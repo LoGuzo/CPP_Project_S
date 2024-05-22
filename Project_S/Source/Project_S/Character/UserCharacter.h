@@ -84,8 +84,6 @@ private:
 
 	class UC_EqiupComponent* Equip;
 
-	class UC_SkillComponent* Skill;
-
 	class UC_QuickSlotComponent* QuickSlot;
 
 	class UUserAnimInstance* AnimInstance;
@@ -129,6 +127,7 @@ public:
 	void OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 
 	UC_InventoryComponent* GetInventoryCom() const { return Inventory; }
+
 	UC_EqiupComponent* GetEquipCom() const { return Equip; }
 
 	void OnInventoryKeyPressed();

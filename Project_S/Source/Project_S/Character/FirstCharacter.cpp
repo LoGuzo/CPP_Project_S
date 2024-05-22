@@ -4,6 +4,7 @@
 #include "FirstCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "Project_S/Component/S_StatComponent.h"
+#include "Project_S/Component/C_SkillComponent.h"
 
 // Sets default values
 AFirstCharacter::AFirstCharacter()
@@ -11,6 +12,7 @@ AFirstCharacter::AFirstCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Stat = CreateDefaultSubobject<US_StatComponent>(TEXT("STAT"));
+	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
 }
 
 float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -27,6 +29,11 @@ void AFirstCharacter::SetMyColor(int32 _MyColor)
 void AFirstCharacter::SetCharID(FString _CharID)
 {
 	CharID = _CharID;
+}
+
+void AFirstCharacter::SetSaveLocation(FVector _SaveLocation)
+{
+	SaveLocation = _SaveLocation;
 }
 
 void AFirstCharacter::MeleeAttackCheck(float _Range)
@@ -70,7 +77,6 @@ void AFirstCharacter::MeleeAttackCheck(float _Range)
 				}
 				if (MyCharType == E_CharacterType::E_User)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("%s"), *hitResult.Actor->GetName());
 					if (Enemy->MyCharType == E_CharacterType::E_Monster) {
 						FDamageEvent DamageEvent;
 						hitResult.Actor->TakeDamage(this->Stat->GetAttack(), DamageEvent, this->GetController(), this);

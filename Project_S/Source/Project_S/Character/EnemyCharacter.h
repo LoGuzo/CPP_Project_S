@@ -24,6 +24,8 @@ public:
 	void DiedEnemy();
 
 	virtual void ResetStat() override;
+
+	TWeakPtr<FMonsterData> LoadData;
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
@@ -34,6 +36,8 @@ private:
 	class UOnlyHpBar* OnlyHpBar;
 
 	class UMonsterAnimInstance* AnimInstance;
+
+	class UMaterialInstanceDynamic* MyMaterialInstanceDynamic;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,7 +55,9 @@ private:
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
 
-	virtual void SetMesh() override;
+	virtual void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial) override;
+
+	void LoadCharacterData();
 
 	class AAggressiveAIController* NowAIController;
 

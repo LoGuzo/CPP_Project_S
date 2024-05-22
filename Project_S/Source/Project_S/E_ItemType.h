@@ -41,4 +41,5 @@ enum class E_DataType : uint8
 	E_MyChar,
 	E_Skill,
 	E_MonsterPattern,
+	E_MonsterData,
 };

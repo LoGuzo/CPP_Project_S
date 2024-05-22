@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Project_S/Component/S_StatComponent.h"
 #include "FirstCharacter.generated.h"
 
 enum class E_CharacterType
@@ -34,8 +33,17 @@ protected:
 	FVector SaveLocation;
 
 	virtual void ResetStat() {};
-	virtual void SetMesh() {};
+	virtual void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial) {};
+
+	UPROPERTY(VisibleAnywhere)
+	class US_StatComponent* Stat;
+
+	UPROPERTY(VisibleAnywhere)
+	class UC_SkillComponent* Skill;
 public:
+	class US_StatComponent* GetStatCom() { return Stat; }
+	class UC_SkillComponent* GetSkillCom() { return Skill; }
+
 	virtual void UseSkill(FString _SkillName) {};
 
 	void MeleeAttackCheck(float _Range);
@@ -47,6 +55,6 @@ public:
 	void SetMyColor(int32 _MyColor);
 	void SetCharID(FString _CharID);
 
-	UPROPERTY(VisibleAnywhere)
-	US_StatComponent* Stat;
+	void SetSaveLocation(FVector _SaveLocation);
+	FVector GetSaveLocation() { return SaveLocation; }
 };

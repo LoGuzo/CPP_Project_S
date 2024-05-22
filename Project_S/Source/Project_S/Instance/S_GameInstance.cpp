@@ -7,6 +7,7 @@
 #include "MyCharDataManager.h"
 #include "SkillManager.h"
 #include "MonsterPatternManager.h"
+#include "MonsterMananger.h"
 
 US_GameInstance::US_GameInstance()
 {
@@ -16,6 +17,8 @@ US_GameInstance::US_GameInstance()
 	MyDataManager.Emplace(E_DataType::E_MyChar, new MyCharDataManager());
 	MyDataManager.Emplace(E_DataType::E_Skill, new SkillManager());
 	MyDataManager.Emplace(E_DataType::E_MonsterPattern, new MonsterPatternManager());
+	MyDataManager.Emplace(E_DataType::E_MonsterData, new MonsterMananger());
+
 
 }
 

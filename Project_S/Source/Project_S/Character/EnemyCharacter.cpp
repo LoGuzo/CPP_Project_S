@@ -17,7 +17,7 @@ AEnemyCharacter::AEnemyCharacter()
 {
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
-
+	SetCharID("Mutant");
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
 	HpBar->SetupAttachment(GetMesh());
 	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
@@ -36,8 +36,6 @@ AEnemyCharacter::AEnemyCharacter()
 		GetMesh()->SetAnimInstanceClass(ANIM.Class);
 	}
 
-	SetMesh();
-
 	IsDead = false;
 
 	AIControllerClass = AEnemyAIController::StaticClass();
@@ -48,11 +46,13 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	OnlyHpBar->SetRenderOpacity(1.f);
+	AFirstCharacter* User = Cast<AFirstCharacter>(DamageCauser);
 	if (Stat->GetHp() <= 0 && !IsDead)
 	{
 		IsDead = true;
 		NowAIController->IsDead = true;
-		UseSkill("Mutant_Die");
+		UseSkill(Skill->GetSlot(1).ItemName.ToString());
+		User->GetStatCom()->SetExp(User->GetStatCom()->GetExp() + Stat->GetMaxExp());
 	}
 	return DamageAmount;
 }
@@ -60,10 +60,16 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	UseSkill("Mutant_Ready");
-	Stat->SetLevel(1);
+	LoadCharacterData();
 	NowAIController = Cast<AAggressiveAIController>(GetController());
 	SaveLocation = GetActorLocation();
+
+	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->SetMonster(this);
+	}
+	UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
 void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -71,16 +77,16 @@ void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	if (NowPattern.IsValid())
-	{
 		NowPattern.Reset();
-	}
+	if (LoadData.IsValid())
+		LoadData.Reset();
+
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 }
 
 void AEnemyCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
 	HpBar->InitWidget();
 
 	OnlyHpBar = Cast<UOnlyHpBar>(HpBar->GetUserWidgetObject());
@@ -89,25 +95,52 @@ void AEnemyCharacter::PostInitializeComponents()
 		OnlyHpBar->BindHp(Stat);
 		OnlyHpBar->SetRenderOpacity(0.f);
 	}
-
-	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	if (AnimInstance)
-	{
-		AnimInstance->SetMonster(this);
-	}
 }
 
-void AEnemyCharacter::SetMesh()
+void AEnemyCharacter::SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial)
 {
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/Mannequin/Monster/Character/Mesh/Mutant_UE.Mutant_UE'"));
-	if (SK_WEAPON.Succeeded())
+	USkeletalMesh* MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
+	if (MeshPath)
 	{
-		GetMesh()->SetSkeletalMesh(SK_WEAPON.Object);
+		GetMesh()->SetSkeletalMesh(MeshPath);
+	}
+	UMaterialInstance* MaterialPath = Cast<UMaterialInstance>(_MonsterMaterial.LoadSynchronous());
+	if (MaterialPath)
+	{
+		MyMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(MaterialPath, this);
+		GetMesh()->SetMaterial(0, MyMaterialInstanceDynamic);
 	}
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	FVector MeshLocation = FVector(-20.f, 0.f, -90.f);
 	FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
 	GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
+
+}
+
+void AEnemyCharacter::LoadCharacterData()
+{
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		if (GetCharID() != "") {
+			LoadData = StaticCastSharedPtr<FMonsterData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterData)->GetMyData(GetCharID()));
+			if (LoadData.IsValid())
+			{
+				Stat->SetMonsterLevel(LoadData.Pin()->Level);
+				Stat->SetHp(LoadData.Pin()->MaxHp);
+				Stat->SetMaxHp(LoadData.Pin()->MaxHp);
+				Stat->SetMp(LoadData.Pin()->MaxMp);
+				Stat->SetMaxMp(LoadData.Pin()->MaxMp);
+				Stat->SetMaxExp(LoadData.Pin()->MaxExp);
+				Stat->SetExp(0);
+				Stat->SetAttack(LoadData.Pin()->Attack);
+				Stat->SetArmor(LoadData.Pin()->Armor);
+				Skill->SetSlots(LoadData.Pin()->MonsterSkill);
+				SetMesh(LoadData.Pin()->MonsterMesh,LoadData.Pin()->MonsterMaterial);
+			}
+
+		}
+	}
 }
 
 void AEnemyCharacter::UseSkill(FString _SkillName)
@@ -117,7 +150,10 @@ void AEnemyCharacter::UseSkill(FString _SkillName)
 	{
 		const auto PatternData = StaticCastSharedPtr<FMonsterPattern>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterPattern)->GetMyData(_SkillName));
 		NowPattern = PatternData;
-		AnimInstance->PlaySome(PatternData);
+		if (AnimInstance)
+		{
+			AnimInstance->PlaySome(PatternData);
+		}
 	}
 }
 
@@ -136,11 +172,9 @@ void AEnemyCharacter::ResetStat()
 	IsDead = false;
 	NowAIController->IsDead = false;
 	GetMesh()->SetEnableGravity(true);
-	Stat->SetLevel(1);
+	LoadCharacterData();
 	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;
-	SetMesh();
-	UseSkill("Mutant_Ready");
 	NowAIController->Possess(this);
 }
 

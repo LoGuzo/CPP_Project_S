@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Project_S/Character/FirstCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Component/C_SkillComponent.h"
 
 void AAggressiveAIController::PreInitializeComponents()
 {
@@ -18,6 +19,12 @@ void AAggressiveAIController::Tick(float DeltaTime)
 	{
 		ChkState = E_State::E_Reset;
 	}
+}
+
+void AAggressiveAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	ChkState = E_State::E_Search;
 }
 
 void AAggressiveAIController::AISerach()
@@ -79,7 +86,7 @@ void AAggressiveAIController::Attack()
 			const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 			if (Enemy) {
 				SetFocus(User);
-				Enemy->UseSkill("Mutant_Attack");
+				Enemy->UseSkill(Enemy->GetSkillCom()->GetSlot(0).ItemName.ToString());
 				return;
 			}
 		}

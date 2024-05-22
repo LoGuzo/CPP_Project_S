@@ -7,15 +7,15 @@
 #include "Project_S/S_StructureAll.h"
 #include "C_SkillComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROJECT_S_API UC_SkillComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UC_SkillComponent();
-		
+
 private:
 	TArray<FS_Slot> Slots;
 

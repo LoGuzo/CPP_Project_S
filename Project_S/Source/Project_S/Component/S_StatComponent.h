@@ -34,10 +34,16 @@ public:
 	FOnLvlChanged OnLvlChanged;
 
 	void SetLevel(int32 _Level);
+	void SetMonsterLevel(int32 _Level);
 	void SetHp(float _Hp);
+	void SetMaxHp(float _MaxHp);
 	void SetMp(float _Mp);
+	void SetMaxMp(float _MaxMp);
 	void SetExp(float _Exp);
+	void SetMaxExp(float _MaxExp);
 	void OnAttacked(float DamageAmount);
+	void SetArmor(float _Armor);
+	void SetAttack(float _Attack);
 
 	int32 GetLevel() { return Level; }
 	float GetHp() { return Hp; }
@@ -53,6 +59,10 @@ public:
 	float GetAttack() { return Attack; }
 
 private:
+
+	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	int32 MaxLevel;
+
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 Level;
 
