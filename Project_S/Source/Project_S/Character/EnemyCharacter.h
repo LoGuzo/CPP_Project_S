@@ -25,7 +25,9 @@ public:
 
 	virtual void ResetStat() override;
 
-	TWeakPtr<FMonsterData> LoadData;
+	void LoadCharacterData();
+
+	void SetEtc();
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
@@ -57,8 +59,10 @@ private:
 
 	virtual void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial) override;
 
-	void LoadCharacterData();
+	TWeakPtr<FMonsterData> LoadData;
 
 	class AAggressiveAIController* NowAIController;
+
+	bool IsReadySpawn;
 
 };

@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Project_S/UserCameraShake.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
@@ -21,7 +22,6 @@
 #include "Project_S/Widget/S_CharacterWidget.h"
 #include "Project_S/Widget/InventoryMenu.h"
 #include "Project_S/Widget/W_Inventory.h"
-#include <Kismet/GameplayStatics.h>
 
 AUserCharacter::AUserCharacter()
 {
@@ -508,7 +508,8 @@ void AUserCharacter::UseSkill(FString _SkillName)
 	{
 		const auto SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
 		NowSkill = SkillData;
-		AnimInstance->PlaySome(SkillData);
+		if(SkillData.IsValid())
+			AnimInstance->PlaySome(SkillData);
 	}
 }
 

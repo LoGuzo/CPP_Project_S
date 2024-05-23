@@ -15,7 +15,7 @@ void AAggressiveAIController::PreInitializeComponents()
 void AAggressiveAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (SDistance(FirstLocation, GetPawn()->GetActorLocation()) > 1000.f)
+	if (SDistance(FirstLocation, GetPawn()->GetActorLocation()) > 2000.f)
 	{
 		ChkState = E_State::E_Reset;
 	}
@@ -29,6 +29,8 @@ void AAggressiveAIController::OnPossess(APawn* InPawn)
 
 void AAggressiveAIController::AISerach()
 {
+	if (IsMoving == true)
+		return;
 	SetMaxSpeed(150.f);
 	auto CurrentPawn = GetPawn();
 	if (CurrentPawn == nullptr)
@@ -59,6 +61,7 @@ void AAggressiveAIController::AISerach()
 				CountSearch = 0;
 				IsMoveAtFirst = false;
 				DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Green, false, 0.2f);
+
 				ChkState = E_State::E_Move;
 				return;
 			}
@@ -79,6 +82,8 @@ void AAggressiveAIController::AISerach()
 
 void AAggressiveAIController::Attack()
 {
+	if (IsMoving == true)
+		return;
 	if (User && !IsDead)
 	{
 		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
@@ -102,12 +107,12 @@ void AAggressiveAIController::AIMove()
 	SetMaxSpeed(600.f);
 	IsMoving = true;
 	IsMoveAtFirst = true;
-	MoveToActor(User,100.f);
+	MoveToActor(User, 100.f);
+	ChkState = E_State::E_Attack;
 }
 
 void AAggressiveAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
 	if (Result.IsSuccess()) {
 		IsMoving = false;
-		ChkState = E_State::E_Attack;
 	}
 }

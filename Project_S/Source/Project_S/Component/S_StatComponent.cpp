@@ -102,10 +102,13 @@ void US_StatComponent::SetExp(float _Exp)
 		if (Exp >= MaxExp)
 		{
 			SetLevel(Level + 1);
-			SetExp(0);
 		}
-		OnExpChanged.Broadcast();
 	}
+	else
+	{
+		Exp = 0;
+	}
+	OnExpChanged.Broadcast();
 }
 
 void US_StatComponent::SetMaxExp(float _MaxExp)

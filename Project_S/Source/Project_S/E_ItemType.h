@@ -42,4 +42,5 @@ enum class E_DataType : uint8
 	E_Skill,
 	E_MonsterPattern,
 	E_MonsterData,
+	E_SpawnerData,
 };

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "Project_S/S_StructureAll.h"
 #include "MonsterSpawner.generated.h"
 
 UCLASS()
@@ -16,13 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	AMonsterSpawner();
 
-	void SetCntMonster(int32 _CntMonster);
-	void SetCntMiddleBoss(int32 _CntMiddleBoss);
-	void SetCntBoss(int32 _CntBoss);
-
-	void SetMonsterID(FName _MonsterID);
-	void SetMiddleBossID(FName _MiddleBossID);
-	void SetBossID(FName _BossID);
+	void SetSpwenerName(FString _SpawnerName);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,18 +32,22 @@ protected:
 	UFUNCTION()
 	void EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void SetEnemy();
+	void SetEnemy(FString _SpawnerName);
 
 	void SpawnEnemy();
 
-private:
-	int32 CntUser;
-	int32 CntMonster;
-	FName MonsterID;
-	int32 CntMiddleBoss;
-	FName MiddleBossID;
-	int32 CntBoss;
-	FName BossID;
+	void SpawnEnemyAI(class AEnemyCharacter* Enemy, E_MonsterType _MonsterType);
 
-	TArray<class AEnemyCharacter> EnemyArray;
+private:
+	TWeakPtr<FSpawnData> SpawnerData;
+
+	FString SpawnerName;
+
+	int32 CntUser;
+
+	TArray<FSpawnMonsterData> EnemyArray;
+
+	TArray<class AEnemyCharacter*> EnemyClassArray;
+
+	bool IsSpawn;
 };

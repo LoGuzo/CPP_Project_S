@@ -68,24 +68,22 @@ void AEnemyAIController::ResetFirst()
 }
 void AEnemyAIController::FSMState()
 {
-	if (!IsDead) {
-		switch (ChkState)
-		{
-		case E_State::E_Search:
-			AISerach();
-			break;
-		case E_State::E_Move:
-			AIMove();
-			break;
-		case E_State::E_Attack:
-			Attack();
-			break;
-		case E_State::E_Reset:
-			ResetFirst();
-			break;
-		default:
-			break;
-		}
+	switch (ChkState)
+	{
+	case E_State::E_Search:
+		AISerach();
+		break;
+	case E_State::E_Move:
+		AIMove();
+		break;
+	case E_State::E_Attack:
+		Attack();
+		break;
+	case E_State::E_Reset:
+		ResetFirst();
+		break;
+	default:
+		break;
 	}
 }
 void AEnemyAIController::SetMaxSpeed(float NewMaxSpeed)

@@ -17,10 +17,9 @@ AEnemyCharacter::AEnemyCharacter()
 {
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
-	SetCharID("Mutant");
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
 	HpBar->SetupAttachment(GetMesh());
-	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
+	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
 	HpBar->SetWidgetSpace(EWidgetSpace::Screen);
 	MyCharType = E_CharacterType::E_Monster;
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_OnlyHpBar.WBP_OnlyHpBar_C'"));
@@ -37,8 +36,7 @@ AEnemyCharacter::AEnemyCharacter()
 	}
 
 	IsDead = false;
-
-	AIControllerClass = AEnemyAIController::StaticClass();
+	IsReadySpawn = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
@@ -51,6 +49,7 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	{
 		IsDead = true;
 		NowAIController->IsDead = true;
+		IsReadySpawn = true;
 		UseSkill(Skill->GetSlot(1).ItemName.ToString());
 		User->GetStatCom()->SetExp(User->GetStatCom()->GetExp() + Stat->GetMaxExp());
 	}
@@ -60,16 +59,6 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	LoadCharacterData();
-	NowAIController = Cast<AAggressiveAIController>(GetController());
-	SaveLocation = GetActorLocation();
-
-	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	if (AnimInstance)
-	{
-		AnimInstance->SetMonster(this);
-	}
-	UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
 void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -141,6 +130,18 @@ void AEnemyCharacter::LoadCharacterData()
 
 		}
 	}
+	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->SetMonster(this);
+	}
+	UseSkill(Skill->GetSlot(2).ItemName.ToString());
+}
+
+void AEnemyCharacter::SetEtc()
+{
+	NowAIController = Cast<AAggressiveAIController>(GetController());
+	SaveLocation = GetActorLocation();
 }
 
 void AEnemyCharacter::UseSkill(FString _SkillName)
@@ -164,17 +165,22 @@ void AEnemyCharacter::DiedEnemy()
 	GetMesh()->SetSkeletalMesh(nullptr);
 	OnlyHpBar->SetRenderOpacity(0.f);
 	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 5000.f));
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
+	if (IsReadySpawn)
+	{
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
+	}
 }
 
 void AEnemyCharacter::ResetStat()
 {
 	IsDead = false;
 	NowAIController->IsDead = false;
+	IsReadySpawn = false;
 	GetMesh()->SetEnableGravity(true);
 	LoadCharacterData();
 	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;
+	UseSkill(Skill->GetSlot(2).ItemName.ToString());
 	NowAIController->Possess(this);
 }
 
