@@ -11,6 +11,7 @@ AFirstCharacter::AFirstCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	IsAttacking = false;
 	Stat = CreateDefaultSubobject<US_StatComponent>(TEXT("STAT"));
 	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
 }
@@ -41,8 +42,8 @@ void AFirstCharacter::MeleeAttackCheck(float _Range)
 	TArray<FHitResult> HitResults;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	float AttackRange = _Range;
-	float AttackRadius = 50.f;
+	float AttackRange = _Range * GetActorScale3D().X;
+	float AttackRadius = 50.f * GetActorScale3D().X;
 	bool bResult = GetWorld()->SweepMultiByChannel(
 		HitResults,
 		this->GetActorLocation(),
@@ -95,7 +96,7 @@ void AFirstCharacter::ScopeAttackCheck(float _Range)
 	TArray<FHitResult> HitResults;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	float AttackRange = _Range;
+	float AttackRange = _Range * GetActorScale3D().X;
 	bool bResult = GetWorld()->SweepMultiByChannel(
 		HitResults,
 		this->GetActorLocation(),

@@ -235,6 +235,9 @@ struct FSpawnMonsterData : public FTableRowBase
 	E_MonsterType MonsterType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector MonsterScale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector SpawnLocation;
 
 };

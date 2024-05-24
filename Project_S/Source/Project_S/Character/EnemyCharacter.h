@@ -61,7 +61,7 @@ private:
 
 	TWeakPtr<FMonsterData> LoadData;
 
-	class AAggressiveAIController* NowAIController;
+	class AEnemyAIController* NowAIController;
 
 	bool IsReadySpawn;
 

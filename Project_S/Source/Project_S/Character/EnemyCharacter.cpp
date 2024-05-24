@@ -5,7 +5,6 @@
 #include "Components/WidgetComponent.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
-#include "Project_S/Controllers/AggressiveAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -34,7 +33,6 @@ AEnemyCharacter::AEnemyCharacter()
 	{
 		GetMesh()->SetAnimInstanceClass(ANIM.Class);
 	}
-
 	IsDead = false;
 	IsReadySpawn = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -88,6 +86,7 @@ void AEnemyCharacter::PostInitializeComponents()
 
 void AEnemyCharacter::SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial)
 {
+
 	USkeletalMesh* MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
 	if (MeshPath)
 	{
@@ -140,7 +139,7 @@ void AEnemyCharacter::LoadCharacterData()
 
 void AEnemyCharacter::SetEtc()
 {
-	NowAIController = Cast<AAggressiveAIController>(GetController());
+	NowAIController = Cast<AEnemyAIController>(GetController());
 	SaveLocation = GetActorLocation();
 }
 

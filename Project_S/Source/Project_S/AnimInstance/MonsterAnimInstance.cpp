@@ -71,7 +71,10 @@ void UMonsterAnimInstance::AnimNotify_Collider()
 
 void UMonsterAnimInstance::AnimNotify_AttackEnd()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Chk"));
+	if (Monster != nullptr)
+	{
+		Monster->IsAttacking = false;
+	}
 }
 
 void UMonsterAnimInstance::AnimNotify_Died()

@@ -41,6 +41,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	class UC_SkillComponent* Skill;
 public:
+	bool IsAttacking;
+
 	class US_StatComponent* GetStatCom() { return Stat; }
 	class UC_SkillComponent* GetSkillCom() { return Skill; }
 

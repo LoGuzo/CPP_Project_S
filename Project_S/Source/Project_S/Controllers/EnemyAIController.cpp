@@ -18,6 +18,7 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 	EndTime = GetWorld()->GetDeltaSeconds();
 	PlayTime = 1.f;
 	IsDead = false;
+	ChkState = E_State::E_Search;
 }
 
 void AEnemyAIController::OnUnPossess()

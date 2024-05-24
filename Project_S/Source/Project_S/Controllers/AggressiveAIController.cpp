@@ -7,11 +7,6 @@
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/C_SkillComponent.h"
 
-void AAggressiveAIController::PreInitializeComponents()
-{
-	Super::PreInitializeComponents();
-}
-
 void AAggressiveAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -19,12 +14,6 @@ void AAggressiveAIController::Tick(float DeltaTime)
 	{
 		ChkState = E_State::E_Reset;
 	}
-}
-
-void AAggressiveAIController::OnPossess(APawn* InPawn)
-{
-	Super::OnPossess(InPawn);
-	ChkState = E_State::E_Search;
 }
 
 void AAggressiveAIController::AISerach()
