@@ -48,6 +48,7 @@ void UMonsterAnimInstance::ColliderNotify()
 		Monster->ScopeAttackCheck(NowPattern->Range);
 		break;
 	case E_SkillType::E_Shot:
+		Monster->ShotAttackCheck();
 		break;
 	default:
 		break;
@@ -82,5 +83,21 @@ void UMonsterAnimInstance::AnimNotify_Died()
 	if (Monster != nullptr)
 	{
 		Monster->DiedEnemy();
+	}
+}
+
+void UMonsterAnimInstance::AnimNotify_AnyMove()
+{
+	if (Monster != nullptr)
+	{
+		Monster->AnyMove();
+	}
+}
+
+void UMonsterAnimInstance::AnimNotify_Make_Projectile()
+{
+	if (Monster != nullptr)
+	{
+		Monster->Make_Projectile();
 	}
 }

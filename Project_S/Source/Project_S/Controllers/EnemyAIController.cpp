@@ -49,7 +49,8 @@ void AEnemyAIController::Tick(float DeltaTime)
 	{
 		if (StartTime + PlayTime < EndTime)
 		{
-			FSMState();
+			if(!IsDead)
+				FSMState();
 
 			EndTime = 0;
 			StartTime = GetWorld()->GetDeltaSeconds();

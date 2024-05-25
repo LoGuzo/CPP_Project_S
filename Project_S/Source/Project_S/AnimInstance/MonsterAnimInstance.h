@@ -47,4 +47,10 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_Died();
+
+	UFUNCTION()
+	void AnimNotify_AnyMove();
+
+	UFUNCTION()
+	void AnimNotify_Make_Projectile();
 };

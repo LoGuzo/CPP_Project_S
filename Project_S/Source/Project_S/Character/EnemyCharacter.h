@@ -23,11 +23,19 @@ public:
 
 	void DiedEnemy();
 
+	virtual void AnyMove() {};
+
+	virtual void Make_Projectile() {};
+
+	virtual void Set_Projectile() {};
+
 	virtual void ResetStat() override;
 
 	void LoadCharacterData();
 
 	void SetEtc();
+
+	E_MonsterType Type;
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 

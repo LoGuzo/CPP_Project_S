@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Character/EnemyCharacter.h"
+#include "Project_S/Character/BossCharacter.h"
 #include "Project_S/Controllers/AggressiveAIController.h"
 #include "Project_S/Controllers/MiddleBossAIController.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -121,12 +122,51 @@ void AMonsterSpawner::SpawnEnemy()
 {
 	for (int32 i = 0; i < EnemyArray.Num(); i++)
 	{
-		AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
-		SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
-		SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
-		SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
-		SpawnNewEnemy->LoadCharacterData();
-		EnemyClassArray.Add(SpawnNewEnemy);
+		switch (EnemyArray[i].MonsterType)
+		{
+		case E_MonsterType::E_Normal:
+		{
+
+		}
+		break;
+		case E_MonsterType::E_Aggressive:
+		{
+			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
+			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
+			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
+			SpawnNewEnemy->LoadCharacterData();
+			EnemyClassArray.Add(SpawnNewEnemy);
+		}
+		break;
+		case E_MonsterType::E_Patrol:
+		{
+
+		}
+		break;
+		case E_MonsterType::E_MiddleBoss:
+		{
+			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
+			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
+			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
+			SpawnNewEnemy->LoadCharacterData();
+			EnemyClassArray.Add(SpawnNewEnemy);
+		}
+		break;
+		case E_MonsterType::E_LastBoss:
+		{
+			ABossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<ABossCharacter>(ABossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
+			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
+			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
+			SpawnNewEnemy->LoadCharacterData();
+			EnemyClassArray.Add(SpawnNewEnemy);
+		}
+		break;
+		default:
+		break;
+		}
 	}
 	IsSpawn = true;
 }
@@ -166,7 +206,9 @@ void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _Monste
 	break;
 	case E_MonsterType::E_LastBoss:
 	{
-
+		AMiddleBossAIController* NewAI = GetWorld()->SpawnActor<AMiddleBossAIController>(AMiddleBossAIController::StaticClass());
+		NewAI->Possess(Enemy);
+		Enemy->SetEtc();
 	}
 	break;
 	default:
