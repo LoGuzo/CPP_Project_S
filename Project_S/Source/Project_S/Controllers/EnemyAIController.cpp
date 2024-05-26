@@ -102,3 +102,9 @@ void AEnemyAIController::SetMaxSpeed(float NewMaxSpeed)
 	}
 }
 
+void AEnemyAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
+	if (Result.IsSuccess()) {
+		IsMoving = false;
+	}
+}
+

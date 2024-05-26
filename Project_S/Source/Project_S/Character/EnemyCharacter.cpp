@@ -41,7 +41,7 @@ AEnemyCharacter::AEnemyCharacter()
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if(Type != E_MonsterType::E_MiddleBoss || Type != E_MonsterType::E_LastBoss)
+	if (Type != E_MonsterType::E_LastBoss && Type != E_MonsterType::E_MiddleBoss)
 		OnlyHpBar->SetRenderOpacity(1.f);
 	AFirstCharacter* User = Cast<AFirstCharacter>(DamageCauser);
 	if (Stat->GetHp() <= 0 && !IsDead)
@@ -87,23 +87,20 @@ void AEnemyCharacter::PostInitializeComponents()
 
 void AEnemyCharacter::SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial)
 {
-	if (!_MonsterMesh.IsValid() && !_MonsterMaterial.IsValid())
+	USkeletalMesh* MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
+	if (MeshPath)
 	{
-		USkeletalMesh* MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
-		if (MeshPath)
+		GetMesh()->SetSkeletalMesh(MeshPath);
+		UMaterialInstance* MaterialPath = Cast<UMaterialInstance>(_MonsterMaterial.LoadSynchronous());
+		if (MaterialPath)
 		{
-			GetMesh()->SetSkeletalMesh(MeshPath);
-			UMaterialInstance* MaterialPath = Cast<UMaterialInstance>(_MonsterMaterial.LoadSynchronous());
-			if (MaterialPath)
-			{
-				MyMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(MaterialPath, this);
-				GetMesh()->SetMaterial(0, MyMaterialInstanceDynamic);
-			}
-			GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
-			FVector MeshLocation = FVector(-20.f, 0.f, -90.f);
-			FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
-			GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
+			MyMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(MaterialPath, this);
+			GetMesh()->SetMaterial(0, MyMaterialInstanceDynamic);
 		}
+		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+		FVector MeshLocation = FVector(-20.f, 0.f, -90.f);
+		FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
+		GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
 	}
 }
 
@@ -127,9 +124,11 @@ void AEnemyCharacter::LoadCharacterData()
 				Stat->SetArmor(LoadData.Pin()->Armor);
 				Type = LoadData.Pin()->Type;
 				Skill->SetSlots(LoadData.Pin()->MonsterSkill);
-				SetMesh(LoadData.Pin()->MonsterMesh,LoadData.Pin()->MonsterMaterial);
+				if (!GetMesh()->SkeletalMesh)
+				{
+					SetMesh(LoadData.Pin()->MonsterMesh, LoadData.Pin()->MonsterMaterial);
+				}
 			}
-
 		}
 	}
 	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
@@ -164,12 +163,18 @@ void AEnemyCharacter::DiedEnemy()
 {
 	NowAIController->UnPossess();
 	GetCharacterMovement()->GravityScale = 0.f;
-	GetMesh()->SetSkeletalMesh(nullptr);
 	OnlyHpBar->SetRenderOpacity(0.f);
-	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 5000.f));
-	if (IsReadySpawn)
+	IsAttacking = false;
+	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 1000.f));
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+	if (Type != E_MonsterType::E_LastBoss)
 	{
-		GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
+		if (IsReadySpawn)
+		{
+			GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
+		}
 	}
 }
 
@@ -179,10 +184,13 @@ void AEnemyCharacter::ResetStat()
 	NowAIController->IsDead = false;
 	IsReadySpawn = false;
 	GetMesh()->SetEnableGravity(true);
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
+	SetActorTickEnabled(true);
 	LoadCharacterData();
 	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;
-	UseSkill(Skill->GetSlot(2).ItemName.ToString());
 	NowAIController->Possess(this);
 }
+
 

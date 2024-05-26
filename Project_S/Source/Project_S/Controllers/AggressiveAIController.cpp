@@ -99,9 +99,3 @@ void AAggressiveAIController::AIMove()
 	MoveToActor(User, 100.f);
 	ChkState = E_State::E_Attack;
 }
-
-void AAggressiveAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
-	if (Result.IsSuccess()) {
-		IsMoving = false;
-	}
-}

@@ -78,20 +78,19 @@ void AMiddleBossAIController::Attack()
 		const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 		if (Enemy->IsAttacking == true)
 			return;
+		SetFocus(User);
 		float ToUserDistance = SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation());
 		if (ToUserDistance <= 200.f * GetPawn()->GetActorScale3D().X)
 		{
 			if (Enemy) {
-				SetFocus(User);
 				Enemy->UseSkill(Enemy->GetSkillCom()->GetSlot(0).ItemName.ToString());
 				Enemy->IsAttacking = true;
 				return;
 			}
 		}
-		else if (ToUserDistance >= 200.f * GetPawn()->GetActorScale3D().X && ToUserDistance <= 400.f * GetPawn()->GetActorScale3D().X)
+		else if (ToUserDistance <= 400.f * GetPawn()->GetActorScale3D().X)
 		{
 			if (Enemy) {
-				SetFocus(User);
 				Enemy->UseSkill(Enemy->GetSkillCom()->GetSlot(3).ItemName.ToString());
 				Enemy->IsAttacking = true;
 				return;

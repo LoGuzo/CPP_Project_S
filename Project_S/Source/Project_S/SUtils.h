@@ -7,4 +7,6 @@
 namespace SUtils
 {
 	float SDistance(const FVector Pos, const FVector OtherPos);
+
+	int32 RandRange(int32 Min, int32 Max);//·£´ý°ª
 }

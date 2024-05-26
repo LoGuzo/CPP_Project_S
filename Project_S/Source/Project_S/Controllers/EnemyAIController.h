@@ -47,6 +47,8 @@ protected :
 
 	class AUserCharacter* User;
 
+	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+
 public:
 	bool IsDead;
 	E_State ChkState;
@@ -66,4 +68,6 @@ public:
 
 	void FSMState(); // 상태 변경
 	void SetMaxSpeed(float NewMaxSpeed); // MaxSpeed 조정
+
+	AUserCharacter* GetUser() { return User; }
 };

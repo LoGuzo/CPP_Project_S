@@ -38,7 +38,8 @@ public:
 	E_MonsterType Type;
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
+	
+	class AEnemyAIController* NowAIController;
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
@@ -68,8 +69,6 @@ private:
 	virtual void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial) override;
 
 	TWeakPtr<FMonsterData> LoadData;
-
-	class AEnemyAIController* NowAIController;
 
 	bool IsReadySpawn;
 

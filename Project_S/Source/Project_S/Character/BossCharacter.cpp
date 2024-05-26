@@ -2,6 +2,8 @@
 
 
 #include "BossCharacter.h"
+#include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Controllers/EnemyAIController.h"
 
 ABossCharacter::ABossCharacter()
 {
@@ -55,7 +57,7 @@ void ABossCharacter::SetBossMesh()
 
 void ABossCharacter::AnyMove()
 {
-
+	SetActorLocation(NowAIController->GetUser()->GetActorLocation());
 }
 
 void ABossCharacter::Make_Projectile()

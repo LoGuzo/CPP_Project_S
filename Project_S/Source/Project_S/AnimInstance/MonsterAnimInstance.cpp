@@ -2,6 +2,7 @@
 
 
 #include "MonsterAnimInstance.h"
+#include "Components/CapsuleComponent.h"
 #include "Project_S/Character/EnemyCharacter.h"
 
 UMonsterAnimInstance::UMonsterAnimInstance() : NowPattern(nullptr), Monster(nullptr)
@@ -75,6 +76,7 @@ void UMonsterAnimInstance::AnimNotify_AttackEnd()
 	if (Monster != nullptr)
 	{
 		Monster->IsAttacking = false;
+		Monster->GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 	}
 }
 

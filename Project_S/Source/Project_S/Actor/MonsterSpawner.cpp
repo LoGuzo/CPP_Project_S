@@ -9,6 +9,7 @@
 #include "Project_S/Character/BossCharacter.h"
 #include "Project_S/Controllers/AggressiveAIController.h"
 #include "Project_S/Controllers/MiddleBossAIController.h"
+#include "Project_S/Controllers/GolemAIController.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 // Sets default values
@@ -206,7 +207,7 @@ void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _Monste
 	break;
 	case E_MonsterType::E_LastBoss:
 	{
-		AMiddleBossAIController* NewAI = GetWorld()->SpawnActor<AMiddleBossAIController>(AMiddleBossAIController::StaticClass());
+		AGolemAIController* NewAI = GetWorld()->SpawnActor<AGolemAIController>(AGolemAIController::StaticClass());
 		NewAI->Possess(Enemy);
 		Enemy->SetEtc();
 	}

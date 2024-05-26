@@ -15,9 +15,6 @@ class PROJECT_S_API AAggressiveAIController : public AEnemyAIController
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
-
 public:
 	virtual void Tick(float DeltaTime) override;
 
