@@ -4,6 +4,7 @@
 #include "EnemyAIController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Project_S/Character/UserCharacter.h"
 #include <Kismet/GameplayStatics.h>
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
@@ -105,6 +106,23 @@ void AEnemyAIController::SetMaxSpeed(float NewMaxSpeed)
 void AEnemyAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
 	if (Result.IsSuccess()) {
 		IsMoving = false;
+	}
+}
+void AEnemyAIController::LookAtPlayer()
+{
+	if (User)
+	{
+		FVector PlayerLocation = User->GetActorLocation();
+		FVector AILocation = GetPawn()->GetActorLocation();
+		FVector Direction = (PlayerLocation - AILocation).GetSafeNormal();
+
+		FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+		LookAtRotation.Pitch = 0.0f;
+		LookAtRotation.Roll = 0.0f;
+
+		GetPawn()->SetActorRotation(LookAtRotation);
+
+		SetControlRotation(LookAtRotation);
 	}
 }
 

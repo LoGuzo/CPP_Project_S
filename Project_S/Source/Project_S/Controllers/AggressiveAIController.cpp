@@ -75,17 +75,16 @@ void AAggressiveAIController::Attack()
 		return;
 	if (User && !IsDead)
 	{
+		LookAtPlayer();
 		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
 		{
 			const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 			if (Enemy) {
-				SetFocus(User);
 				Enemy->UseSkill(Enemy->GetSkillCom()->GetSlot(0).ItemName.ToString());
 				return;
 			}
 		}
 	}
-	SetFocus(nullptr);
 	ChkState = E_State::E_Search;
 }
 

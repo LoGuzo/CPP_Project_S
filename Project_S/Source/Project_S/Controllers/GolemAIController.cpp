@@ -137,22 +137,3 @@ bool AGolemAIController::IsSkillOnCooldown(int32 SkillIndex) const
 	}
 	return false;
 }
-void AGolemAIController::LookAtPlayer()
-{
-	if (User)
-	{
-		FVector PlayerLocation = User->GetActorLocation();
-		FVector AILocation = GetPawn()->GetActorLocation();
-		FVector Direction = (PlayerLocation - AILocation).GetSafeNormal();
-
-		FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
-		LookAtRotation.Pitch = 0.0f;  // Optionally, lock pitch if you want only yaw rotation
-		LookAtRotation.Roll = 0.0f;   // Optionally, lock roll
-
-		// Set the AI character's rotation
-		GetPawn()->SetActorRotation(LookAtRotation);
-
-		// Alternatively, you can use the controller's rotation
-		SetControlRotation(LookAtRotation);
-	}
-}

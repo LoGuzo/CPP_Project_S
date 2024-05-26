@@ -88,7 +88,6 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AUserCharacter::Dash);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AUserCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AUserCharacter::MoveRight);
@@ -228,7 +227,6 @@ void AUserCharacter::MoveForward(float Value)
 	if (!IsAttacking) {
 		if ((Controller != nullptr) && (Value != 0.0f))
 		{
-			// find out which way is forward
 			const FRotator Rotation = Controller->GetControlRotation();
 			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -447,7 +445,7 @@ void AUserCharacter::OnSkillWidgetKeyPressed()
 	}
 }
 
-void AUserCharacter::SetCurItem(AA_Item *_Curitem)
+void AUserCharacter::SetCurItem(AA_Item* _Curitem)
 {
 	Curitem = _Curitem;
 }
@@ -477,16 +475,27 @@ void AUserCharacter::AnyMove(UCurveBase* _SkillCurve)
 
 void AUserCharacter::Dash()
 {
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	// Get the last input vector (movement direction)
+	FVector LastInputVector = GetCharacterMovement()->GetLastInputVector();
+	if (LastInputVector.IsNearlyZero())
+	{
+		// If no movement input, dash in the forward direction
+		LastInputVector = GetActorForwardVector();
+	}
+	else
+	{
+		// Normalize the input vector to get the direction
+		LastInputVector = LastInputVector.GetSafeNormal();
+	}
+	LastInputVector.Z = 0;
 
 	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
-	LaunchCharacter(Direction * 5000.f, true, true);
-	AnimInstance ->SetOnDash(true);
+	LaunchCharacter(LastInputVector * 5000.f, true, true);
+	if (AnimInstance)
+		AnimInstance->SetOnDash(true);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::StopDashing, 0.1f, false);
+
 }
 
 void AUserCharacter::StopDashing() {
@@ -508,11 +517,10 @@ void AUserCharacter::UseSkill(FString _SkillName)
 	{
 		const auto SkillData = StaticCastSharedPtr<FSkillTable>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Skill)->GetMyData((Skill->GetSlot(0).ItemName).ToString()));
 		NowSkill = SkillData;
-		if(SkillData.IsValid())
+		if (SkillData.IsValid())
 			AnimInstance->PlaySome(SkillData);
 	}
 }
-
 
 
 

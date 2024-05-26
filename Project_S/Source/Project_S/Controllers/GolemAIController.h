@@ -31,7 +31,6 @@ public:
 	virtual void AIMove() override; // 이동
 	virtual void Attack() override; // 공격
 
-	void LookAtPlayer();
 	void SetRandomCharacter();
 
 	void OnSkillCooldownComplete(int32 SkillIndex); // 쿨타임

@@ -45,6 +45,7 @@ public:
 	void SetSpeed(const float _Speed);
 	void SetHaveWeapon(const bool _HaveWeapon);
 
+	bool GetOnDash() { return OnDash; }
 	void SetOnDash(const bool _OnDash);
 
 	void PlaySome(TSharedPtr<FSkillTable>_Data);

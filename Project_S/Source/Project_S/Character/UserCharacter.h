@@ -58,7 +58,9 @@ protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 	virtual void ResetStat() override;
+
 private:
+
 	class AWeaponActor* MyWeapon = nullptr;
 
 	TWeakPtr<FSkillTable> NowSkill;
@@ -145,5 +147,4 @@ public:
 
 	UPROPERTY(EditAnyWhere, Category = Camera)
 	TSubclassOf<class UUserCameraShake> TCameraShake;
-
 };

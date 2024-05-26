@@ -49,6 +49,7 @@ protected :
 
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 
+	void LookAtPlayer();
 public:
 	bool IsDead;
 	E_State ChkState;

@@ -17,8 +17,6 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
-	HpBar->SetupAttachment(GetMesh());
-	HpBar->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
 	HpBar->SetWidgetSpace(EWidgetSpace::Screen);
 	MyCharType = E_CharacterType::E_Monster;
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_OnlyHpBar.WBP_OnlyHpBar_C'"));
@@ -101,6 +99,7 @@ void AEnemyCharacter::SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMes
 		FVector MeshLocation = FVector(-20.f, 0.f, -90.f);
 		FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
 		GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
+		HpBar->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("HpBar"));
 	}
 }
 
