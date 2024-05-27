@@ -20,8 +20,12 @@ MonsterMananger::~MonsterMananger()
 
 const TSharedPtr<FTableRowBase> MonsterMananger::GetMyData(FString _Init)
 {
-	MyMonster = MakeShared<FMonsterData>(*MyData->FindRow<FMonsterData>(FName(*_Init), TEXT(""), false));;
-	return MyMonster;
+	auto myCharacter = MyData->FindRow<FMonsterData>(FName(*_Init), TEXT(""), false);
+	if (myCharacter)
+	{
+		MyMonster = MakeShared<FMonsterData>(*myCharacter);
+	}
+	return MyMonster.IsValid() ? MyMonster : nullptr;
 }
 
 void MonsterMananger::InsertMonsterManage(int32 Key, FMonsterData Data)

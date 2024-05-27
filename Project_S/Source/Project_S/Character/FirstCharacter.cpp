@@ -22,11 +22,6 @@ float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	return DamageAmount;
 }
 
-void AFirstCharacter::SetMyColor(int32 _MyColor)
-{
-	MyColor = _MyColor;
-}
-
 void AFirstCharacter::SetCharID(FString _CharID)
 {
 	CharID = _CharID;

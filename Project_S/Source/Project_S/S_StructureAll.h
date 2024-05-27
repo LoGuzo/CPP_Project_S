@@ -257,6 +257,21 @@ struct FSpawnData : public FTableRowBase
 	TArray<FSpawnMonsterData> SpawnMonster;
 };
 
+USTRUCT()
+struct FUserID: public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString Password;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FString> HaveChar;
+};
+
 
 
 USTRUCT()

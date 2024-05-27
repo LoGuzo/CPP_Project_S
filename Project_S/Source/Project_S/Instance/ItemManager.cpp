@@ -20,7 +20,11 @@ ItemManager::~ItemManager()
 
 const TSharedPtr<FTableRowBase> ItemManager::GetMyData(FString _Init)
 {
-	MyCharacter = MakeShared<FS_Item>(*MyData->FindRow<FS_Item>(FName(*_Init), TEXT(""), false));;
-	return MyCharacter;
+	auto myCharacter = MyData->FindRow<FS_Item>(FName(*_Init), TEXT(""), false);
+	if (myCharacter)
+	{
+		MyCharacter = MakeShared<FS_Item>(*myCharacter);
+	}
+	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

@@ -188,7 +188,7 @@ void AUserCharacter::SaveCharacterData()
 	if (MyGameInstance)
 	{
 		if (GetCharID() != "") {
-			MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->SetMyData(GetCharID(), NowCharData);
+			MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->SetMyData(GetCharID(), &NowCharData);
 		}
 	}
 }
@@ -209,17 +209,16 @@ void AUserCharacter::LoadCharacterData()
 				QuickSlot->SetSkillSlots(LoadData.Pin()->MySkillQuick);
 				QuickSlot->SetPotionSlots(LoadData.Pin()->MyPotionQuick);
 			}
-
+			for (const FS_Slot& slot : Equip->GetSlots())
+			{
+				if (slot.ItemClass != nullptr)
+				{
+					SetMyWeapon(slot.ItemClass);
+				}
+			}
+			QuickSlot->OnQuickUpdated.Broadcast();
 		}
 	}
-	for (const FS_Slot& slot : Equip->GetSlots())
-	{
-		if (slot.ItemClass != nullptr)
-		{
-			SetMyWeapon(slot.ItemClass);
-		}
-	}
-	QuickSlot->OnQuickUpdated.Broadcast();
 }
 
 void AUserCharacter::MoveForward(float Value)

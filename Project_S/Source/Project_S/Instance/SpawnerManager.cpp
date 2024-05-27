@@ -20,6 +20,10 @@ SpawnerManager::~SpawnerManager()
 
 const TSharedPtr<FTableRowBase> SpawnerManager::GetMyData(FString _Init)
 {
-	MySpawner = MakeShared<FSpawnData>(*MyData->FindRow<FSpawnData>(FName(*_Init), TEXT(""), false));;
-	return MySpawner;
+	auto myCharacter = MyData->FindRow<FSpawnData>(FName(*_Init), TEXT(""), false);
+	if (myCharacter)
+	{
+		MySpawner = MakeShared<FSpawnData>(*myCharacter);
+	}
+	return MySpawner.IsValid() ? MySpawner : nullptr;
 }

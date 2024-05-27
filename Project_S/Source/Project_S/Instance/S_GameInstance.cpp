@@ -9,6 +9,7 @@
 #include "MonsterPatternManager.h"
 #include "MonsterMananger.h"
 #include "SpawnerManager.h"
+#include "UserIDManager.h"
 
 US_GameInstance::US_GameInstance()
 {
@@ -19,7 +20,7 @@ US_GameInstance::US_GameInstance()
 	MyDataManager.Emplace(E_DataType::E_MonsterPattern, new MonsterPatternManager());
 	MyDataManager.Emplace(E_DataType::E_MonsterData, new MonsterMananger());
 	MyDataManager.Emplace(E_DataType::E_SpawnerData, new SpawnerManager());
-
+	MyDataManager.Emplace(E_DataType::E_UserIDData, new UserIDManager());
 }
 
 void US_GameInstance::Init()

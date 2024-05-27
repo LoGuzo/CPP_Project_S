@@ -23,7 +23,6 @@ public:
 	AFirstCharacter();
 
 private:
-	int32 MyColor;
 	FString CharID;
 
 protected:
@@ -52,9 +51,7 @@ public:
 	void ScopeAttackCheck(float _Range);
 	void ShotAttackCheck();
 
-	int32 GetMyColor() { return MyColor; }
 	FString GetCharID() { return CharID; }
-	void SetMyColor(int32 _MyColor);
 	void SetCharID(FString _CharID);
 
 	void SetSaveLocation(FVector _SaveLocation);

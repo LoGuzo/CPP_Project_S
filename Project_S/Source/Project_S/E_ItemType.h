@@ -43,4 +43,5 @@ enum class E_DataType : uint8
 	E_MonsterPattern,
 	E_MonsterData,
 	E_SpawnerData,
+	E_UserIDData,
 };
