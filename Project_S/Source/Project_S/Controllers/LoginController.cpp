@@ -35,9 +35,9 @@ void ALoginController::BeginPlay()
 
 			// 필요시 마우스 커서 표시
 			bShowMouseCursor = true;
-			FInputModeUIOnly InputMode;
-			InputMode.SetWidgetToFocus(W_Login->TakeWidget());
-			SetInputMode(InputMode);
+			FInputModeUIOnly LoginInputMode;
+			LoginInputMode.SetWidgetToFocus(W_Login->TakeWidget());
+			SetInputMode(LoginInputMode);
 		}
 	}
 }

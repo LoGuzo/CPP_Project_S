@@ -20,4 +20,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+private:
+	TSubclassOf<class UUserWidget> ULobby_Widget;
+	class UW_CharacterLobby* W_CharacterLobby;
 };

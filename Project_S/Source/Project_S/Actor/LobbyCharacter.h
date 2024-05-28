@@ -24,10 +24,7 @@ private:
 	USkeletalMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMesh;
+	class USceneCaptureComponent2D* SceneCapture;
 
-	UPROPERTY(VisibleAnywhere)
-	class UWidgetComponent* LobbyWidget;
-
-	//class * OnlyHpBar;
+	class UTextureRenderTarget2D* RenderTarget;
 };

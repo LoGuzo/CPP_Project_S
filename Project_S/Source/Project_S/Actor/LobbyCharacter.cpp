@@ -2,7 +2,8 @@
 
 
 #include "LobbyCharacter.h"
-#include "Components/WidgetComponent.h"
+#include "Components/SceneCaptureComponent2D.h"
+#include "Engine/TextureRenderTarget2D.h"
 
 // Sets default values
 ALobbyCharacter::ALobbyCharacter()
@@ -11,22 +12,20 @@ ALobbyCharacter::ALobbyCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
-	LobbyWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("LobbyWidget"));
-	LobbyWidget->SetWidgetSpace(EWidgetSpace::World);
-	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_CharacterLobby.WBP_CharacterLobby_C'"));
-	if (UW.Succeeded())
-	{
-		LobbyWidget->SetWidgetClass(UW.Class);
-		LobbyWidget->SetDrawSize(FVector2D(200.f, 200.f));
-		LobbyWidget->SetRelativeLocation(FVector(0.f, 60.f, 105.f));
-		LobbyWidget->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
-	}
-	LobbyWidget->SetupAttachment(RootComponent);
+	SceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCapture"));
+	SceneCapture->SetRelativeLocation(FVector(0.f, 120.f, 115.f));
+	SceneCapture->SetRelativeRotation(FRotator(-10.f, -90.f, 0.f));
+	SceneCapture->SetupAttachment(RootComponent);
+
+	// Render target 생성 및 Scene Capture Component에 설정
+	RenderTarget = CreateDefaultSubobject<UTextureRenderTarget2D>(TEXT("RenderTarget"));
+	RenderTarget->InitAutoFormat(512, 512);
+	SceneCapture->TextureTarget = RenderTarget;
+	SceneCapture->CaptureSource = SCS_SceneColorSceneDepth;
 }
 
 // Called when the game starts or when spawned
 void ALobbyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	LobbyWidget->InitWidget();
 }
