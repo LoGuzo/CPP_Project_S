@@ -2,4 +2,9 @@
 
 
 #include "LobbyGameMode.h"
+#include "Project_S/Controllers/LobbyController.h"
 
+ALobbyGameMode::ALobbyGameMode()
+{
+	PlayerControllerClass = ALobbyController::StaticClass();
+}

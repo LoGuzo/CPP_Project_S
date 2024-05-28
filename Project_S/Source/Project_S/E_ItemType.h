@@ -45,3 +45,11 @@ enum class E_DataType : uint8
 	E_SpawnerData,
 	E_UserIDData,
 };
+
+enum class E_Widget : uint8
+{
+	E_Main,
+	E_HUD,
+	E_Set,
+	E_PopUp,
+};
