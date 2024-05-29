@@ -9,15 +9,26 @@
 /**
  * 
  */
+struct FMyCharacterData;
+
 UCLASS()
 class PROJECT_S_API UW_LobbySlot : public UMainUserWidget
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void NativePreConstruct() override;
+public:
+	UW_LobbySlot(const FObjectInitializer& ObjectInitializer);
 
+	void SetCharName(FString _CharName);
+	void SetIndex(int32 _SlotIndex);
+	void SetCharacterImage(UTextureRenderTarget2D* RenderTarget);
+protected:
+	virtual void NativeConstruct() override;
+	virtual void NativePreConstruct() override;
+	virtual void NativeDestruct() override;
 private:
+	void SetWidget();
+
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Char;
 
@@ -38,4 +49,16 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* Txt_Class;
+
+	int32 SlotIndex;
+
+	FString CharName;
+
+	TWeakPtr<FMyCharacterData> UserData;
+
+	class ALobbyCharacter* LobbyCharacter;
+
+	UMaterialInterface* RenderTargetMaterial;
+
+	class MappingClass* CharacterTypeMapping;
 };

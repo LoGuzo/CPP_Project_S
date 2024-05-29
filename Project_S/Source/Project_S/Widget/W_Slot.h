@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "DO_DragDrop.h"
-#include <Project_S/E_ItemType.h>
+#include "Project_S/E_ItemType.h"
 #include "W_Slot.generated.h"
 
 /**

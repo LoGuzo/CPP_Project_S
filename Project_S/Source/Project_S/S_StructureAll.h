@@ -127,6 +127,9 @@ struct FMyCharacterData : public FTableRowBase
 	FString CharID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_CharClass Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Level;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -272,7 +275,23 @@ struct FUserID: public FTableRowBase
 	TArray<FString> HaveChar;
 };
 
+USTRUCT()
+struct FCharacterClass : public FTableRowBase
+{
+	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_CharClass Type;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftObjectPtr<USkeletalMesh> ClassMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<UAnimInstance> ClassAnim;
+};
 
 USTRUCT()
 struct FResult : public FTableRowBase 

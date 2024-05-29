@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Project_S/UserCameraShake.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_S/MappingClass.h"
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
@@ -50,14 +51,8 @@ AUserCharacter::AUserCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->SetRelativeLocation(FVector(-110.f, 0.f, 212.f));
-	FollowCamera->SetRelativeRotation(FRotator(0.f, -20.f, 0.f));
+	FollowCamera->SetRelativeRotation(FRotator(-20.f, 0.f, 0.f));
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Animations/BP_UserAnimInstance.BP_UserAnimInstance_C'"));
-	if (ANIM.Succeeded())
-	{
-		GetMesh()->SetAnimInstanceClass(ANIM.Class);
-	}
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
@@ -110,7 +105,34 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Quick7", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
 
 }
-
+void AUserCharacter::SetMesh(E_CharClass _ClassType)
+{
+	MappingClass* CharacterTypeMapping = new MappingClass();
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData(CharacterTypeMapping->GetCharacterDescription(_ClassType)));
+		if (ClassData.IsValid())
+		{
+			USkeletalMesh* MeshPath = ClassData.Pin()->ClassMesh.LoadSynchronous();
+			if (MeshPath)
+			{
+				GetMesh()->SetSkeletalMesh(MeshPath);
+				GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
+				GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+				GetMesh()->SetAnimInstanceClass(ClassData.Pin()->ClassAnim.LoadSynchronous());
+				GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+			}
+		}
+		AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
+		if (AnimInstance)
+		{
+			AnimInstance->SetPlayer(this);
+			AnimInstance->OnAttackHit.AddUObject(this, &AUserCharacter::AttackCheck);
+			AnimInstance->OnMontageEnded.AddDynamic(this, &AUserCharacter::OnAttackMontageEnd);
+		}
+	}
+}
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -129,6 +151,10 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if (NowSkill.IsValid())
 	{
 		NowSkill.Reset();
+	}
+	if (ClassData.IsValid())
+	{
+		ClassData.Reset();
 	}
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 }
@@ -151,13 +177,6 @@ void AUserCharacter::ResetStat()
 void AUserCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
-	if (AnimInstance)
-	{
-		AnimInstance->SetPlayer(this);
-		AnimInstance->OnAttackHit.AddUObject(this, &AUserCharacter::AttackCheck);
-		AnimInstance->OnMontageEnded.AddDynamic(this, &AUserCharacter::OnAttackMontageEnd);
-	}
 	if (CharacterUI)
 	{
 		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
@@ -177,6 +196,7 @@ void AUserCharacter::SaveCharacterData()
 {
 	FMyCharacterData NowCharData;
 	NowCharData.CharID = GetCharID();
+	NowCharData.Type = ClassType;
 	NowCharData.Level = Stat->GetLevel();
 	NowCharData.Exp = Stat->GetExp();
 	NowCharData.MyEquip = Equip->GetSlots();
@@ -202,6 +222,8 @@ void AUserCharacter::LoadCharacterData()
 			LoadData = StaticCastSharedPtr<FMyCharacterData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->GetMyData(GetCharID()));
 			if (LoadData.IsValid())
 			{
+				SetClass(LoadData.Pin()->Type);
+				SetMesh(LoadData.Pin()->Type);
 				Stat->SetLevel(LoadData.Pin()->Level);
 				Stat->SetExp(LoadData.Pin()->Exp);
 				Equip->SetSlots(LoadData.Pin()->MyEquip);
@@ -219,6 +241,11 @@ void AUserCharacter::LoadCharacterData()
 			QuickSlot->OnQuickUpdated.Broadcast();
 		}
 	}
+}
+
+void AUserCharacter::SetClass(E_CharClass _ClassType)
+{
+	ClassType = _ClassType;
 }
 
 void AUserCharacter::MoveForward(float Value)

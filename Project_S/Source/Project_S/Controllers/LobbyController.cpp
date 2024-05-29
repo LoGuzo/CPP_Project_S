@@ -4,7 +4,9 @@
 #include "LobbyController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Widget/W_CharacterLobby.h"
+#include "Project_S/Instance/S_GameInstance.h"
 
 ALobbyController::ALobbyController()
 {
@@ -26,7 +28,7 @@ void ALobbyController::BeginPlay()
 		{
 			W_CharacterLobby->AddToViewport();
 
-			FInputModeGameAndUI LobbyInputMode;
+			FInputModeUIOnly LobbyInputMode;
 			LobbyInputMode.SetWidgetToFocus(W_CharacterLobby->TakeWidget());
 			SetInputMode(LobbyInputMode);
 		}

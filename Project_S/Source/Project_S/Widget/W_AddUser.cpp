@@ -54,6 +54,7 @@ void UW_AddUser::SignUp()
     FString Password = Txt_Pass->GetText().ToString();
     NowUserIDData.ID = Username;
     NowUserIDData.Password = Password;
+    NowUserIDData.HaveChar.SetNum(4);
 
     if (Username != "" && Password != "")
     {
@@ -63,6 +64,7 @@ void UW_AddUser::SignUp()
             MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->SetMyData(Username, &NowUserIDData);
         }
     }
+    Back();
 }
 
 void UW_AddUser::Back()

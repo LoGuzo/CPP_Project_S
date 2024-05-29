@@ -44,6 +44,7 @@ enum class E_DataType : uint8
 	E_MonsterData,
 	E_SpawnerData,
 	E_UserIDData,
+	E_CharClassData,
 };
 
 enum class E_Widget : uint8
@@ -52,4 +53,12 @@ enum class E_Widget : uint8
 	E_HUD,
 	E_Set,
 	E_PopUp,
+};
+
+UENUM()
+enum class E_CharClass : uint8
+{
+	E_Warrior,
+	E_Magician,
+	E_Healer
 };

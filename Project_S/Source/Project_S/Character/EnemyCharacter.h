@@ -66,7 +66,7 @@ private:
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
 
-	virtual void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial) override;
+	void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial);
 
 	TWeakPtr<FMonsterData> LoadData;
 

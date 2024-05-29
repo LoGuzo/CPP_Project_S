@@ -32,7 +32,6 @@ protected:
 	FVector SaveLocation;
 
 	virtual void ResetStat() {};
-	virtual void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial) {};
 
 	UPROPERTY(VisibleAnywhere)
 	class US_StatComponent* Stat;

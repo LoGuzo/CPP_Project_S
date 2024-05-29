@@ -9,6 +9,8 @@
 /**
  * 
  */
+struct FUserID;
+
 UCLASS()
 class PROJECT_S_API UW_CharacterLobby : public UMainUserWidget
 {
@@ -16,13 +18,19 @@ class PROJECT_S_API UW_CharacterLobby : public UMainUserWidget
 public:
 	UW_CharacterLobby(const FObjectInitializer& ObjectInitializer);
 
-	//void UpdateSlots(const TArray<FS_Slot>& Slots);
+	void UpdateSlots(const TArray<FString>& Slots);
+
+protected:
+	virtual void NativeConstruct() override;
+	virtual void NativePreConstruct() override;
+	virtual void NativeDestruct() override;
+
 private:
 	TSubclassOf<class UW_LobbySlot> UW_LobbyWidget;
 	class UW_LobbySlot* W_LobbyWidget;
 
 	UPROPERTY(meta = (BindWidget))
-	class UWrapBox* Wrap_Char;
+	class UHorizontalBox* Box_Char;
 	
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Start;
@@ -30,4 +38,10 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Del;
 
+	UFUNCTION()
+	void GameStart();
+
+	TWeakPtr<FUserID> UserData;
+
+	TArray<FString> HaveChar;
 };

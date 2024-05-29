@@ -10,6 +10,7 @@
 #include "MonsterMananger.h"
 #include "SpawnerManager.h"
 #include "UserIDManager.h"
+#include "CharacterClassManager.h"
 
 US_GameInstance::US_GameInstance()
 {
@@ -21,6 +22,7 @@ US_GameInstance::US_GameInstance()
 	MyDataManager.Emplace(E_DataType::E_MonsterData, new MonsterMananger());
 	MyDataManager.Emplace(E_DataType::E_SpawnerData, new SpawnerManager());
 	MyDataManager.Emplace(E_DataType::E_UserIDData, new UserIDManager());
+	MyDataManager.Emplace(E_DataType::E_CharClassData, new CharacterClassManager());
 }
 
 void US_GameInstance::Init()
@@ -36,4 +38,14 @@ void US_GameInstance::Shutdown()
 	{
 		MyDataManager.Empty();
 	}
+}
+
+void US_GameInstance::SetUserID(const FString& _UserID)
+{
+	UserID = _UserID;
+}
+
+void US_GameInstance::SetUserName(const FString& _UserName)
+{
+	UserName = _UserName;
 }

@@ -35,8 +35,10 @@ public:
 
 	void SaveCharacterData();
 	void LoadCharacterData();
+	void SetClass(E_CharClass _ClassType);
 	virtual void UseSkill(FString _SkillName) override;
 protected:
+	void SetMesh(E_CharClass _ClassType);
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -60,8 +62,11 @@ protected:
 	virtual void ResetStat() override;
 
 private:
+	E_CharClass ClassType;
 
 	class AWeaponActor* MyWeapon = nullptr;
+
+	TWeakPtr<FCharacterClass> ClassData;
 
 	TWeakPtr<FSkillTable> NowSkill;
 

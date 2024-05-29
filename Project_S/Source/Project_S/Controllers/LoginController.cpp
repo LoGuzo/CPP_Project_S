@@ -2,8 +2,9 @@
 
 
 #include "LoginController.h"
-#include "Project_S/Widget/W_Login.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_S/Instance/S_GameInstance.h"
+#include "Project_S/Widget/W_Login.h"
 
 ALoginController::ALoginController()
 {
@@ -14,10 +15,13 @@ ALoginController::ALoginController()
 	}
 }
 
-void ALoginController::LoginSuccessful(const FString& Username)
+void ALoginController::LoginSuccessful(const FString& UserID)
 {
-	PlayerUsername = Username;
-
+	US_GameInstance* GameInstance = Cast<US_GameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->SetUserID(UserID);
+	}
 	// 다음 맵으로 전환
 	UGameplayStatics::OpenLevel(this, FName("LobbyMap"));
 }

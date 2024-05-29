@@ -16,6 +16,9 @@ class PROJECT_S_API US_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+private:
+	FString UserID;
+	FString UserName;
 public:
 	US_GameInstance();
 
@@ -24,4 +27,12 @@ public:
 
 	TMap<E_DataType, SGameManagerBase*> MyDataManager;
 	
+	UFUNCTION(BlueprintCallable)
+	void SetUserID(const FString& _UserID);
+
+	UFUNCTION(BlueprintCallable)
+	FString GetUserID() { return UserID; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetUserName(const FString& _UserName);
 };

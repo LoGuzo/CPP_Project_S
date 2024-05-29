@@ -17,15 +17,11 @@ class PROJECT_S_API ALoginController : public APlayerController
 public:
 	ALoginController();
 
-	void LoginSuccessful(const FString& Username);
-
-	FString GetPlayerUsername() const { return PlayerUsername; }
+	void LoginSuccessful(const FString& UserID);
 protected:
 	virtual void BeginPlay() override;
 
 private:
-	FString PlayerUsername;
-
 	TSubclassOf<class UUserWidget> ULogin_Widget;
 	class UW_Login* W_Login;
 };

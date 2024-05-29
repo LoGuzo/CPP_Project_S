@@ -15,6 +15,7 @@ US_StatComponent::US_StatComponent()
 
 	// ...
 	bWantsInitializeComponent = true;
+	Level = 1;
 }
 
 
