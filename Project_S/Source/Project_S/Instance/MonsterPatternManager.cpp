@@ -21,8 +21,8 @@ const TSharedPtr<FTableRowBase> MonsterPatternManager::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FMonsterPattern>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MyCharacter = MakeShared<FMonsterPattern>(*myCharacter);
-	}
+	else
+		MyCharacter.Reset();
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }

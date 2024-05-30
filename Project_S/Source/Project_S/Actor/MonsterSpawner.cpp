@@ -53,7 +53,7 @@ void AMonsterSpawner::BeginOverlap(class UPrimitiveComponent* OverlappedComp, cl
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		if (OtherActor->GetClass()->GetSuperClass() == AUserCharacter::StaticClass())
+		if (OtherActor->GetClass() == AUserCharacter::StaticClass())
 		{
 			CntUser++;
 			if (HasAuthority()) // 서버에서만 실행되도록 확인
@@ -81,7 +81,7 @@ void AMonsterSpawner::EndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		if (OtherActor->GetClass()->GetSuperClass() == AUserCharacter::StaticClass())
+		if (OtherActor->GetClass() == AUserCharacter::StaticClass())
 		{
 			if (CntUser > 0)
 			{

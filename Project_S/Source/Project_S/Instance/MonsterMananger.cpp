@@ -22,9 +22,9 @@ const TSharedPtr<FTableRowBase> MonsterMananger::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FMonsterData>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MyMonster = MakeShared<FMonsterData>(*myCharacter);
-	}
+	else
+		MyMonster.Reset();
 	return MyMonster.IsValid() ? MyMonster : nullptr;
 }
 

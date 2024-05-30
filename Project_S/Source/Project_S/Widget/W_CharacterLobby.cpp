@@ -48,9 +48,9 @@ void UW_CharacterLobby::NativePreConstruct()
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		if (MyGameInstance->GetUserID() != "")
+		if (MyGameInstance->GetUserData())
 		{
-			UserData = StaticCastSharedPtr<FUserID>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->GetMyData(MyGameInstance->GetUserID()));
+			UserData = StaticCastSharedPtr<FUserID>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->GetMyData(*MyGameInstance->GetUserData()->ID));
 			if (UserData.IsValid())
 			{
 				HaveChar = UserData.Pin()->HaveChar;

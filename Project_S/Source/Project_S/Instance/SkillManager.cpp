@@ -22,9 +22,9 @@ const TSharedPtr<FTableRowBase> SkillManager::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FSkillTable>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MyCharacter = MakeShared<FSkillTable>(*myCharacter);
-	}
+	else
+		MyCharacter.Reset();
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

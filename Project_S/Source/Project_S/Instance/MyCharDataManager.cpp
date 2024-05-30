@@ -21,9 +21,9 @@ const TSharedPtr<FTableRowBase> MyCharDataManager::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FMyCharacterData>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MyCharacter = MakeShared<FMyCharacterData>(*myCharacter);
-	}
+	else
+		MyCharacter.Reset();
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

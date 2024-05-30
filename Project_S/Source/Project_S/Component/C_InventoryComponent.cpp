@@ -42,7 +42,8 @@ void UC_InventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void UC_InventoryComponent::SetSlots(const TArray<FS_Slot>& _Slots)
 {
-	Slots = _Slots;
+	if (_Slots.Num() != 0)
+		Slots = _Slots;
 }
 
 void UC_InventoryComponent::SetSlot(int32 _Index, FS_Slot _Slot)

@@ -11,14 +11,16 @@
 /**
  * 
  */
+
 UCLASS()
 class PROJECT_S_API US_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
 private:
-	FString UserID;
 	FString UserName;
+	FUserID UserData;
+	int32 SelectedSlotIndex = -1;
 public:
 	US_GameInstance();
 
@@ -26,13 +28,16 @@ public:
 	virtual void Shutdown() override;
 
 	TMap<E_DataType, SGameManagerBase*> MyDataManager;
-	
-	UFUNCTION(BlueprintCallable)
-	void SetUserID(const FString& _UserID);
 
-	UFUNCTION(BlueprintCallable)
-	FString GetUserID() { return UserID; }
+	void SetUserData(const FUserID& _UserData);
 
-	UFUNCTION(BlueprintCallable)
+	FUserID* GetUserData() { return &UserData; }
+
 	void SetUserName(const FString& _UserName);
+
+	FString GetUserName() { return UserName; }
+
+	void SetIndex(const int32 _SelectedSlotIndex);
+
+	int32 GetIndex() { return SelectedSlotIndex; }
 };

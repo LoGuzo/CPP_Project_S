@@ -15,12 +15,12 @@ ALoginController::ALoginController()
 	}
 }
 
-void ALoginController::LoginSuccessful(const FString& UserID)
+void ALoginController::LoginSuccessful(const FUserID& UserData)
 {
 	US_GameInstance* GameInstance = Cast<US_GameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		GameInstance->SetUserID(UserID);
+		GameInstance->SetUserData(UserData);
 	}
 	// 다음 맵으로 전환
 	UGameplayStatics::OpenLevel(this, FName("LobbyMap"));

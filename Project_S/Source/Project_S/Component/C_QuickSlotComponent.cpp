@@ -26,12 +26,14 @@ void UC_QuickSlotComponent::BeginPlay()
 
 void UC_QuickSlotComponent::SetSkillSlots(const TArray<FS_Slot>& _Slots)
 {
-	SkillSlots = _Slots;
+	if (_Slots.Num() != 0)
+		SkillSlots = _Slots;
 }
 
 void UC_QuickSlotComponent::SetPotionSlots(const TArray<FS_Slot>& _Slots)
 {
-	PotionSlots = _Slots;
+	if (_Slots.Num() != 0)
+		PotionSlots = _Slots;
 }
 
 void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, UC_SkillComponent* _SkillCom)

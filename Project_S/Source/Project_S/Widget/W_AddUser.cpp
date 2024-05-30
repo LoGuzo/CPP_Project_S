@@ -3,10 +3,10 @@
 
 #include "W_AddUser.h"
 #include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/S_StructureAll.h"
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Components/EditableTextBox.h"
-#include "Kismet/GameplayStatics.h"
 
 
 void UW_AddUser::NativeConstruct()

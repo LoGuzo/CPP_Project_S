@@ -27,6 +27,9 @@ protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeDestruct() override;
 private:
+	UFUNCTION()
+	void GoToCreate();
+
 	void SetWidget();
 
 	UPROPERTY(meta = (BindWidget))

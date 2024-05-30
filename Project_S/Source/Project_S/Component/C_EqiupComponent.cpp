@@ -24,7 +24,8 @@ void UC_EqiupComponent::BeginPlay()
 
 void UC_EqiupComponent::SetSlots(const TArray<FS_Slot>& _Slots)
 {
-	Slots = _Slots;
+	if (_Slots.Num() != 0)
+		Slots = _Slots;
 }
 
 void UC_EqiupComponent::SetSlot(int32 _Index, FS_Slot _Slot)

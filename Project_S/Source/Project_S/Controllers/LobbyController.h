@@ -17,6 +17,7 @@ class PROJECT_S_API ALobbyController : public APlayerController
 public:
 	ALobbyController();
 
+	void MakeCharLevel(const int32 _Index);
 protected:
 	virtual void BeginPlay() override;
 

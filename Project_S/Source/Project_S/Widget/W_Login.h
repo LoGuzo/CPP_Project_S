@@ -44,7 +44,7 @@ private:
 	class UButton* Btn_AddUser;
 
 	// 로그인 체크
-	bool ValidateLogin(const FString& Username, const FString& Password);
+	void ValidateLogin(const FString& Username, const FString& Password);
 
 	// Enter 바인딩
 	UFUNCTION()

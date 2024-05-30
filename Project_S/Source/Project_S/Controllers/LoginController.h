@@ -9,6 +9,8 @@
 /**
  * 
  */
+struct FUserID;
+
 UCLASS()
 class PROJECT_S_API ALoginController : public APlayerController
 {
@@ -17,7 +19,7 @@ class PROJECT_S_API ALoginController : public APlayerController
 public:
 	ALoginController();
 
-	void LoginSuccessful(const FString& UserID);
+	void LoginSuccessful(const FUserID& UserData);
 protected:
 	virtual void BeginPlay() override;
 

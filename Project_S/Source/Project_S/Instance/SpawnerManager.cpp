@@ -12,7 +12,7 @@ SpawnerManager::SpawnerManager()
 
 SpawnerManager::~SpawnerManager()
 {
-	if (MySpawner != nullptr)
+	if (MySpawner.IsValid())
 	{
 		MySpawner.Reset();
 	}
@@ -22,8 +22,8 @@ const TSharedPtr<FTableRowBase> SpawnerManager::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FSpawnData>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MySpawner = MakeShared<FSpawnData>(*myCharacter);
-	}
+	else
+		MySpawner.Reset();
 	return MySpawner.IsValid() ? MySpawner : nullptr;
 }

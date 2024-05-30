@@ -10,6 +10,7 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "Project_S/MappingClass.h"
 #include "Project_S/Actor/LobbyCharacter.h"
+#include "Project_S/Controllers/LobbyController.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 
@@ -53,6 +54,8 @@ void UW_LobbySlot::NativeConstruct()
 void UW_LobbySlot::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+	if (Btn_Create)
+		Btn_Create->OnClicked.AddDynamic(this, &UW_LobbySlot::GoToCreate);
 	SetWidget();
 }
 
@@ -76,7 +79,7 @@ void UW_LobbySlot::SetWidget()
 			UserData = StaticCastSharedPtr<FMyCharacterData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->GetMyData(CharName));
 			if (UserData.IsValid())
 			{
-				LobbyCharacter = GetWorld()->SpawnActor<ALobbyCharacter>(ALobbyCharacter::StaticClass(), FVector(100.f * SlotIndex, 500.f, 500.f), FRotator::ZeroRotator);
+				LobbyCharacter = GetWorld()->SpawnActor<ALobbyCharacter>(ALobbyCharacter::StaticClass(), FVector(500.f * SlotIndex, 500.f, 500.f), FRotator::ZeroRotator);
 				LobbyCharacter->LoadData(CharacterTypeMapping->GetCharacterDescription(UserData.Pin()->Type));
 				Btn_Create->SetVisibility(ESlateVisibility::Hidden);
 				Txt_Name->SetText(FText::FromString(UserData.Pin()->CharID));
@@ -93,5 +96,13 @@ void UW_LobbySlot::SetWidget()
 			Btn_Create->SetVisibility(ESlateVisibility::Visible);
 			Box_Info->SetVisibility(ESlateVisibility::Hidden);
 		}
+	}
+}
+void UW_LobbySlot::GoToCreate()
+{
+	ALobbyController* PlayerController = Cast<ALobbyController>(UGameplayStatics::GetPlayerController(this, 0));
+	if (PlayerController)
+	{
+		PlayerController->MakeCharLevel(SlotIndex);
 	}
 }

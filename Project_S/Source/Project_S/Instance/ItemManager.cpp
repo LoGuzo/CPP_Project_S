@@ -22,9 +22,9 @@ const TSharedPtr<FTableRowBase> ItemManager::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FS_Item>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MyCharacter = MakeShared<FS_Item>(*myCharacter);
-	}
+	else
+		MyCharacter.Reset();
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

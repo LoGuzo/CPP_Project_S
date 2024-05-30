@@ -22,9 +22,9 @@ const TSharedPtr<FTableRowBase> UserIDManager::GetMyData(FString _Init)
 {
 	auto myCharacter = MyData->FindRow<FUserID>(FName(*_Init), TEXT(""), false);
 	if (myCharacter)
-	{
 		MyCharacter = MakeShared<FUserID>(*myCharacter);
-	}
+	else
+		MyCharacter.Reset();
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

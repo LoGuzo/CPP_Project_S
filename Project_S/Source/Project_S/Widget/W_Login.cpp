@@ -43,7 +43,7 @@ FReply UW_Login::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& I
     return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 }
 
-bool UW_Login::ValidateLogin(const FString& Username, const FString& Password)
+void UW_Login::ValidateLogin(const FString& Username, const FString& Password)
 {
     auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
     if (MyGameInstance)
@@ -51,10 +51,16 @@ bool UW_Login::ValidateLogin(const FString& Username, const FString& Password)
         auto UserData = StaticCastSharedPtr<FUserID>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->GetMyData(Username));
         if (UserData.IsValid())
         {
-            return Username == UserData.Get()->ID && Password == UserData.Get()->Password;
+            if (Username == UserData.Get()->ID && Password == UserData.Get()->Password)
+            {
+                ALoginController* PlayerController = Cast<ALoginController>(UGameplayStatics::GetPlayerController(this, 0));
+                if (PlayerController)
+                {
+                    PlayerController->LoginSuccessful(*UserData.Get());
+                }
+            }
         }
     }
-    return false;
 }
 
 void UW_Login::IDCommitted(const FText& Text, ETextCommit::Type CommitMethod)
@@ -72,18 +78,7 @@ void UW_Login::OnLogin()
 
     if (Username != "" && Password != "")
     {
-        if (ValidateLogin(Username, Password))
-        {
-            ALoginController* PlayerController = Cast<ALoginController>(UGameplayStatics::GetPlayerController(this, 0));
-            if (PlayerController)
-            {
-                PlayerController->LoginSuccessful(Username);
-            }
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("ID : %s , Pass: %s"), *Username, *Password);
-        }
+        ValidateLogin(Username, Password);
     }
 }
 void UW_Login::OnAddUser()

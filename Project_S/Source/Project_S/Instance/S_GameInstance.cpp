@@ -40,12 +40,17 @@ void US_GameInstance::Shutdown()
 	}
 }
 
-void US_GameInstance::SetUserID(const FString& _UserID)
+void US_GameInstance::SetUserData(const FUserID& _UserData)
 {
-	UserID = _UserID;
+	UserData = _UserData;
 }
 
 void US_GameInstance::SetUserName(const FString& _UserName)
 {
 	UserName = _UserName;
+}
+
+void US_GameInstance::SetIndex(const int32 _SelectedSlotIndex)
+{
+	SelectedSlotIndex = _SelectedSlotIndex;
 }

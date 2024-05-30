@@ -34,3 +34,12 @@ void ALobbyController::BeginPlay()
 		}
 	}
 }
+void ALobbyController::MakeCharLevel(const int32 _Index)
+{
+	US_GameInstance* GameInstance = Cast<US_GameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->SetIndex(_Index);
+	}
+	UGameplayStatics::OpenLevel(GetWorld(), "MakeCharMap");
+}
