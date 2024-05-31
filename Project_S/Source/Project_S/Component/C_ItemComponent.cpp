@@ -2,10 +2,12 @@
 
 
 #include "C_ItemComponent.h"
-#include "Project_S/Character/UserCharacter.h"
-#include "Project_S/Instance/S_GameInstance.h"
 #include "C_InventoryComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Instance/S_GameInstance.h"
+#include "Project_S/Item/RedPotionActor.h"
+#include "Project_S/Item/WeaponActor.h"
 
 // Sets default values for this component's properties
 UC_ItemComponent::UC_ItemComponent()
@@ -24,7 +26,7 @@ void UC_ItemComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
 }
 
 void UC_ItemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -55,7 +57,7 @@ void UC_ItemComponent::Interact(AUserCharacter* _UserCharacter)
 	}
 }
 
-void UC_ItemComponent::SetItem(FString _ItemName)
+void UC_ItemComponent::SetItem(const FString& _ItemName)
 {
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
@@ -70,6 +72,7 @@ void UC_ItemComponent::SetItem(FString _ItemName)
 				ItemImage = ItemData.Pin()->ItemImage;
 				StackSize = ItemData.Pin()->StackSize;
 				ItemType = ItemData.Pin()->ItemType;
+				DropChance = ItemData.Pin()->DropChance;
 				ItemClass = ItemData.Pin()->ItemClass;
 				ItemMesh = ItemData.Pin()->ItemMesh;
 			}

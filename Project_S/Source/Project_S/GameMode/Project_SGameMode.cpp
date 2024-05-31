@@ -2,10 +2,13 @@
 
 #include "Project_SGameMode.h"
 #include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Controllers/UserPlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
 AProject_SGameMode::AProject_SGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	DefaultPawnClass = AUserCharacter::StaticClass();
+
+	PlayerControllerClass = AUserPlayerController::StaticClass();
 }

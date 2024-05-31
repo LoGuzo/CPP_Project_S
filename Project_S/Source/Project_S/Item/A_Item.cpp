@@ -17,14 +17,21 @@ AA_Item::AA_Item()
 
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AA_Item::BeginOverlap);
 	BoxCollision->OnComponentEndOverlap.AddDynamic(this, &AA_Item::EndOverlap);
-
-
 	RootComponent = BoxCollision;
 }
 
-void AA_Item::SetName(FString _Name)
+void AA_Item::SetItem(const FString& _ItemName)
 {
-	Name = _Name;
+	Name = _ItemName;
+	ItemCom->SetItem(_ItemName);
+	SetW_Mesh(ItemCom->GetItemMesh());
+	SetType(ItemCom->GetType());
+}
+
+void AA_Item::SetName(const FString& _ItemName)
+{
+	Name = _ItemName;
+	ItemCom->SetItem(Name);
 }
 
 void AA_Item::SetType(E_ItemType _Type)
@@ -36,7 +43,7 @@ void AA_Item::BeginOverlap(class UPrimitiveComponent* OverlappedComp, class AAct
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		if (OtherActor->GetClass()->GetSuperClass() == AUserCharacter::StaticClass())
+		if (OtherActor->GetClass() == AUserCharacter::StaticClass())
 		{
 			auto userCharacter = Cast<AUserCharacter>(OtherActor);
 			userCharacter->SetCurItem(this);
@@ -49,11 +56,10 @@ void AA_Item::EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		if (OtherActor->GetClass()->GetSuperClass() == AUserCharacter::StaticClass())
+		if (OtherActor->GetClass() == AUserCharacter::StaticClass())
 		{
 			auto userCharacter = Cast<AUserCharacter>(OtherActor);
 			userCharacter->SetCurItem(nullptr);
 		}
-
 	}
 }

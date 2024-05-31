@@ -10,7 +10,6 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "Project_S/MappingClass.h"
 #include "Project_S/Actor/LobbyCharacter.h"
-#include "Project_S/Controllers/LobbyController.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 
@@ -56,6 +55,8 @@ void UW_LobbySlot::NativePreConstruct()
 	Super::NativePreConstruct();
 	if (Btn_Create)
 		Btn_Create->OnClicked.AddDynamic(this, &UW_LobbySlot::GoToCreate);
+	if (Btn_Char)
+		Btn_Char->OnClicked.AddDynamic(this, &UW_LobbySlot::SetInstanceIndex);
 	SetWidget();
 }
 
@@ -98,11 +99,22 @@ void UW_LobbySlot::SetWidget()
 		}
 	}
 }
+void UW_LobbySlot::SetInstanceIndex()
+{
+	US_GameInstance* GameInstance = Cast<US_GameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->SetIndex(SlotIndex);
+	}
+	OnUpDateButton.Broadcast();
+}
+
 void UW_LobbySlot::GoToCreate()
 {
-	ALobbyController* PlayerController = Cast<ALobbyController>(UGameplayStatics::GetPlayerController(this, 0));
-	if (PlayerController)
+	US_GameInstance* GameInstance = Cast<US_GameInstance>(GetGameInstance());
+	if (GameInstance)
 	{
-		PlayerController->MakeCharLevel(SlotIndex);
+		GameInstance->SetIndex(SlotIndex);
+		GameInstance->NextLevel("MakeCharMap");
 	}
 }

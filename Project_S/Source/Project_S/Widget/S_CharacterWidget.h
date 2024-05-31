@@ -47,6 +47,7 @@ public:
 	void ShowQuickDynamic();
 
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
+	const UW_QuickSlotMenu* GetQuickWidget() { return PotionSlot; }
 
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;

@@ -21,9 +21,8 @@ void ALoginController::LoginSuccessful(const FUserID& UserData)
 	if (GameInstance)
 	{
 		GameInstance->SetUserData(UserData);
+		GameInstance->NextLevel("LobbyMap");
 	}
-	// 다음 맵으로 전환
-	UGameplayStatics::OpenLevel(this, FName("LobbyMap"));
 }
 
 void ALoginController::BeginPlay()

@@ -12,11 +12,6 @@ ARedPotionActor::ARedPotionActor()
 void ARedPotionActor::BeginPlay()
 {
     Super::BeginPlay();
-    ItemCom->SetItem("RedPotion");
-    SetName(ItemCom->GetItemName());
-    SetW_Mesh(ItemCom->GetItemMesh());
-    SetType(ItemCom->GetType());
-
 }
 
 void ARedPotionActor::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) 

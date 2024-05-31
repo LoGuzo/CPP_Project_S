@@ -41,8 +41,3 @@ void AMakeCharController::BPFunction()
 	FOutputDeviceNull ar;
 	CallFunctionByNameWithArguments(*str, ar, nullptr, true);
 }
-
-void AMakeCharController::LobbyLevel()
-{
-	UGameplayStatics::OpenLevel(GetWorld(), "LobbyMap");
-}

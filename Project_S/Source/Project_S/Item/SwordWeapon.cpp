@@ -22,11 +22,6 @@ ASwordWeapon::ASwordWeapon() {
 void ASwordWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	ItemCom->SetItem("BlackSword");
-	SetName(ItemCom->GetItemName());
-	SetW_Mesh(ItemCom->GetItemMesh());
-	SetType(ItemCom->GetType());
-
 }
 
 void ASwordWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {

@@ -37,6 +37,8 @@ public:
 	void LoadCharacterData();
 	void SetClass(E_CharClass _ClassType);
 	virtual void UseSkill(FString _SkillName) override;
+
+	void PickUpItem();
 protected:
 	void SetMesh(E_CharClass _ClassType);
 
@@ -82,8 +84,6 @@ private:
 	bool bIsFlipFlopEquipmentActive;
 
 	bool bIsFlipFlopSkillWidgetActive;
-
-	void PickUpItem();
 
 	class AA_Item* Curitem;
 

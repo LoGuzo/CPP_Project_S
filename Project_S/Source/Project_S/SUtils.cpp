@@ -17,3 +17,10 @@ int32 SUtils::RandRange(int32 Min, int32 Max)
 
 	return FMath::RandRange(Min, Max);
 }
+float SUtils::RandRange(float Min, float Max)
+{
+	if (Max < Min)
+		return Min;
+
+	return FMath::RandRange(Min, Max);
+}

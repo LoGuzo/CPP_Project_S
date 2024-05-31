@@ -21,6 +21,8 @@ private:
 	FString UserName;
 	FUserID UserData;
 	int32 SelectedSlotIndex = -1;
+
+
 public:
 	US_GameInstance();
 
@@ -40,4 +42,6 @@ public:
 	void SetIndex(const int32 _SelectedSlotIndex);
 
 	int32 GetIndex() { return SelectedSlotIndex; }
+
+	void NextLevel(const FString& _LevelName);
 };

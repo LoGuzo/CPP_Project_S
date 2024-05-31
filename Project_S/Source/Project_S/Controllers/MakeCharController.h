@@ -17,7 +17,6 @@ class PROJECT_S_API AMakeCharController : public APlayerController
 public:
 	AMakeCharController();
 
-	void LobbyLevel();
 protected:
 	virtual void BeginPlay() override;
 

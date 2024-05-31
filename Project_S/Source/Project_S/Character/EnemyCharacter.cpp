@@ -3,14 +3,16 @@
 
 #include "EnemyCharacter.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Instance/S_GameInstance.h"
+#include "Project_S/Item/A_Item.h"
 #include "Project_S/Widget/OnlyHpBar.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include <Kismet/GameplayStatics.h>
+#include "Project_S/Item/RedPotionActor.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -103,6 +105,30 @@ void AEnemyCharacter::SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMes
 	}
 }
 
+void AEnemyCharacter::DropItem()
+{
+	for (int i = 0; i < Item.Num(); i++)
+	{
+		auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (MyGameInstance)
+		{
+			if (Item[i] != "") {
+				auto ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(Item[i]));
+				if (ItemData.IsValid())
+				{
+					if (RandRange(0.f, 100.f) < ItemData.Get()->DropChance)
+					{
+						FVector RandomOffset = FVector(RandRange(-100.0f, 100.0f), RandRange(-100.0f, 100.0f), 0.0f);
+						FVector SpawnLocation = GetActorLocation() + RandomOffset;
+						AA_Item* DropItem = GetWorld()->SpawnActor<AA_Item>(ItemData.Get()->ItemClass, SpawnLocation, FRotator::ZeroRotator);
+						DropItem->SetItem(Item[i]);
+					}
+				}
+			}
+		}
+	}
+}
+
 void AEnemyCharacter::LoadCharacterData()
 {
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -122,6 +148,7 @@ void AEnemyCharacter::LoadCharacterData()
 				Stat->SetAttack(LoadData.Pin()->Attack);
 				Stat->SetArmor(LoadData.Pin()->Armor);
 				Type = LoadData.Pin()->Type;
+				Item = LoadData.Pin()->DropItem;
 				Skill->SetSlots(LoadData.Pin()->MonsterSkill);
 				if (!GetMesh()->SkeletalMesh)
 				{
@@ -164,6 +191,7 @@ void AEnemyCharacter::DiedEnemy()
 	GetCharacterMovement()->GravityScale = 0.f;
 	OnlyHpBar->SetRenderOpacity(0.f);
 	IsAttacking = false;
+	DropItem();
 	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 1000.f));
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);

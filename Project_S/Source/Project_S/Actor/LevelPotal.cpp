@@ -7,7 +7,8 @@
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Misc/OutputDeviceNull.h"
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
+#include "Project_S/Instance/S_GameInstance.h"
 
 // Sets default values
 ALevelPotal::ALevelPotal()
@@ -62,5 +63,9 @@ void ALevelPotal::BPFunction()
 
 void ALevelPotal::NextLevel()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), FName(*LevelName));
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		MyGameInstance->NextLevel(LevelName);
+	}
 }

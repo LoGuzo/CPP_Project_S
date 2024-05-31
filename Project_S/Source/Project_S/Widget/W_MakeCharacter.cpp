@@ -7,7 +7,6 @@
 #include "Project_S/S_StructureAll.h"
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Actor/MakeCharacterPawn.h"
-#include "Project_S/Controllers/MakeCharController.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 void UW_MakeCharacter::NativePreConstruct()
@@ -31,6 +30,7 @@ void UW_MakeCharacter::NativeConstruct()
 	NowPawn = Cast<AMakeCharacterPawn>(GetOwningPlayerPawn());
 	bIsRotating = false;
 }
+
 
 void UW_MakeCharacter::SetWarrior()
 {
@@ -70,10 +70,11 @@ void UW_MakeCharacter::GoToMake()
 }
 void UW_MakeCharacter::GoToBack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("None"))
-	AMakeCharController* PlayerController = Cast<AMakeCharController>(UGameplayStatics::GetPlayerController(this, 0));
-	if (PlayerController)
-		PlayerController->LobbyLevel();
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		MyGameInstance->NextLevel("LobbyMap");
+	}
 }
 
 void UW_MakeCharacter::ValidateID(const FString& Username)
@@ -97,7 +98,7 @@ void UW_MakeCharacter::ValidateID(const FString& Username)
 
 			FUserID NewUserID = *MyGameInstance->GetUserData();
 			NewUserID.HaveChar[MyGameInstance->GetIndex()] = Username;
-
+			MyGameInstance->SetUserData(NewUserID);
 			MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->SetMyData(NewUserID.ID, &NewUserID);
 
 			GoToBack();

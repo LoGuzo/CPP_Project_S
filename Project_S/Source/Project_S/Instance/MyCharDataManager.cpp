@@ -31,3 +31,8 @@ void MyCharDataManager::SetMyData(FString _RowName, FTableRowBase* _NewData)
 {
 	MyData->AddRow(FName(*_RowName), *_NewData);
 }
+
+void MyCharDataManager::DelMyData(FString _RowName)
+{
+	MyData->RemoveRow(FName(*_RowName));
+}

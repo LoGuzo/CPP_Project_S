@@ -6,6 +6,7 @@
 #include "MainUserWidget.h"
 #include "W_LobbySlot.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnUpDateButton);
 /**
  * 
  */
@@ -22,6 +23,7 @@ public:
 	void SetCharName(FString _CharName);
 	void SetIndex(int32 _SlotIndex);
 	void SetCharacterImage(UTextureRenderTarget2D* RenderTarget);
+	FOnUpDateButton OnUpDateButton;
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativePreConstruct() override;
@@ -29,6 +31,9 @@ protected:
 private:
 	UFUNCTION()
 	void GoToCreate();
+	
+	UFUNCTION()
+	void SetInstanceIndex();
 
 	void SetWidget();
 

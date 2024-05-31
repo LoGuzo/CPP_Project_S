@@ -11,6 +11,7 @@
 #include "SpawnerManager.h"
 #include "UserIDManager.h"
 #include "CharacterClassManager.h"
+#include "Kismet/GameplayStatics.h"
 
 US_GameInstance::US_GameInstance()
 {
@@ -53,4 +54,9 @@ void US_GameInstance::SetUserName(const FString& _UserName)
 void US_GameInstance::SetIndex(const int32 _SelectedSlotIndex)
 {
 	SelectedSlotIndex = _SelectedSlotIndex;
+}
+
+void US_GameInstance::NextLevel(const FString& _LevelName)
+{
+	UGameplayStatics::OpenLevel(GetWorld(), *_LevelName);
 }

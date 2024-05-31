@@ -41,7 +41,11 @@ private:
 	UFUNCTION()
 	void GameStart();
 
-	TWeakPtr<FUserID> UserData;
+	UFUNCTION()
+	void DelCharacter();
+
+	UFUNCTION()
+	void SetClickButton();
 
 	TArray<FString> HaveChar;
 };

@@ -19,5 +19,7 @@ public:
 	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) = 0;
 	//TWeakPtr 참조자 Pin으로 접근
 
-	virtual void SetMyData(FString _RowName, FTableRowBase* _NewData){};
+	virtual void SetMyData(FString _RowName, FTableRowBase* _NewData) {};
+	virtual void DelMyData(FString _RowName) {};
+	
 };

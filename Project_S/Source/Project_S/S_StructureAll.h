@@ -30,6 +30,9 @@ struct FS_Item : public FTableRowBase
 	E_ItemType ItemType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DropChance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class AA_Item> ItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -107,6 +110,9 @@ struct FMonsterData : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxExp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FString> DropItem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FS_Slot> MonsterSkill;

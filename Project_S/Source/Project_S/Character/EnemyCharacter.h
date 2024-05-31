@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "FirstCharacter.h"
+#include "Project_S/SUtils.h"
 #include "Project_S/S_StructureAll.h"
 #include "EnemyCharacter.generated.h"
-
+using namespace SUtils;
 /**
  * 
  */
@@ -71,5 +72,9 @@ private:
 	TWeakPtr<FMonsterData> LoadData;
 
 	bool IsReadySpawn;
+
+	TArray<FString> Item;
+
+	void DropItem();
 
 };

@@ -4,23 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "LobbyController.generated.h"
+#include "UserPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_S_API ALobbyController : public APlayerController
+class PROJECT_S_API AUserPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
 public:
-	ALobbyController();
+	AUserPlayerController();
 
 protected:
 	virtual void BeginPlay() override;
-
-private:
-	TSubclassOf<class UUserWidget> ULobby_Widget;
-	class UW_CharacterLobby* W_CharacterLobby;
 };

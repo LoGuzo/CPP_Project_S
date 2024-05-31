@@ -75,7 +75,6 @@ AUserCharacter::AUserCharacter()
 	bIsFlipFlopEquipmentActive = false;
 	bIsFlipFlopSkillWidgetActive = false;
 	IsAttacking = false;
-	SetCharID("LogH");
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -94,8 +93,8 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 
 	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AUserCharacter::OnInventoryKeyPressed);
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
-	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
+	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
 	PlayerInputComponent->BindAction("Quick1", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
 	PlayerInputComponent->BindAction("Quick2", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
 	PlayerInputComponent->BindAction("Quick3", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
@@ -136,6 +135,8 @@ void AUserCharacter::SetMesh(E_CharClass _ClassType)
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	SetCharID(MyGameInstance->GetUserName());
 	LoadCharacterData();
 	SaveLocation = GetActorLocation();
 }
@@ -290,7 +291,8 @@ void AUserCharacter::PickUpItem()
 {
 	if (GetCurItem() != nullptr) {
 		GetCurItem()->GetC_ItemComponent()->Interact(this);
-		UpdateInventory();
+		Inventory->OnInventoryUpdated.Broadcast();
+		QuickSlot->OnQuickUpdated.Broadcast();
 	}
 }
 
@@ -304,6 +306,7 @@ void AUserCharacter::SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon)
 	// UserClass
 	FName WeaponSocket(TEXT("r_hand_sword"));
 	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon);
+	MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
 	if (nullptr != MyWeapon) {
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
@@ -399,8 +402,8 @@ void AUserCharacter::UseQuickSlot()
 			{
 				if (QuickSlot->GetPotionSlot(0) != "None")
 				{
-					QuickSlot->UsePotionSlot(0);
 					Inventory->UsePotionSlot(QuickSlot->BindTarget.FindRef(0));
+					QuickSlot->InvenToQuick(0, QuickSlot->BindTarget.FindRef(0), Inventory);
 					QuickSlot->OnQuickUpdated.Broadcast();
 					Inventory->OnInventoryUpdated.Broadcast();
 				}
@@ -412,8 +415,8 @@ void AUserCharacter::UseQuickSlot()
 			{
 				if (QuickSlot->GetPotionSlot(1) != "None")
 				{
-					QuickSlot->UsePotionSlot(1);
 					Inventory->UsePotionSlot(QuickSlot->BindTarget.FindRef(1));
+					QuickSlot->InvenToQuick(1, QuickSlot->BindTarget.FindRef(1), Inventory);
 					QuickSlot->OnQuickUpdated.Broadcast();
 					Inventory->OnInventoryUpdated.Broadcast();
 				}
@@ -533,7 +536,8 @@ void AUserCharacter::StopDashing() {
 
 void AUserCharacter::ResetDash()
 {
-	AnimInstance->SetOnDash(false);
+	if (AnimInstance)
+		AnimInstance->SetOnDash(false);
 }
 
 void AUserCharacter::UseSkill(FString _SkillName)
