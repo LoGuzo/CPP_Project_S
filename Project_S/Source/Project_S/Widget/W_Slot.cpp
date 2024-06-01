@@ -3,6 +3,8 @@
 
 #include "W_Slot.h"
 #include "W_Drag.h"
+#include "W_ItemPop.h"
+#include "DO_DragDrop.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
@@ -16,10 +18,15 @@
 
 UW_Slot::UW_Slot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<UW_Drag>UW_Drag(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Drag.WBP_Drag_C'"));
-	if (UW_Drag.Succeeded())
+	static ConstructorHelpers::FClassFinder<UW_Drag>BP_Drag(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Drag.WBP_Drag_C'"));
+	if (BP_Drag.Succeeded())
 	{
-		U_DragImg = UW_Drag.Class;
+		U_DragImg = BP_Drag.Class;
+	}
+	static ConstructorHelpers::FClassFinder<UW_ItemPop>BP_ItemPop(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_ItemPop.WBP_ItemPop_C'"));
+	if (BP_ItemPop.Succeeded())
+	{
+		U_ItemPop = BP_ItemPop.Class;
 	}
 }
 
@@ -130,6 +137,19 @@ FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, cons
 			reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
 			return reply.NativeReply;
 		}
+		else if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
+		{
+			/*if (U_ItemPop)
+			{
+				ItemPop = CreateWidget<UW_ItemPop>(GetWorld(), U_ItemPop);
+				if (ItemPop)
+				{
+					ItemPop->SetInvenCom(InventoryCom);
+					ItemPop->SetTargetIndex(ContentIndex);
+				}
+			}*/
+			return FReply::Handled();
+		}
 		else
 		{
 			return FReply::Unhandled();
@@ -155,7 +175,7 @@ bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& In
 		}
 		else
 		{
-			if (ItemKey.ToString() == "None" || DO_Drag->GetItemConName() == GetItemConName())
+			if (ItemKey.ToString() == "None" && DO_Drag->GetItemConName() == GetItemConName())
 			{
 				EquipCom->InvenToEquip(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
 			}

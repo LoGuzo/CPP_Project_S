@@ -44,7 +44,7 @@ public:
 	class US_StatComponent* GetStatCom() { return Stat; }
 	class UC_SkillComponent* GetSkillCom() { return Skill; }
 
-	virtual void UseSkill(FString _SkillName) {};
+	virtual void UseSkill(const FString& _SkillName) {};
 
 	void MeleeAttackCheck(float _Range);
 	void ScopeAttackCheck(float _Range);

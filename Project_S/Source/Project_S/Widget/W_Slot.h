@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "DO_DragDrop.h"
 #include "Project_S/E_ItemType.h"
 #include "W_Slot.generated.h"
 
@@ -14,6 +13,7 @@
 struct FS_Item;
 struct FSkillTable;
 class UW_Drag;
+class UW_ItemPop;
 class UC_InventoryComponent;
 class UC_EqiupComponent;
 class UC_SkillComponent;
@@ -50,11 +50,15 @@ public:
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation);
 private:
 
+	TSubclassOf<UW_ItemPop> U_ItemPop;
+
+	UW_ItemPop* ItemPop;
+
 	TSubclassOf<UW_Drag> U_DragImg;
 
 	UW_Drag* DragImg;
 
-	UDO_DragDrop* DO_Drag;
+	class UDO_DragDrop* DO_Drag;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Img_Item;

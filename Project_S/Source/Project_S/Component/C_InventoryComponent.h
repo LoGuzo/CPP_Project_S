@@ -45,7 +45,7 @@ public:
 
 	void SetSlot(int32 _Index, FS_Slot _Slot);
 
-	void UsePotionSlot(int32 _Index) { Slots[_Index].Amount -= 1; }
+	void UsePotionSlot(int32 _Index);
 
 	void AddItem(int32 _Amount,FName _ItemKey, E_ItemType _ItemConName, TSubclassOf<class AA_Item> _ItemClass);
 
@@ -64,4 +64,6 @@ public:
 	void EquipToInven(int32 _BeforeIndex, int32 _TargetIndex, class UC_EqiupComponent* _EquipCom);
 
 	void ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TSubclassOf<class AA_Item> _ItemClass);
+
+	void DropItem(int32 _TargetIndex);
 };

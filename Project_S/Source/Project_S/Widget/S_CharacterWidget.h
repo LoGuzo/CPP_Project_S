@@ -10,6 +10,7 @@
  * 
  */
 
+class UW_CharInfo;
 class UInventoryMenu;
 class UW_Equip;
 class UW_Skill;
@@ -23,16 +24,6 @@ class PROJECT_S_API US_CharacterWidget : public UUserWidget
 
 public:
 	US_CharacterWidget(const FObjectInitializer& ObjectInitializer);
-
-	void BindHp(class US_StatComponent* _StatComp);
-	void BindMp(class US_StatComponent* _StatComp);
-	void BindExp(class US_StatComponent* _StatComp);
-	void BindLvl(class US_StatComponent* _StatComp);
-
-	void UpdateHp();
-	void UpdateMp();
-	void UpdateExp();
-	void UpdateLvl();
 
 	void ShowInventory();
 	void RemoveInventory() const;
@@ -48,29 +39,20 @@ public:
 
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 	const UW_QuickSlotMenu* GetQuickWidget() { return PotionSlot; }
+	UW_CharInfo* GetCharInfo() { return WBP_CharInfo; }
 
 private:
-	TWeakObjectPtr<class US_StatComponent> SStatComponent;
-
-	UC_QuickSlotComponent* QuickComponent;
-
-	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_Hp;
-
-	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_Mp;
-
-	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_Exp;
-
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Txt_Lvl;
+	class UDO_DragDrop* DO_Drag;
+	TWeakObjectPtr<class UC_QuickSlotComponent> QuickComponent;
 
 	UPROPERTY(meta = (BindWidget))
 	UW_QuickSlotMenu* SkillSlot;
 
 	UPROPERTY(meta = (BindWidget))
 	UW_QuickSlotMenu* PotionSlot;
+
+	UPROPERTY(meta = (BindWidget))
+	UW_CharInfo* WBP_CharInfo;
 
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 

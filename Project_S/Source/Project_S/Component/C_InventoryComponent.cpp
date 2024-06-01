@@ -51,6 +51,16 @@ void UC_InventoryComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 	Slots[_Index] = _Slot;
 }
 
+void UC_InventoryComponent::UsePotionSlot(int32 _Index)
+{
+	Slots[_Index].Amount--;
+	if (Slots[_Index].Amount < 1)
+	{
+		Slots[_Index] = FS_Slot();
+	}
+	OnInventoryUpdated.Broadcast();
+}
+
 void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, E_ItemType _ItemConName, TSubclassOf<class AA_Item> _ItemClass)
 {
 	AmountLeft = _Amount;
@@ -193,4 +203,9 @@ void UC_InventoryComponent::ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex
 			userCharacter->SetMyWeapon(Slots[_TargetIndex].ItemClass);
 		}
 	}
+}
+
+void UC_InventoryComponent::DropItem(int32 _TargetIndex)
+{
+	Slots[_TargetIndex] = FS_Slot();
 }

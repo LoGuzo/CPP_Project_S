@@ -36,7 +36,7 @@ public:
 	void SaveCharacterData();
 	void LoadCharacterData();
 	void SetClass(E_CharClass _ClassType);
-	virtual void UseSkill(FString _SkillName) override;
+	virtual void UseSkill(const FString& _SkillName) override;
 
 	void PickUpItem();
 protected:
@@ -117,6 +117,10 @@ private:
 
 	TWeakPtr<FMyCharacterData> LoadData;
 
+	void UseItem(const int32 QuickIndex);
+
+	void UsePotion(const int32 StackSize, const FString& ItemName);
+
 public:
 	void UseQuickSlot();
 	
@@ -145,8 +149,6 @@ public:
 
 	AA_Item* GetCurItem() const { return Curitem; }
 	void SetCurItem(AA_Item *_Curitem);
-
-	void UpdateInventory();
 
 	void AnyMove(UCurveBase* _SkillCurve);
 

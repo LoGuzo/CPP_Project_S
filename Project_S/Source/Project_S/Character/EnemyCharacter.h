@@ -20,7 +20,7 @@ class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 public:
 	AEnemyCharacter();
 
-	virtual void UseSkill(FString _SkillName) override;
+	virtual void UseSkill(const FString& _SkillName) override;
 
 	void DiedEnemy();
 

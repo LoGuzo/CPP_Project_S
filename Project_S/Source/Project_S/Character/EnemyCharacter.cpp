@@ -171,7 +171,7 @@ void AEnemyCharacter::SetEtc()
 	SaveLocation = GetActorLocation();
 }
 
-void AEnemyCharacter::UseSkill(FString _SkillName)
+void AEnemyCharacter::UseSkill(const FString& _SkillName)
 {
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)

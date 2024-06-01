@@ -21,8 +21,7 @@
 #include "Project_S/Item/WeaponActor.h"
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Widget/S_CharacterWidget.h"
-#include "Project_S/Widget/InventoryMenu.h"
-#include "Project_S/Widget/W_Inventory.h"
+#include "Project_S/Widget/W_CharInfo.h"
 
 AUserCharacter::AUserCharacter()
 {
@@ -183,10 +182,10 @@ void AUserCharacter::PostInitializeComponents()
 		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
 		if (HUDWidget)
 		{
-			HUDWidget->BindLvl(Stat);
-			HUDWidget->BindHp(Stat);
-			HUDWidget->BindMp(Stat);
-			HUDWidget->BindExp(Stat);
+			HUDWidget->GetCharInfo()->BindLvl(Stat);
+			HUDWidget->GetCharInfo()->BindHp(Stat);
+			HUDWidget->GetCharInfo()->BindMp(Stat);
+			HUDWidget->GetCharInfo()->BindExp(Stat);
 			HUDWidget->ShowQuick(QuickSlot);
 			HUDWidget->AddToViewport();
 		}
@@ -402,10 +401,7 @@ void AUserCharacter::UseQuickSlot()
 			{
 				if (QuickSlot->GetPotionSlot(0) != "None")
 				{
-					Inventory->UsePotionSlot(QuickSlot->BindTarget.FindRef(0));
-					QuickSlot->InvenToQuick(0, QuickSlot->BindTarget.FindRef(0), Inventory);
-					QuickSlot->OnQuickUpdated.Broadcast();
-					Inventory->OnInventoryUpdated.Broadcast();
+					UseItem(0);
 				}
 			}
 		}
@@ -415,10 +411,7 @@ void AUserCharacter::UseQuickSlot()
 			{
 				if (QuickSlot->GetPotionSlot(1) != "None")
 				{
-					Inventory->UsePotionSlot(QuickSlot->BindTarget.FindRef(1));
-					QuickSlot->InvenToQuick(1, QuickSlot->BindTarget.FindRef(1), Inventory);
-					QuickSlot->OnQuickUpdated.Broadcast();
-					Inventory->OnInventoryUpdated.Broadcast();
+					UseItem(1);
 				}
 			}
 		}
@@ -479,14 +472,6 @@ void AUserCharacter::SetCurItem(AA_Item* _Curitem)
 	Curitem = _Curitem;
 }
 
-void AUserCharacter::UpdateInventory()
-{
-	if (IsValid(HUDWidget->GetInvetoryWidget()))
-	{
-		HUDWidget->GetInvetoryWidget()->WBP_Inventory->ShowInventory(Inventory);
-	}
-}
-
 void AUserCharacter::AnyMove(UCurveBase* _SkillCurve)
 {
 	BeforeRot = GetMesh()->GetRelativeRotation();
@@ -540,7 +525,7 @@ void AUserCharacter::ResetDash()
 		AnimInstance->SetOnDash(false);
 }
 
-void AUserCharacter::UseSkill(FString _SkillName)
+void AUserCharacter::UseSkill(const FString& _SkillName)
 {
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
@@ -551,8 +536,31 @@ void AUserCharacter::UseSkill(FString _SkillName)
 			AnimInstance->PlaySome(SkillData);
 	}
 }
+void AUserCharacter::UseItem(const int32 QuickIndex)
+{
+	UsePotion(QuickSlot->GetPotionSlots()[QuickIndex].Amount, QuickSlot->GetPotionSlots()[QuickIndex].ItemName.ToString());
+	QuickSlot->UsePotionSlot(QuickIndex);
+}
 
-
+void AUserCharacter::UsePotion(const int32 StackSize, const FString& ItemName)
+{
+	int32 LeastIndex = -1;
+	int32 SumSize = 0;
+	int32 index = 0;
+	for (const FS_Slot& slot : Inventory->GetSlots())
+	{
+		if (slot.ItemName.ToString() == ItemName)
+		{
+			if (slot.Amount <= StackSize)
+			{
+				LeastIndex = index;
+			}
+		}
+		index++;
+	}
+	if(LeastIndex != -1)
+		Inventory->UsePotionSlot(LeastIndex);
+}
 
 
 

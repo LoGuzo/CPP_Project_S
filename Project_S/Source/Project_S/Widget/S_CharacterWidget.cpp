@@ -2,16 +2,17 @@
 
 
 #include "S_CharacterWidget.h"
+#include "DO_DragDrop.h"
 #include "InventoryMenu.h"
+#include "W_CharInfo.h"
 #include "W_Equip.h"
 #include "W_Skill.h"
 #include "W_QuickSlotMenu.h"
-#include "Components/ProgressBar.h"
-#include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Component/C_QuickSlotComponent.h"
-#include "Project_S/Component/S_StatComponent.h"
-#include <Kismet/GameplayStatics.h>
+
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -30,55 +31,6 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 	{
 		U_SkillWidget = UW_Sk.Class;
 	}
-
-}
-
-void US_CharacterWidget::BindLvl (class US_StatComponent* _StatComp)
-{
-	SStatComponent = _StatComp;
-	_StatComp->OnLvlChanged.AddUObject(this, &US_CharacterWidget::UpdateLvl);
-}
-
-void US_CharacterWidget::UpdateLvl()
-{
-	if (SStatComponent.IsValid())
-		Txt_Lvl->SetText(FText::FromString(FString::Printf(TEXT("Lv : %d"), SStatComponent->GetLevel())));
-}
-
-void US_CharacterWidget::BindHp(class US_StatComponent* _StatComp)
-{
-	SStatComponent = _StatComp;
-	_StatComp->OnHpChanged.AddUObject(this, &US_CharacterWidget::UpdateHp);
-}
-
-void US_CharacterWidget::UpdateHp()
-{
-	if (SStatComponent.IsValid())
-		PB_Hp->SetPercent(SStatComponent->GetHpRatio());
-}
-
-void US_CharacterWidget::BindMp(class US_StatComponent* _StatComp)
-{
-	SStatComponent = _StatComp;
-	_StatComp->OnMpChanged.AddUObject(this, &US_CharacterWidget::UpdateMp);
-}
-
-void US_CharacterWidget::UpdateMp()
-{
-	if (SStatComponent.IsValid())
-		PB_Mp->SetPercent(SStatComponent->GetMpRatio());
-}
-
-void US_CharacterWidget::BindExp(class US_StatComponent* _StatComp)
-{
-	SStatComponent = _StatComp;
-	_StatComp->OnExpChanged.AddUObject(this, &US_CharacterWidget::UpdateExp);
-}
-
-void US_CharacterWidget::UpdateExp()
-{
-	if (SStatComponent.IsValid())
-		PB_Exp->SetPercent(SStatComponent->GetExpRatio());
 }
 
 void US_CharacterWidget::ShowInventory()
@@ -141,17 +93,19 @@ void US_CharacterWidget::RemoveSillW() const
 void US_CharacterWidget::ShowQuick(UC_QuickSlotComponent* _QuickComponent)
 {
 	QuickComponent = _QuickComponent;
-	if (_QuickComponent)
+	if (QuickComponent.IsValid())
 	{
-		SkillSlot->ShowQSkillWidget(_QuickComponent);
-		PotionSlot->ShowQPotionWidget(_QuickComponent);
+		SkillSlot->ShowQSkillWidget(QuickComponent.Get());
+		PotionSlot->ShowQPotionWidget(QuickComponent.Get());
 	}
-	_QuickComponent->OnQuickUpdated.AddUObject(this, &US_CharacterWidget::ShowQuickDynamic);
+	QuickComponent->OnQuickUpdated.AddUObject(this, &US_CharacterWidget::ShowQuickDynamic);
 }
+
 void US_CharacterWidget::ShowQuickDynamic()
 {
-	SkillSlot->ShowQSkillWidget(QuickComponent);
-	PotionSlot->ShowQPotionWidget(QuickComponent);
+	if (QuickComponent.IsValid())
+	{
+		SkillSlot->ShowQSkillWidget(QuickComponent.Get());
+		PotionSlot->ShowQPotionWidget(QuickComponent.Get());
+	}
 }
-
-
