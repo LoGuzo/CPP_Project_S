@@ -16,7 +16,6 @@ class PROJECT_S_API AA_Item : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AA_Item();
-
 protected:
 	UFUNCTION()
 	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) PURE_VIRTUAL(AA_Item::SetW_Mesh, ;);

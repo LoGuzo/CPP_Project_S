@@ -79,7 +79,7 @@ void UW_CharacterLobby::GameStart()
 	if (MyGameInstance)
 	{
 		MyGameInstance->SetUserName(HaveChar[MyGameInstance->GetIndex()]);
-		MyGameInstance->NextLevel("DemoMap");
+		MyGameInstance->NextLoadingLevel("DemoMap");
 	}
 }
 

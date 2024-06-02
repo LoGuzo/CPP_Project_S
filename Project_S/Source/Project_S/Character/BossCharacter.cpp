@@ -3,11 +3,18 @@
 
 #include "BossCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Controllers/EnemyAIController.h"
+#include "Project_S/Widget/W_BossHp.h"
 
 ABossCharacter::ABossCharacter()
 {
 	SetBossMesh();
+	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_BossHP.WBP_BossHp_C'"));
+	if (UW.Succeeded())
+	{
+		U_BossHp = UW.Class;
+	}
 }
 
 void ABossCharacter::SetBossMesh()
@@ -66,4 +73,45 @@ void ABossCharacter::Make_Projectile()
 
 void ABossCharacter::Set_Projectile()
 {
+}
+
+void ABossCharacter::LoadCharacterData()
+{
+	Super::LoadCharacterData();
+	if (W_BossHp)
+	{
+		if (Stat)
+		{
+			W_BossHp->BindHp(Stat);
+			W_BossHp->BindTxtHp(Stat);
+			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
+		}
+	}
+}
+
+float ABossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if (W_BossHp && !W_BossHp->IsInViewport())
+	{
+		W_BossHp->AddToViewport();
+	}
+	if (Stat) {
+		if (Stat->GetHp() <= 0)
+		{
+			if (W_BossHp && W_BossHp->IsInViewport())
+			{
+				W_BossHp->RemoveFromViewport();
+				W_BossHp = nullptr;
+			}
+		}
+	}
+	return DamageAmount;
+}
+
+void ABossCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	W_BossHp = CreateWidget<UW_BossHp>(GetWorld(), U_BossHp);
 }

@@ -13,11 +13,12 @@ AA_Item::AA_Item()
 	ItemCom = CreateDefaultSubobject<UC_ItemComponent>(TEXT("ITEMCOM"));
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("COLLISION"));
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f)); 
-	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
+	BoxCollision->SetCollisionProfileName(TEXT("Item"));
 
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AA_Item::BeginOverlap);
 	BoxCollision->OnComponentEndOverlap.AddDynamic(this, &AA_Item::EndOverlap);
 	RootComponent = BoxCollision;
+
 }
 
 void AA_Item::SetItem(const FString& _ItemName)

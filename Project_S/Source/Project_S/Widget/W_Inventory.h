@@ -24,6 +24,9 @@ private:
 	TSubclassOf<class UW_Slot> W_Slot;
 	class UW_Slot* W_Slots2;
 
+
+	UFUNCTION()
+	void ClosePop();
 public:
 	UW_Inventory(const FObjectInitializer& ObjectInitializer);
 	virtual void NativePreConstruct() override;

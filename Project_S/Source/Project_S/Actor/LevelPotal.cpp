@@ -66,6 +66,6 @@ void ALevelPotal::NextLevel()
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		MyGameInstance->NextLevel(LevelName);
+		MyGameInstance->NextLoadingLevel(LevelName);
 	}
 }

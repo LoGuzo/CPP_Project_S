@@ -58,5 +58,11 @@ void US_GameInstance::SetIndex(const int32 _SelectedSlotIndex)
 
 void US_GameInstance::NextLevel(const FString& _LevelName)
 {
-	UGameplayStatics::OpenLevel(GetWorld(), *_LevelName);
+	UGameplayStatics::OpenLevel(GetWorld(), FName(*_LevelName));
+}
+
+void US_GameInstance::NextLoadingLevel(const FString& _LevelName)
+{
+	NextLevelName = _LevelName;
+	UGameplayStatics::OpenLevel(GetWorld(), FName("LoadingMap"));
 }

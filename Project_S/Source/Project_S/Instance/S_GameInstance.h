@@ -19,6 +19,7 @@ class PROJECT_S_API US_GameInstance : public UGameInstance
 
 private:
 	FString UserName;
+	FString NextLevelName;
 	FUserID UserData;
 	int32 SelectedSlotIndex = -1;
 
@@ -41,7 +42,10 @@ public:
 
 	void SetIndex(const int32 _SelectedSlotIndex);
 
+	FString GetNextLevelName() { return NextLevelName; }
+
 	int32 GetIndex() { return SelectedSlotIndex; }
 
 	void NextLevel(const FString& _LevelName);
+	void NextLoadingLevel(const FString& _LevelName);
 };

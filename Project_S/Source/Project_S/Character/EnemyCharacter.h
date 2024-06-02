@@ -32,7 +32,7 @@ public:
 
 	virtual void ResetStat() override;
 
-	void LoadCharacterData();
+	virtual void LoadCharacterData();
 
 	void SetEtc();
 
@@ -41,6 +41,14 @@ protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
 	class AEnemyAIController* NowAIController;
+
+	virtual void PostInitializeComponents() override;
+	
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	bool IsDead;
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
@@ -50,15 +58,6 @@ private:
 	class UMonsterAnimInstance* AnimInstance;
 
 	class UMaterialInstanceDynamic* MyMaterialInstanceDynamic;
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	virtual void PostInitializeComponents() override;
-
-	bool IsDead;
 
 	UC_SkillComponent* Pattern;
 

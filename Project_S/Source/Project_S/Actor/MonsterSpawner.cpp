@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Character/EnemyCharacter.h"
+#include "Project_S/Character/MiddleBossCharacter.h"
 #include "Project_S/Character/BossCharacter.h"
 #include "Project_S/Controllers/AggressiveAIController.h"
 #include "Project_S/Controllers/MiddleBossAIController.h"
@@ -147,7 +148,7 @@ void AMonsterSpawner::SpawnEnemy()
 		break;
 		case E_MonsterType::E_MiddleBoss:
 		{
-			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			AMiddleBossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AMiddleBossCharacter>(AMiddleBossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
 			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);

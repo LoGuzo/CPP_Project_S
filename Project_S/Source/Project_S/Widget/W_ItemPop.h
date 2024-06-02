@@ -21,6 +21,7 @@ public:
 
 	virtual void NativePreConstruct() override;
 private:
+
 	int32 TargetIndex;
 
 	class UC_InventoryComponent* InvenCom;

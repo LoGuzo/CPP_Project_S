@@ -3,6 +3,7 @@
 
 #include "EnemyCharacter.h"
 #include "Components/WidgetComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"

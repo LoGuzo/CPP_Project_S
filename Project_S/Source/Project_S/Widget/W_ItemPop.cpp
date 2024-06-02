@@ -22,11 +22,13 @@ void UW_ItemPop::NativePreConstruct()
 		Btn_ItemDrop->OnClicked.AddDynamic(this, &UW_ItemPop::ItemDrop);
 	}
 }
+
 void UW_ItemPop::ItemDrop()
 {
-	/*if (InvenCom)
+	if (InvenCom)
 	{
 		InvenCom->DropItem(TargetIndex);
-	}*/
+		InvenCom->OnInventoryUpdated.Broadcast();
+	}
 	RemoveFromParent();
 }

@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Project_S/E_ItemType.h"
 #include "W_Slot.generated.h"
-
+DECLARE_MULTICAST_DELEGATE(FOnCloseItemPop);
 /**
  * 
  */
@@ -48,6 +48,10 @@ public:
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation);
+
+	FOnCloseItemPop OnCloseItemPop;
+
+	bool ClosePop();
 private:
 
 	TSubclassOf<UW_ItemPop> U_ItemPop;

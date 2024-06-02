@@ -5,10 +5,11 @@
 #include "W_Drag.h"
 #include "W_ItemPop.h"
 #include "DO_DragDrop.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "Components/TextBlock.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Component/C_EqiupComponent.h"
@@ -83,6 +84,7 @@ void UW_Slot::NativeDestruct()
 	{
 		SkillData.Reset();
 	}
+	ClosePop();
 }
 
 void UW_Slot::SetItemConName(E_ItemType _ItemConName)
@@ -139,15 +141,24 @@ FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, cons
 		}
 		else if (InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
 		{
-			/*if (U_ItemPop)
+			if (U_ItemPop)
 			{
+				OnCloseItemPop.Broadcast();
 				ItemPop = CreateWidget<UW_ItemPop>(GetWorld(), U_ItemPop);
 				if (ItemPop)
 				{
-					ItemPop->SetInvenCom(InventoryCom);
-					ItemPop->SetTargetIndex(ContentIndex);
+					if (InventoryCom)
+					{
+						ItemPop->SetInvenCom(InventoryCom);
+						ItemPop->SetTargetIndex(ContentIndex);
+						ItemPop->AddToViewport();
+
+						FVector2D MousePosition = InMouseEvent.GetScreenSpacePosition();
+						FVector2D ViewportPosition = UWidgetLayoutLibrary::GetViewportWidgetGeometry(this).AbsoluteToLocal(MousePosition);
+						ItemPop->SetPositionInViewport(ViewportPosition, false);
+					}
 				}
-			}*/
+			}
 			return FReply::Handled();
 		}
 		else
@@ -245,4 +256,15 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 void UW_Slot::SetSkillKey(FName _SkillKey)
 {
 	SkillKey = _SkillKey;
+}
+
+bool UW_Slot::ClosePop()
+{
+	if (ItemPop)
+	{
+		ItemPop->RemoveFromParent();
+		ItemPop = nullptr;
+		return true;
+	}
+	return false;
 }

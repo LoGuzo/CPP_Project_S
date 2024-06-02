@@ -2,8 +2,8 @@
 
 
 #include "OnlyHpBar.h"
-#include "Project_S/Component/S_StatComponent.h"
 #include "Components/ProgressBar.h"
+#include "Project_S/Component/S_StatComponent.h"
 
 void UOnlyHpBar::BindHp(class US_StatComponent* _StatComp)
 {

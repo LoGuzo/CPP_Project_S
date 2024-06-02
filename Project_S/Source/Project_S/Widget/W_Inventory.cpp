@@ -54,8 +54,23 @@ void UW_Inventory::UpdateSlots(const TArray<FS_Slot>& _Slots)
 			W_Slots2->SetInvenCom(InventoryCom);
 			W_Slots2->SetConName("Inventory");
 			W_Slots2->SetConIndex(index);
+			W_Slots2->OnCloseItemPop.AddUObject(this, &UW_Inventory::ClosePop);
 		}
 		Box_Wrap->AddChild(W_Slots2);
 		index++;
+	}
+}
+
+void UW_Inventory::ClosePop()
+{
+	if (Box_Wrap)
+	{
+		for (UWidget* Widget : Box_Wrap->GetAllChildren())
+		{
+			UW_Slot* SlotWidget = Cast<UW_Slot>(Widget);
+			if (SlotWidget)
+				if (SlotWidget->ClosePop())
+					return;
+		}
 	}
 }
