@@ -100,6 +100,6 @@ void UMonsterAnimInstance::AnimNotify_Make_Projectile()
 {
 	if (Monster != nullptr)
 	{
-		Monster->Make_Projectile();
+		Monster->Set_Projectile();
 	}
 }

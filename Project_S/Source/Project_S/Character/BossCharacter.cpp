@@ -2,9 +2,11 @@
 
 
 #include "BossCharacter.h"
+#include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Controllers/EnemyAIController.h"
+#include "Project_S/Item/Projectile_Missle.h"
 #include "Project_S/Widget/W_BossHp.h"
 
 ABossCharacter::ABossCharacter()
@@ -15,6 +17,8 @@ ABossCharacter::ABossCharacter()
 	{
 		U_BossHp = UW.Class;
 	}
+
+	ProjectileClass = AProjectile_Missle::StaticClass();
 }
 
 void ABossCharacter::SetBossMesh()
@@ -67,14 +71,6 @@ void ABossCharacter::AnyMove()
 	SetActorLocation(NowAIController->GetUser()->GetActorLocation());
 }
 
-void ABossCharacter::Make_Projectile()
-{
-}
-
-void ABossCharacter::Set_Projectile()
-{
-}
-
 void ABossCharacter::LoadCharacterData()
 {
 	Super::LoadCharacterData();
@@ -92,7 +88,6 @@ void ABossCharacter::LoadCharacterData()
 float ABossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
 	if (W_BossHp && !W_BossHp->IsInViewport())
 	{
 		W_BossHp->AddToViewport();
@@ -114,4 +109,37 @@ void ABossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	W_BossHp = CreateWidget<UW_BossHp>(GetWorld(), U_BossHp);
+}
+
+void ABossCharacter::Make_Projectile(const FVector& SpawnLocation, AActor* TargetActor)
+{
+	if (ProjectileClass)
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			AProjectile_Missle* Missle = World->SpawnActor<AProjectile_Missle>(ProjectileClass, SpawnLocation, GetActorRotation());
+		}
+	}
+}
+
+void ABossCharacter::Set_Projectile()
+{
+	if (!ProjectileClass) return;
+	if (!Target) return;
+	FVector BossLocation = GetActorLocation() + FVector(0.f, 0.f, 300.f);
+	FRotator BossRotation = GetActorRotation();
+	FVector BossBackward = -BossRotation.Vector();
+
+	float Radius = 600.f;
+	float AngleStep = 180.f / 4;
+
+	for (int32 i = 0; i < 5; i++)
+	{
+		float Angle = AngleStep * i * PI / 180.f;
+		FVector SpawnOffset = FVector(0, FMath::Cos(Angle), FMath::Sin(Angle)); // 반원 형태의 오프셋 계산
+		FVector SpawnLocation = BossLocation + SpawnOffset * Radius; // 미사일이 소환될 위치 계산
+
+		Make_Projectile(SpawnLocation, Target);
+	}
 }

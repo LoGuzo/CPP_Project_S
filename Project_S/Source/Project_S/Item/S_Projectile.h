@@ -19,9 +19,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	class UParticleSystem* HitParticleEffect;
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	USkeletalMeshComponent* ProjectileMesh;
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	class USphereComponent* CollisionComponent;
 
@@ -34,10 +37,5 @@ private:
 	int32 Cnt;
 	int32 MaxCnt;
 	int32 Type;
-
-public:
-
-	void FireInDirection(const FVector& Direction);
-	virtual void SetProjectile();
 
 };

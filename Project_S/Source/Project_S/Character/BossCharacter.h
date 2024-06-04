@@ -20,15 +20,22 @@ public:
 
 	virtual void AnyMove() override;
 
-	virtual void Make_Projectile() override;
+	virtual void Make_Projectile(const FVector& SpawnLocation, AActor* TargetActor) override;
 
 	virtual void Set_Projectile() override;
 
 	virtual void LoadCharacterData() override;
+
+
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void PostInitializeComponents() override;
+
 private:
+	TSubclassOf<class AProjectile_Missle> ProjectileClass;
+	
+	FVector MuzzleOffset;
+
 	TSubclassOf<class UW_BossHp> U_BossHp;
 	class UW_BossHp* W_BossHp;
 

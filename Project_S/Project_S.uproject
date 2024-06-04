@@ -11,13 +11,18 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"UMG",
-				"AIModule"
+				"AIModule",
+				"Niagara"
 			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "ControlRig",
+			"Enabled": true
+		},
+		{
+			"Name": "NiagaraExtras",
 			"Enabled": true
 		}
 	]

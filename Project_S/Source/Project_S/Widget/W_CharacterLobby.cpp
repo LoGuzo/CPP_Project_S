@@ -95,6 +95,7 @@ void UW_CharacterLobby::DelCharacter()
 			DelUserID.HaveChar[MyGameInstance->GetIndex()] = "";
 			MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->SetMyData(DelUserID.ID, &DelUserID);
 			UpdateSlots(DelUserID.HaveChar);
+			MyGameInstance->SetUserData(DelUserID);
 		}
 	}
 }

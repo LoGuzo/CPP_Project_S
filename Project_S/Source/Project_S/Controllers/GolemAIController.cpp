@@ -8,6 +8,7 @@
 #include "Project_S/Character/FirstCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/C_SkillComponent.h"
+#include "Project_S/Character/EnemyCharacter.h"
 
 
 void AGolemAIController::OnPossess(APawn* InPawn)
@@ -107,6 +108,9 @@ void AGolemAIController::SetRandomCharacter()
 {
 	int32 RandomPattern = RandRange(0, SearchChacter.Num()-1);
 	User = SearchChacter[RandomPattern];
+	auto Boss = Cast<AEnemyCharacter>(GetPawn());
+	if (Boss)
+		Boss->SetTarget(User);
 	ChkState = E_State::E_Move;
 }
 

@@ -166,6 +166,11 @@ void AEnemyCharacter::LoadCharacterData()
 	UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
+void AEnemyCharacter::SetTarget(AUserCharacter* _Target)
+{
+	Target = _Target;
+}
+
 void AEnemyCharacter::SetEtc()
 {
 	NowAIController = Cast<AEnemyAIController>(GetController());

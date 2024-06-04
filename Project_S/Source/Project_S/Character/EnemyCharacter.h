@@ -26,13 +26,15 @@ public:
 
 	virtual void AnyMove() {};
 
-	virtual void Make_Projectile() {};
+	virtual void Make_Projectile(const FVector& SpawnLocation, AActor* TargetActor) {};
 
 	virtual void Set_Projectile() {};
 
 	virtual void ResetStat() override;
 
 	virtual void LoadCharacterData();
+
+	void SetTarget(class AUserCharacter* _Target);
 
 	void SetEtc();
 
@@ -49,6 +51,8 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	bool IsDead;
+
+	class AUserCharacter* Target;
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
@@ -75,5 +79,4 @@ private:
 	TArray<FString> Item;
 
 	void DropItem();
-
 };
