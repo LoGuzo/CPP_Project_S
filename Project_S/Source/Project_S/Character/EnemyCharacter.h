@@ -26,7 +26,7 @@ public:
 
 	virtual void AnyMove() {};
 
-	virtual void Make_Projectile(const FVector& SpawnLocation, AActor* TargetActor) {};
+	virtual void Make_Projectile() {};
 
 	virtual void Set_Projectile() {};
 

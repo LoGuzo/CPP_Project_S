@@ -24,12 +24,16 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* ProjectileMesh;
+	class AFirstCharacter* Owner;
+	void ScopeAttackCheck(float _Range);
 public:	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	class USphereComponent* CollisionComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Movement")
 	class UProjectileMovementComponent* ProjectileMovementComponent;
+
+	void SetProjectileOwner(class AFirstCharacter* _Owner);
 
 	//Decal 마법진과 같은 것을 사용할때
 

@@ -6,8 +6,10 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
 #include "Components/SphereComponent.h"
-#include "Particles/ParticleSystem.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+#include "Project_S/Character/FirstCharacter.h"
 
 AProjectile_Missle::AProjectile_Missle()
 {
@@ -18,7 +20,6 @@ AProjectile_Missle::AProjectile_Missle()
 	if (AttackP.Succeeded())
 	{
 		HitParticleEffect = AttackP.Object;
-		
 	}
 
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
@@ -37,33 +38,76 @@ AProjectile_Missle::AProjectile_Missle()
 	{
 		NiagaraSystem = Niagara.Object;
 	}
+	StartMoving = false;
+
+	SetActorHiddenInGame(true);
 }
 
 void AProjectile_Missle::BeginPlay()
 {
 	Super::BeginPlay();
-	if (NiagaraSystem)
-	{
-		//NiagaraComponent->SetAsset(NiagaraSystem);
-		//NiagaraComponent->ActivateSystem();
-	}
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
 }
 
 void AProjectile_Missle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (Target)
+	if (StartMoving)
 	{
-		FVector Direction = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-		ProjectileMovementComponent->Velocity = Direction * ProjectileMovementComponent->InitialSpeed;
+		MoveTowardsTarget(DeltaTime);
+		RotateTowardsTarget(DeltaTime);
 	}
 }
 
-void AProjectile_Missle::SetTarget(AActor* TargetActor)
+void AProjectile_Missle::SetTarget(FVector _Location, FVector _Target)
 {
-	Target = TargetActor;
-	if (Target)
+	Target = _Target;
+	if (Target.Size() > 0)
 	{
+		SetActorLocation(_Location);
+		SetActorRotation(Owner->GetActorRotation());
+		StartMoving = true;
+		if (NiagaraSystem)
+		{
+			NiagaraComponent->SetAsset(NiagaraSystem);
+		}
+		SetActorHiddenInGame(false);
+		SetActorEnableCollision(true);
+		SetActorTickEnabled(true);
+		FVector Direction = (Target - GetActorLocation()).GetSafeNormal();
+		ProjectileMovementComponent->Velocity = Direction * ProjectileMovementComponent->InitialSpeed;
 		ProjectileMovementComponent->Activate();
 	}
+}
+
+void AProjectile_Missle::MoveTowardsTarget(float DeltaTime)
+{
+	if (FVector::Dist(GetActorLocation(), Target) <= 10.0f) // 목표 지점에 거의 도착했을 때
+	{
+		// 폭발 효과를 트리거
+		Explode();
+	}
+}
+
+void AProjectile_Missle::RotateTowardsTarget(float DeltaTime)
+{
+	FVector Direction = (Target - GetActorLocation()).GetSafeNormal();
+	FRotator TargetRotation = Direction.Rotation();
+	FRotator CurrentRotation = GetActorRotation();
+
+	FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, DeltaTime, 5.0f);
+	SetActorRotation(NewRotation);
+}
+
+void AProjectile_Missle::Explode()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
+	ScopeAttackCheck(300);
+	StartMoving = false;
+	NiagaraComponent->SetAsset(nullptr);
+	ProjectileMovementComponent->StopMovementImmediately();
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
 }

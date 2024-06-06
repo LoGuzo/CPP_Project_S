@@ -55,4 +55,6 @@ public:
 
 	void SetSaveLocation(FVector _SaveLocation);
 	FVector GetSaveLocation() { return SaveLocation; }
+
+	E_CharacterType GetType() { return MyCharType; }
 };

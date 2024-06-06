@@ -2,6 +2,7 @@
 
 
 #include "BossCharacter.h"
+#include "Components/CapsuleComponent.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/S_StatComponent.h"
@@ -17,7 +18,7 @@ ABossCharacter::ABossCharacter()
 	{
 		U_BossHp = UW.Class;
 	}
-
+	CntMissile = 0;
 	ProjectileClass = AProjectile_Missle::StaticClass();
 }
 
@@ -111,14 +112,25 @@ void ABossCharacter::PostInitializeComponents()
 	W_BossHp = CreateWidget<UW_BossHp>(GetWorld(), U_BossHp);
 }
 
-void ABossCharacter::Make_Projectile(const FVector& SpawnLocation, AActor* TargetActor)
+void ABossCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	Make_Projectile();
+}
+
+void ABossCharacter::Make_Projectile()
 {
 	if (ProjectileClass)
 	{
 		UWorld* World = GetWorld();
 		if (World)
 		{
-			AProjectile_Missle* Missle = World->SpawnActor<AProjectile_Missle>(ProjectileClass, SpawnLocation, GetActorRotation());
+			for (int32 i=0; i < 5; i++)
+			{
+				AProjectile_Missle* Missle = World->SpawnActor<AProjectile_Missle>(ProjectileClass);
+				Missle->SetProjectileOwner(this);
+				MyProjectiles.Emplace(Missle);
+			}
 		}
 	}
 }
@@ -127,19 +139,26 @@ void ABossCharacter::Set_Projectile()
 {
 	if (!ProjectileClass) return;
 	if (!Target) return;
+	if (CntMissile > 4) CntMissile = 0;
+
+	auto TargetCharacter = Cast<ACharacter>(Target);
+	FVector RealTarget = TargetCharacter->GetActorLocation() - FVector(0.0f, 0.0f, TargetCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+	MyProjectiles[CntMissile]->SetTarget(SetMissleLocation(), RealTarget);
+	CntMissile++;
+}
+
+FVector ABossCharacter::SetMissleLocation()
+{
 	FVector BossLocation = GetActorLocation() + FVector(0.f, 0.f, 300.f);
 	FRotator BossRotation = GetActorRotation();
 	FVector BossBackward = -BossRotation.Vector();
-
+	FRotator RotationOffset(0.f, -90.f, 0.f);
+	FVector ForwardVector = RotationOffset.RotateVector(GetActorForwardVector());
 	float Radius = 600.f;
 	float AngleStep = 180.f / 4;
+	float Angle = AngleStep * CntMissile * PI / 180.f;
+	FVector SpawnOffset = FVector(-FMath::Cos(Angle) * ForwardVector.X, -FMath::Cos(Angle) * ForwardVector.Y, FMath::Sin(Angle)); // 반원 형태의 오프셋 계산
+	FVector SpawnLocation = BossLocation + SpawnOffset * Radius; // 미사일이 소환될 위치 계산
 
-	for (int32 i = 0; i < 5; i++)
-	{
-		float Angle = AngleStep * i * PI / 180.f;
-		FVector SpawnOffset = FVector(0, FMath::Cos(Angle), FMath::Sin(Angle)); // 반원 형태의 오프셋 계산
-		FVector SpawnLocation = BossLocation + SpawnOffset * Radius; // 미사일이 소환될 위치 계산
-
-		Make_Projectile(SpawnLocation, Target);
-	}
+	return SpawnLocation;
 }

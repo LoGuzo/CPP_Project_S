@@ -17,17 +17,25 @@ class PROJECT_S_API AProjectile_Missle : public AS_Projectile
 public:
 	AProjectile_Missle();
 
-	void SetTarget(AActor* TargetActor);
+	void SetTarget(FVector _Location, FVector _Target);
+
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
 private:
-	AActor* Target;
+	bool StartMoving;
+
+	FVector Target;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effects")
 	class UNiagaraComponent* NiagaraComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UNiagaraSystem* NiagaraSystem;
+
+	void Explode();
+
+	void MoveTowardsTarget(float DeltaTime);
+	void RotateTowardsTarget(float DeltaTime);
 };

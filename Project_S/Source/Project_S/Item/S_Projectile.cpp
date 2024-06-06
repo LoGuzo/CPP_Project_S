@@ -2,9 +2,12 @@
 
 
 #include "S_Projectile.h"
+#include "DrawDebugHelpers.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Misc/OutputDeviceNull.h"
+#include "Project_S/Component/S_StatComponent.h"
+#include "Project_S/Character/FirstCharacter.h"
 
 // Sets default values
 AS_Projectile::AS_Projectile()
@@ -14,11 +17,12 @@ AS_Projectile::AS_Projectile()
 
 	CollisionComponent = CreateAbstractDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	CollisionComponent->InitSphereRadius(30.f);
+	CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));
 	RootComponent = CollisionComponent;
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-	ProjectileMovementComponent->InitialSpeed = 0.f;
+	ProjectileMovementComponent->InitialSpeed = 2000.f;
 	ProjectileMovementComponent->MaxSpeed = 2000.f;
 	ProjectileMovementComponent->bAutoActivate = false;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
@@ -28,5 +32,58 @@ AS_Projectile::AS_Projectile()
 void AS_Projectile::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AS_Projectile::SetProjectileOwner(AFirstCharacter* _Owner)
+{
+	Owner = _Owner;
+}
+
+void AS_Projectile::ScopeAttackCheck(float _Range)
+{
+	TArray<FHitResult> HitResults;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	float AttackRange = _Range;
+	bool bResult = GetWorld()->SweepMultiByChannel(
+		HitResults,
+		this->GetActorLocation(),
+		this->GetActorLocation(),
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(AttackRange),
+		Params
+	);
+
+	FVector Center = this->GetActorLocation();
+	FColor DrawColor = FColor::Red;
+
+	for (FHitResult hitResult : HitResults)
+	{
+		if (bResult && hitResult.Actor.IsValid())
+		{
+			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
+			if (Enemy)
+			{
+				if (Owner->GetType() == E_CharacterType::E_Monster)
+				{
+					if (Enemy->GetType() == E_CharacterType::E_User) {
+						FDamageEvent DamageEvent;
+						hitResult.Actor->TakeDamage(Owner->GetStatCom()->GetAttack(), DamageEvent, Owner->GetController(), this);
+						DrawColor = FColor::Green;
+					}
+				}
+				else if (Owner->GetType() == E_CharacterType::E_User)
+				{
+					if (Enemy->GetType() == E_CharacterType::E_Monster) {
+						FDamageEvent DamageEvent;
+						hitResult.Actor->TakeDamage(Owner->GetStatCom()->GetAttack(), DamageEvent, Owner->GetController(), this);
+						DrawColor = FColor::Green;
+					}
+				}
+			}
+		}
+	}
+	DrawDebugSphere(GetWorld(), Center, AttackRange, 10, DrawColor, false, 2.f);
 }
 
