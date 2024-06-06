@@ -33,6 +33,12 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Movement")
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	UAudioComponent* AudioComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundWave* ParticleSound;
+
 	void SetProjectileOwner(class AFirstCharacter* _Owner);
 
 	//Decal 마법진과 같은 것을 사용할때

@@ -5,6 +5,8 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
+#include "Sound/SoundWave.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -37,6 +39,11 @@ AProjectile_Missle::AProjectile_Missle()
 	if (Niagara.Succeeded())
 	{
 		NiagaraSystem = Niagara.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<USoundWave> SoundObject(TEXT("SoundWave'/Game/StarterContent/Audio/Explosion01.Explosion01'"));
+	if (SoundObject.Succeeded())
+	{
+		ParticleSound = SoundObject.Object;
 	}
 	StartMoving = false;
 
@@ -104,6 +111,11 @@ void AProjectile_Missle::Explode()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
 	ScopeAttackCheck(300);
+	if (ParticleSound && AudioComponent)
+	{
+		AudioComponent->SetSound(ParticleSound);
+		AudioComponent->Play();
+	}
 	StartMoving = false;
 	NiagaraComponent->SetAsset(nullptr);
 	ProjectileMovementComponent->StopMovementImmediately();

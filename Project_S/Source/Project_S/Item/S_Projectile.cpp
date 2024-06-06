@@ -3,6 +3,7 @@
 
 #include "S_Projectile.h"
 #include "DrawDebugHelpers.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Misc/OutputDeviceNull.h"
@@ -19,11 +20,13 @@ AS_Projectile::AS_Projectile()
 	CollisionComponent->InitSphereRadius(30.f);
 	CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));
 	RootComponent = CollisionComponent;
-
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	AudioComponent->SetupAttachment(RootComponent);
+	AudioComponent->bAutoActivate = false;
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-	ProjectileMovementComponent->InitialSpeed = 2000.f;
-	ProjectileMovementComponent->MaxSpeed = 2000.f;
+	ProjectileMovementComponent->InitialSpeed = 2500.f;
+	ProjectileMovementComponent->MaxSpeed = 2500.f;
 	ProjectileMovementComponent->bAutoActivate = false;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 }
