@@ -62,3 +62,11 @@ enum class E_CharClass : uint8
 	E_Magician,
 	E_Healer
 };
+
+
+UENUM()
+enum class E_Spanwer : uint8
+{
+	E_Normal,
+	E_Boss,
+};

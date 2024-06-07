@@ -37,6 +37,18 @@ AEnemyCharacter::AEnemyCharacter()
 	IsDead = false;
 	IsReadySpawn = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	SetActorHiddenInGame(true);
+}
+
+void AEnemyCharacter::SetState(bool NowState)
+{
+	SetActorHiddenInGame(!NowState);
+	SetActorEnableCollision(NowState);
+	SetActorTickEnabled(NowState);
+	if (NowState)
+		NowAIController->Possess(this);
+	else
+		NowAIController->UnPossess();
 }
 
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -59,6 +71,8 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
 }
 
 void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -140,10 +154,10 @@ void AEnemyCharacter::LoadCharacterData()
 			if (LoadData.IsValid())
 			{
 				Stat->SetMonsterLevel(LoadData.Pin()->Level);
-				Stat->SetHp(LoadData.Pin()->MaxHp);
 				Stat->SetMaxHp(LoadData.Pin()->MaxHp);
-				Stat->SetMp(LoadData.Pin()->MaxMp);
+				Stat->SetHp(LoadData.Pin()->MaxHp);
 				Stat->SetMaxMp(LoadData.Pin()->MaxMp);
+				Stat->SetMp(LoadData.Pin()->MaxMp);
 				Stat->SetMaxExp(LoadData.Pin()->MaxExp);
 				Stat->SetExp(0);
 				Stat->SetAttack(LoadData.Pin()->Attack);
@@ -199,9 +213,7 @@ void AEnemyCharacter::DiedEnemy()
 	IsAttacking = false;
 	DropItem();
 	SetActorLocation(FVector(SaveLocation.X, SaveLocation.Y, SaveLocation.Z + 1000.f));
-	SetActorHiddenInGame(true);
-	SetActorEnableCollision(false);
-	SetActorTickEnabled(false);
+	SetState(false);
 	if (Type != E_MonsterType::E_LastBoss)
 	{
 		if (IsReadySpawn)
@@ -217,9 +229,7 @@ void AEnemyCharacter::ResetStat()
 	NowAIController->IsDead = false;
 	IsReadySpawn = false;
 	GetMesh()->SetEnableGravity(true);
-	SetActorHiddenInGame(false);
-	SetActorEnableCollision(true);
-	SetActorTickEnabled(true);
+	SetState(true);
 	LoadCharacterData();
 	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;

@@ -305,6 +305,7 @@ void AUserCharacter::SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon)
 	// UserClass
 	FName WeaponSocket(TEXT("r_hand_sword"));
 	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon);
+	MyWeapon->GetBoxCollision()->SetSimulatePhysics(false);
 	MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
 	if (nullptr != MyWeapon) {
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));

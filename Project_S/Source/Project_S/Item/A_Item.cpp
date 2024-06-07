@@ -14,11 +14,10 @@ AA_Item::AA_Item()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("COLLISION"));
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f)); 
 	BoxCollision->SetCollisionProfileName(TEXT("Item"));
-
+	BoxCollision->SetSimulatePhysics(true);
 	BoxCollision->OnComponentBeginOverlap.AddDynamic(this, &AA_Item::BeginOverlap);
 	BoxCollision->OnComponentEndOverlap.AddDynamic(this, &AA_Item::EndOverlap);
 	RootComponent = BoxCollision;
-
 }
 
 void AA_Item::SetItem(const FString& _ItemName)
@@ -63,4 +62,16 @@ void AA_Item::EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor
 			userCharacter->SetCurItem(nullptr);
 		}
 	}
+}
+
+void AA_Item::BeginPlay()
+{
+	Super::BeginPlay();
+	FTimerHandle DropTimeHandle;
+	GetWorldTimerManager().SetTimer(DropTimeHandle, this, &AA_Item::SetDrop, 0.5f, false);
+}
+
+void AA_Item::SetDrop()
+{
+	BoxCollision->SetSimulatePhysics(false);
 }

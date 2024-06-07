@@ -79,20 +79,24 @@ void ABossCharacter::LoadCharacterData()
 	{
 		if (Stat)
 		{
-			W_BossHp->BindHp(Stat);
-			W_BossHp->BindTxtHp(Stat);
 			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		}
+	}
+	GetWorldTimerManager().SetTimer(WidgetHandle, this, &ABossCharacter::SetWidget, 2.f, false);
+	SetState(true);
+}
+void ABossCharacter::SetWidget()
+{
+	if (W_BossHp && !W_BossHp->IsInViewport())
+	{
+		W_BossHp->AddToViewport();
+		GetWorldTimerManager().ClearTimer(WidgetHandle);
 	}
 }
 
 float ABossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if (W_BossHp && !W_BossHp->IsInViewport())
-	{
-		W_BossHp->AddToViewport();
-	}
 	if (Stat) {
 		if (Stat->GetHp() <= 0)
 		{
@@ -110,6 +114,13 @@ void ABossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	W_BossHp = CreateWidget<UW_BossHp>(GetWorld(), U_BossHp);
+	if (W_BossHp)
+	{
+		if (Stat)
+		{
+			W_BossHp->BindHp(Stat);
+		}
+	}
 }
 
 void ABossCharacter::BeginPlay()

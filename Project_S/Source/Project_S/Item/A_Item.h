@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AA_Item();
 protected:
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) PURE_VIRTUAL(AA_Item::SetW_Mesh, ;);
 
@@ -39,7 +41,8 @@ protected:
 	UFUNCTION()
 	void EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 private:
-	
+	void SetDrop();
+
 	UPROPERTY(VisibleAnywhere)
 	FString Name;
 

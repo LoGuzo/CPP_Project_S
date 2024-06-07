@@ -29,12 +29,15 @@ AS_Projectile::AS_Projectile()
 	ProjectileMovementComponent->MaxSpeed = 2500.f;
 	ProjectileMovementComponent->bAutoActivate = false;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
+	SetActorHiddenInGame(true);
 }
 
 // Called when the game starts or when spawned
 void AS_Projectile::BeginPlay()
 {
 	Super::BeginPlay();
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
 }
 
 void AS_Projectile::SetProjectileOwner(AFirstCharacter* _Owner)

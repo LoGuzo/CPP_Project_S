@@ -19,6 +19,8 @@ public:
 
 	void SetSpwenerName(FString _SpawnerName);
 
+	void SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,10 +33,6 @@ protected:
 
 	UFUNCTION()
 	void EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	void SetEnemy(FString _SpawnerName);
-
-	void SpawnEnemy();
 
 	void SpawnEnemyAI(class AEnemyCharacter* Enemy, E_MonsterType _MonsterType);
 

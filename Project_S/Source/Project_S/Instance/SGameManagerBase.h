@@ -12,7 +12,6 @@ class PROJECT_S_API SGameManagerBase
 {
 protected:
 	class UDataTable* MyData;
-
 public:
 	SGameManagerBase() {};
 	virtual ~SGameManagerBase() {};
@@ -21,5 +20,6 @@ public:
 
 	virtual void SetMyData(FString _RowName, FTableRowBase* _NewData) {};
 	virtual void DelMyData(FString _RowName) {};
-	
+
+	virtual TMap<int32, TSharedPtr<FTableRowBase>>  GetDataMap() { return TMap<int32, TSharedPtr<FTableRowBase>>();}
 };

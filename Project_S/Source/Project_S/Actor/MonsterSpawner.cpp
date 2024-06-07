@@ -24,6 +24,7 @@ AMonsterSpawner::AMonsterSpawner()
 	SpawnerName = "Mutant_Spawner";
 
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("COLLISION"));
+	RootComponent = BoxCollision;
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	BoxCollision->SetCollisionProfileName(TEXT("OverlapAll"));
 
@@ -40,14 +41,6 @@ void AMonsterSpawner::SetSpwenerName(FString _SpawnerName)
 void AMonsterSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	if (HasAuthority()) // 서버에서만 실행되도록 확인
-	{
-		SetEnemy(SpawnerName);
-		if (SpawnerName == "Boss_Spawner")
-		{
-			SpawnEnemy();
-		}
-	}
 }
 
 void AMonsterSpawner::BeginOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -61,16 +54,9 @@ void AMonsterSpawner::BeginOverlap(class UPrimitiveComponent* OverlappedComp, cl
 			{
 				if (CntUser == 1)
 				{
-					if (!IsSpawn)
+ 					for (int i = 0; i < EnemyClassArray.Num(); i++)
 					{
-						SpawnEnemy();
-					}
-					else
-					{
- 						for (int i = 0; i < EnemyClassArray.Num(); i++)
-						{
-							EnemyClassArray[i]->ResetStat();
-						}
+						EnemyClassArray[i]->SetState(true);
 					}
 				}
 			}
@@ -95,7 +81,7 @@ void AMonsterSpawner::EndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 						{
 							for (int32 i = 0; i < EnemyClassArray.Num(); i++)
 							{
-								EnemyClassArray[i]->DiedEnemy();
+								EnemyClassArray[i]->SetState(false);
 							}
 						}
 					}
@@ -105,23 +91,9 @@ void AMonsterSpawner::EndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 	}
 }
 
-void AMonsterSpawner::SetEnemy(FString _SpawnerName)
+void AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray)
 {
-	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (MyGameInstance)
-	{
-		if (SpawnerName != "") {
-			SpawnerData = StaticCastSharedPtr<FSpawnData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_SpawnerData)->GetMyData(SpawnerName));
-			if (SpawnerData.IsValid())
-			{
-				EnemyArray = SpawnerData.Pin()->SpawnMonster;
-			}
-		}
-	}
-}
-
-void AMonsterSpawner::SpawnEnemy()
-{
+	EnemyArray = _EnemyArray;
 	for (int32 i = 0; i < EnemyArray.Num(); i++)
 	{
 		switch (EnemyArray[i].MonsterType)
@@ -134,7 +106,7 @@ void AMonsterSpawner::SpawnEnemy()
 		case E_MonsterType::E_Aggressive:
 		{
 			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
-			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
+			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
 			SpawnNewEnemy->LoadCharacterData();
@@ -149,7 +121,7 @@ void AMonsterSpawner::SpawnEnemy()
 		case E_MonsterType::E_MiddleBoss:
 		{
 			AMiddleBossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AMiddleBossCharacter>(AMiddleBossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
-			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
+			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
 			SpawnNewEnemy->LoadCharacterData();
@@ -159,7 +131,7 @@ void AMonsterSpawner::SpawnEnemy()
 		case E_MonsterType::E_LastBoss:
 		{
 			ABossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<ABossCharacter>(ABossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
-			SpawnNewEnemy->SetCharID(EnemyArray[i].ID.ToString());
+			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
 			SpawnNewEnemy->LoadCharacterData();
@@ -192,6 +164,7 @@ void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _Monste
 		AAggressiveAIController* NewAI = GetWorld()->SpawnActor<AAggressiveAIController>(AAggressiveAIController::StaticClass());
 		NewAI->Possess(Enemy);
 		Enemy->SetEtc();
+		Enemy->SetState(false);
 	}
 	break;
 	case E_MonsterType::E_Patrol:
@@ -204,6 +177,7 @@ void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _Monste
 		AMiddleBossAIController* NewAI = GetWorld()->SpawnActor<AMiddleBossAIController>(AMiddleBossAIController::StaticClass());
 		NewAI->Possess(Enemy);
 		Enemy->SetEtc();
+		Enemy->SetState(false);
 	}
 	break;
 	case E_MonsterType::E_LastBoss:
@@ -211,9 +185,10 @@ void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _Monste
 		AGolemAIController* NewAI = GetWorld()->SpawnActor<AGolemAIController>(AGolemAIController::StaticClass());
 		NewAI->Possess(Enemy);
 		Enemy->SetEtc();
+		Enemy->SetState(false);
 	}
 	break;
 	default:
-		break;
+	break;
 	}
 }

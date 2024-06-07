@@ -46,15 +46,12 @@ AProjectile_Missle::AProjectile_Missle()
 		ParticleSound = SoundObject.Object;
 	}
 	StartMoving = false;
-
-	SetActorHiddenInGame(true);
 }
 
 void AProjectile_Missle::BeginPlay()
 {
 	Super::BeginPlay();
-	SetActorEnableCollision(false);
-	SetActorTickEnabled(false);
+
 }
 
 void AProjectile_Missle::Tick(float DeltaTime)

@@ -28,15 +28,20 @@ const TSharedPtr<FTableRowBase> MonsterMananger::GetMyData(FString _Init)
 	return MyMonster.IsValid() ? MyMonster : nullptr;
 }
 
-void MonsterMananger::InsertMonsterManage(int32 Key, FMonsterData Data)
+TMap<int32, TSharedPtr<FTableRowBase>> MonsterMananger::GetDataMap()
 {
-	if (MonsterMap.Contains(Key))
-		return;
-
-	MonsterMap.Emplace(Key, Data);
-}
-
-FMonsterData MonsterMananger::GetMonsterData(int32 Key)
-{
-	return MonsterMap.FindRef(Key);
+	const TArray<FName> row = MyData->GetRowNames();
+	TMap<int32, TSharedPtr<FTableRowBase>> DataMap;
+	for (int i = 0; i < row.Num(); ++i)
+	{
+		const auto data = MyData->FindRow<FMonsterData>(row[i], row[i].ToString(), false);
+		if (data)
+		{
+			MyMonster = MakeShared<FMonsterData>(*data);
+			DataMap.Emplace(data->ID, MyMonster);
+		}
+		else
+			MyMonster.Reset();
+	}
+	return DataMap;
 }

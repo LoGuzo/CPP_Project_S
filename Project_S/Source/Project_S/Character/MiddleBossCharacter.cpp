@@ -43,7 +43,6 @@ void AMiddleBossCharacter::LoadCharacterData()
 		if (Stat)
 		{
 			W_BossHp->BindHp(Stat);
-			W_BossHp->BindTxtHp(Stat);
 			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		}
 	}

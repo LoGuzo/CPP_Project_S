@@ -13,6 +13,8 @@ USTRUCT()
 struct FS_Item : public FTableRowBase
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText ItemName;
@@ -43,6 +45,11 @@ USTRUCT()
 struct FCharacterData : public FTableRowBase
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_CharClass Type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Level;
@@ -211,9 +218,6 @@ struct FMonsterPattern : public FTableRowBase
 	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Type;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	E_SkillType PatternType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -238,7 +242,10 @@ struct FSpawnMonsterData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ID;
+	FName MonsterName;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	E_MonsterType MonsterType;
@@ -260,7 +267,16 @@ struct FSpawnData : public FTableRowBase
 	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_Spanwer Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName MapName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector SpawnerLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector SpawnerScale;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FSpawnMonsterData> SpawnMonster;

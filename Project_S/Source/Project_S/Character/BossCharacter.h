@@ -27,6 +27,7 @@ public:
 	virtual void LoadCharacterData() override;
 
 protected:
+	FTimerHandle WidgetHandle;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
@@ -49,4 +50,6 @@ private:
 	TArray<class AProjectile_Missle*> MyProjectiles;
 
 	FVector SetMissleLocation();
+
+	void SetWidget();
 };

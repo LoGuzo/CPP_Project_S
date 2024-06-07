@@ -17,7 +17,5 @@ public:
 
 	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) override;
 
-	TMap<int32, FMonsterData> MonsterMap;
-	void InsertMonsterManage(int32 Key, FMonsterData Data);
-	FMonsterData GetMonsterData(int32 Key);
+	TMap<int32, TSharedPtr<FTableRowBase>> GetDataMap() override;
 };

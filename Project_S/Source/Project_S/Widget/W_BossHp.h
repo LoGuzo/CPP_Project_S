@@ -19,10 +19,6 @@ public:
 
 	void UpdateHp();
 
-	void BindTxtHp(class US_StatComponent* _StatComp);
-
-	void UpdateTxtHp();
-
 	void SetTxtName(const int32 Lvl, const FString& Name);
 
 private:

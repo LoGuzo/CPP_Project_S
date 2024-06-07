@@ -28,4 +28,20 @@ const TSharedPtr<FTableRowBase> SkillManager::GetMyData(FString _Init)
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 
-
+TMap<int32, TSharedPtr<FTableRowBase>> SkillManager::GetDataMap()
+{
+	const TArray<FName> row = MyData->GetRowNames();
+	TMap<int32, TSharedPtr<FTableRowBase>> DataMap;
+	for (int i = 0; i < row.Num(); ++i)
+	{
+		const auto data = MyData->FindRow<FSkillTable>(row[i], row[i].ToString(), false);
+		if (data)
+		{
+			MyCharacter = MakeShared<FSkillTable>(*data);
+			DataMap.Emplace(data->ID, MyCharacter);
+		}
+		else
+			MyCharacter.Reset();
+	}
+	return DataMap;
+}
