@@ -58,6 +58,4 @@ public:
 	void SetName(const FString& _ItemName);
 
 	void SetItem(const FString& _ItemName);
-
-
 };

@@ -3,6 +3,7 @@
 
 #include "W_AddUser.h"
 #include "Components/Button.h"
+#include "Components/EditableTextBox.h"
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/S_StructureAll.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -11,12 +12,25 @@
 
 void UW_AddUser::NativeConstruct()
 {
+    Super::NativeConstruct();
+    Txt_ID = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("Txt_ID")));
+    Txt_Pass = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("Txt_Pass")));
     if (Btn_ChkID)
         Btn_ChkID->OnClicked.AddDynamic(this, &UW_AddUser::FindID);
     if (Btn_Add)
         Btn_Add->OnClicked.AddDynamic(this, &UW_AddUser::SignUp);
     if (Btn_X)
         Btn_X->OnClicked.AddDynamic(this, &UW_AddUser::Back);
+    if (Txt_ID)
+    {
+        Txt_ID->OnTextChanged.Clear();
+        Txt_ID->OnTextChanged.AddDynamic(this, &UW_AddUser::ValidateIDText);
+    }
+    if (Txt_Pass)
+    {
+        Txt_Pass->OnTextChanged.Clear();
+        Txt_Pass->OnTextChanged.AddDynamic(this, &UW_AddUser::ValidatePWText);
+    }
 }
 
 bool UW_AddUser::ValidateID(const FString& Username)
@@ -70,4 +84,37 @@ void UW_AddUser::SignUp()
 void UW_AddUser::Back()
 {
     RemoveFromViewport();
+}
+
+void UW_AddUser::ValidateIDText(const FText& Text)
+{
+    FString str = Text.ToString();
+
+    const FRegexPattern pattern = FRegexPattern(FString(TEXT("^[A-Za-z0-9]+$")));
+
+    FRegexMatcher matcher(pattern, str);
+
+    bool bMatch = matcher.FindNext();
+
+    if (!bMatch)
+        Txt_ID->SetText(FText::FromString(str.Left(str.Len() - 1)));
+    else
+    {
+        if (str.Len() > 32)
+        {
+            str = str.Left(32);
+            Txt_ID->SetText(FText::FromString(str));
+        }
+    }
+}
+
+void UW_AddUser::ValidatePWText(const FText& Text)
+{
+    FString str = Text.ToString();
+
+    if (str.Len() > 32)
+    {
+        str = str.Left(32);
+        Txt_Pass->SetText(FText::FromString(str));
+    }
 }

@@ -41,17 +41,3 @@ void AProject_SGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	ItemData.Empty();
 	SpawnerData.Empty();
 }
-
-void AProject_SGameMode::MonsterFactory()
-{
-	if (HasAuthority()) // 서버에서만 실행되도록 확인
-	{
-		auto Data = static_cast<FSpawnData*>(SpawnerData.FindRef(111).Get());
-		if (Data)
-		{
-			AMonsterSpawner* ASpawner = GetWorld()->SpawnActor<AMonsterSpawner>(Data->SpawnerLocation, FRotator(0.f, 30.f, 0.f));
-			ASpawner->SetActorScale3D(Data->SpawnerScale);
-			ASpawner->SpawnEnemy(Data->SpawnMonster);
-		}
-	}
-}

@@ -44,4 +44,10 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_X;
+
+	UFUNCTION()
+	void ValidateIDText(const FText& Text);
+
+	UFUNCTION()
+	void ValidatePWText(const FText& Text);
 };

@@ -17,33 +17,6 @@ ABossGameMode::ABossGameMode()
 	PlayerControllerClass = AUserPlayerController::StaticClass();
 }
 
-void ABossGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
-{
-	Super::InitGame(MapName, Options, ErrorMessage);
-	auto MyInstance = Cast<US_GameInstance>(GetGameInstance());
-	if (MyInstance)
-	{
-		SpawnerData = MyInstance->MyDataManager.FindRef(E_DataType::E_SpawnerData)->GetDataMap();
-		MonsterData = MyInstance->MyDataManager.FindRef(E_DataType::E_MonsterData)->GetDataMap();
-		ItemData = MyInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetDataMap();
-	}
-}
-
-void ABossGameMode::BeginPlay()
-{
-	Super::BeginPlay();
-
-	MonsterFactory();
-}
-
-void ABossGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	MonsterData.Empty();
-	ItemData.Empty();
-	SpawnerData.Empty();
-}
-
 void ABossGameMode::MonsterFactory()
 {
 	if (HasAuthority()) // 서버에서만 실행되도록 확인
