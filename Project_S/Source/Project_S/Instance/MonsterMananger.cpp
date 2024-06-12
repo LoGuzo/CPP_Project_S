@@ -45,3 +45,102 @@ TMap<int32, TSharedPtr<FTableRowBase>> MonsterMananger::GetDataMap()
 	}
 	return DataMap;
 }
+
+/*void MonsterMananger::MonsterFactory(FSpawnMonsterData* MonsterData)
+{
+
+	switch (MonsterData.MonsterType)
+	{
+	case E_MonsterType::E_Normal:
+	{
+
+	}
+	break;
+	case E_MonsterType::E_Aggressive:
+	{
+		AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+		SpawnNewEnemy->SetCharID(MonsterData->MonsterName.ToString());
+		SpawnEnemyAI(SpawnNewEnemy, MonsterData->MonsterType);
+		SpawnNewEnemy->SetActorScale3D(MonsterData->MonsterScale);
+		SpawnNewEnemy->LoadCharacterData();
+		EnemyClassArray.Add(SpawnNewEnemy);
+	}
+	break;
+	case E_MonsterType::E_Patrol:
+	{
+
+	}
+	break;
+	case E_MonsterType::E_MiddleBoss:
+	{
+		AMiddleBossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AMiddleBossCharacter>(AMiddleBossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+		SpawnNewEnemy->SetCharID(MonsterData->MonsterName.ToString());
+		SpawnEnemyAI(SpawnNewEnemy, MonsterData->MonsterType);
+		SpawnNewEnemy->SetActorScale3D(MonsterData->MonsterScale);
+		SpawnNewEnemy->LoadCharacterData();
+		EnemyClassArray.Add(SpawnNewEnemy);
+	}
+	break;
+	case E_MonsterType::E_LastBoss:
+	{
+		ABossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<ABossCharacter>(ABossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+		SpawnNewEnemy->SetCharID(MonsterData->MonsterName.ToString());
+		SpawnEnemyAI(SpawnNewEnemy, MonsterData->MonsterType);
+		SpawnNewEnemy->SetActorScale3D(MonsterData->MonsterScale);
+		SpawnNewEnemy->LoadCharacterData();
+		EnemyClassArray.Add(SpawnNewEnemy);
+	}
+	break;
+	default:
+		break;
+	}
+
+}
+
+void MonsterMananger::AIFactory(AEnemyCharacter* Enemy, E_MonsterType _MonsterType)
+{
+	auto* NowAI = Cast<AAIController>(Enemy->GetController());
+	if (NowAI)
+	{
+		NowAI->Destroy(); // 기존 AI 컨트롤러 삭제
+	}
+	switch (_MonsterType)
+	{
+	case E_MonsterType::E_Normal:
+	{
+
+	}
+	break;
+	case E_MonsterType::E_Aggressive:
+	{
+		auto* NewAI = GetWorld()->SpawnActor<AAggressiveAIController>();
+		NewAI->Possess(Enemy);
+		Enemy->SetEtc();
+		Enemy->SetState(false);
+	}
+	break;
+	case E_MonsterType::E_Patrol:
+	{
+
+	}
+	break;
+	case E_MonsterType::E_MiddleBoss:
+	{
+		auto* NewAI = GetWorld()->SpawnActor<AMiddleBossAIController>();
+		NewAI->Possess(Enemy);
+		Enemy->SetEtc();
+		Enemy->SetState(false);
+	}
+	break;
+	case E_MonsterType::E_LastBoss:
+	{
+		auto* NewAI = GetWorld()->SpawnActor<AGolemAIController>();
+		NewAI->Possess(Enemy);
+		Enemy->SetEtc();
+		Enemy->SetState(false);
+	}
+	break;
+	default:
+		break;
+	}
+}*/

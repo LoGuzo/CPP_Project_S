@@ -63,6 +63,7 @@ protected:
 
 	virtual void ResetStat() override;
 
+	float CalculateHitDirectionAngle(const FVector& AttackerLocation);
 private:
 	E_CharClass ClassType;
 
@@ -108,6 +109,9 @@ private:
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
 
+	UPROPERTY()
+	FTimerHandle HitHandle;
+
 	FTimeline CurveTimeLine;
 
 	UFUNCTION()
@@ -121,6 +125,7 @@ private:
 
 	void UsePotion(const int32 StackSize, const FString& ItemName);
 
+	void SetHitFalse();
 public:
 	void UseQuickSlot();
 	
@@ -153,5 +158,8 @@ public:
 	void AnyMove(UCurveBase* _SkillCurve);
 
 	UPROPERTY(EditAnyWhere, Category = Camera)
-	TSubclassOf<class UUserCameraShake> TCameraShake;
+	TSubclassOf<class UCameraShakeBase> TCameraShake;
+
+	UFUNCTION(BlueprintCallable, Category = "Camera")
+	void PlayCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass);
 };

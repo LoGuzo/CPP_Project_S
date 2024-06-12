@@ -32,6 +32,10 @@ private:
 	bool HaveWeapon;
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	bool OnDash;
+	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
+	bool bIsHit;
+	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
+	float Direction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* OneHandSwordAM;
@@ -42,11 +46,18 @@ private:
 public:
 	float GetSpeed() const { return Speed; }
 	bool GetHaveWeapon() const { return HaveWeapon; }
+
 	void SetSpeed(const float _Speed);
 	void SetHaveWeapon(const bool _HaveWeapon);
 
 	bool GetOnDash() { return OnDash; }
 	void SetOnDash(const bool _OnDash);
+
+	bool GetIsHit() { return bIsHit; }
+	void SetIsHit(const bool _bIsHit);
+
+	float GetDirection() { return Direction; }
+	void SetDirection(const float _Direction);
 
 	void PlaySome(TSharedPtr<FSkillTable>_Data);
 	void ColliderNotify();
@@ -66,5 +77,4 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AnyMove();
-
 };

@@ -13,8 +13,6 @@
 void UW_AddUser::NativeConstruct()
 {
     Super::NativeConstruct();
-    Txt_ID = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("Txt_ID")));
-    Txt_Pass = Cast<UEditableTextBox>(GetWidgetFromName(TEXT("Txt_Pass")));
     if (Btn_ChkID)
         Btn_ChkID->OnClicked.AddDynamic(this, &UW_AddUser::FindID);
     if (Btn_Add)

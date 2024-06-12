@@ -3,13 +3,15 @@
 
 #include "UserAnimInstance.h"
 #include "Project_S/Character/UserCharacter.h"
+#include "Animation/AnimNode_StateMachine.h"
+#include "Animation/AnimInstanceProxy.h"
 
 UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 {
 	Speed = 0.0f;
 	HaveWeapon = false;
 	OnDash = false;
-
+	bIsHit = false;
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK(TEXT("AnimMontage'/Game/Mannequin/Animations/OneHandSword_Attack_Montage.OneHandSword_Attack_Montage'"));
 	if (ATTACK.Succeeded())
 	{
@@ -23,6 +25,11 @@ UUserAnimInstance::~UUserAnimInstance()
 	{
 		NowSkill = nullptr;
 	}
+}
+
+void UUserAnimInstance::SetDirection(const float _Direction)
+{
+	Direction = _Direction;
 }
 
 void UUserAnimInstance::PlaySome(TSharedPtr<FSkillTable>_Data)
@@ -83,6 +90,11 @@ void UUserAnimInstance::SetHaveWeapon(bool _HaveWeapon)
 void UUserAnimInstance::SetOnDash(const bool _OnDash)
 {
 	OnDash = _OnDash;
+}
+
+void UUserAnimInstance::SetIsHit(const bool _bIsHit)
+{
+	bIsHit = _bIsHit;
 }
 
 void UUserAnimInstance::OnHandSwordPlayAM()

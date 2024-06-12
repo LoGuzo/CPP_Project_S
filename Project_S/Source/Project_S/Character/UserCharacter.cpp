@@ -9,8 +9,8 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Project_S/UserCameraShake.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Project_S/MappingClass.h"
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
@@ -62,13 +62,11 @@ AUserCharacter::AUserCharacter()
 		CharacterUI = UW.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<UUserCameraShake>CS(TEXT("Blueprint'/Game/ThirdPersonCPP/Blueprints/BP_UserCameraShake.BP_UserCameraShake_C'"));
+	static ConstructorHelpers::FClassFinder<UCameraShakeBase>CS(TEXT("Blueprint'/Game/ThirdPersonCPP/Blueprints/BP_UserCameraShake.BP_UserCameraShake_C'"));
 	if (CS.Succeeded())
 	{
 		TCameraShake = CS.Class;
 	}
-
-	//GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(TCameraShake);
 
 	bIsFlipFlopInventoryActive = false;
 	bIsFlipFlopEquipmentActive = false;
@@ -157,6 +155,7 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		ClassData.Reset();
 	}
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
+	GetWorldTimerManager().ClearTimer(HitHandle);
 }
 
 float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -165,6 +164,20 @@ float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	if (Stat->GetHp() <= 0)
 	{
 		//AnimInstance->PlaySome();
+	}
+	if (TCameraShake)
+	{
+		PlayCameraShake(TCameraShake);
+	}
+	if (DamageCauser)
+	{
+		float HitDirectionAngle = CalculateHitDirectionAngle(DamageCauser->GetActorLocation());
+		if (AnimInstance)
+		{
+			AnimInstance->SetDirection(HitDirectionAngle);
+			AnimInstance->SetIsHit(true);
+			GetWorldTimerManager().SetTimer(HitHandle, this, &AUserCharacter::SetHitFalse, 0.1f, false);
+		}
 	}
 	return DamageAmount;
 }
@@ -488,6 +501,18 @@ void AUserCharacter::AnyMove(UCurveBase* _SkillCurve)
 	}
 }
 
+void AUserCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass)
+{
+	if (ShakeClass)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		if (PlayerController && PlayerController->PlayerCameraManager)
+		{
+			PlayerController->PlayerCameraManager->StartCameraShake(ShakeClass);
+		}
+	}
+}
+
 void AUserCharacter::Dash()
 {
 	// Get the last input vector (movement direction)
@@ -510,7 +535,6 @@ void AUserCharacter::Dash()
 		AnimInstance->SetOnDash(true);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::StopDashing, 0.1f, false);
-
 }
 
 void AUserCharacter::StopDashing() {
@@ -561,6 +585,37 @@ void AUserCharacter::UsePotion(const int32 StackSize, const FString& ItemName)
 	}
 	if(LeastIndex != -1)
 		Inventory->UsePotionSlot(LeastIndex);
+}
+
+void AUserCharacter::SetHitFalse()
+{
+	if (AnimInstance)
+	{
+		AnimInstance->SetIsHit(false);
+		GetWorldTimerManager().ClearTimer(HitHandle);
+	}
+}
+
+float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation)
+{
+	// 피격자(현재 캐릭터)의 위치 가져오기
+	FVector VictimLocation = GetActorLocation();
+
+	// 공격자에서 피격자로 향하는 벡터 계산
+	FVector HitDirection = VictimLocation - AttackerLocation;
+	HitDirection.Normalize();
+
+	// 피격자의 로컬 좌표계에서 방향 벡터 가져오기
+	FVector ForwardVector = GetActorForwardVector();
+
+	// 공격 벡터를 피격자의 로컬 좌표계로 변환
+	FRotator Rotation = UKismetMathLibrary::MakeRotFromX(HitDirection);
+	FVector LocalHitDirection = UKismetMathLibrary::InverseTransformDirection(GetActorTransform(), HitDirection);
+
+	// 각도 계산
+	float HitAngle = FMath::RadiansToDegrees(FMath::Atan2(LocalHitDirection.Y, LocalHitDirection.X));
+
+	return HitAngle;
 }
 
 
