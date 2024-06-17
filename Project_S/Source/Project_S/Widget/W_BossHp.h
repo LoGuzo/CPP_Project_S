@@ -15,6 +15,8 @@ class PROJECT_S_API UW_BossHp : public UMainUserWidget
 	GENERATED_BODY()
 	
 public:
+	virtual void NativeDestruct() override;
+
 	void BindHp(class US_StatComponent* _StatComp);
 
 	void UpdateHp();
@@ -32,4 +34,21 @@ private:
 	
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* Txt_LvName;
+
+	UPROPERTY()
+	FTimerHandle HealthUpdateTimerHandle;
+
+	UPROPERTY()
+	float HealthUpdateDuration;
+
+	UPROPERTY()
+	float HealthUpdateTime;
+
+	UPROPERTY()
+	float CurrentHealth;
+
+	UPROPERTY()
+	float TargetHealth;
+
+	void AnimateHealthBar();
 };

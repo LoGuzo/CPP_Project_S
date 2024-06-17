@@ -19,7 +19,7 @@ public:
 
 	void SetSpwenerName(FString _SpawnerName);
 
-	void SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray);
+	TArray<class AEnemyCharacter*> SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray);
 
 protected:
 	// Called when the game starts or when spawned

@@ -64,6 +64,9 @@ protected:
 	virtual void ResetStat() override;
 
 	float CalculateHitDirectionAngle(const FVector& AttackerLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void UserDied();
 private:
 	E_CharClass ClassType;
 

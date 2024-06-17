@@ -65,6 +65,7 @@ void ABossCharacter::SetBossMesh()
 		Drill->SetAnimInstanceClass(DrillAnimAsset.Class);
 	}
 	Drill->SetupAttachment(GetMesh(), TEXT("spine_03Socket"));
+	BossDied = false;
 }
 
 void ABossCharacter::AnyMove()
@@ -82,7 +83,10 @@ void ABossCharacter::LoadCharacterData()
 			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		}
 	}
-	GetWorldTimerManager().SetTimer(WidgetHandle, this, &ABossCharacter::SetWidget, 2.f, false);
+	if (W_BossHp && !W_BossHp->IsInViewport())
+	{
+		W_BossHp->AddToViewport();
+	}
 	SetState(true);
 }
 void ABossCharacter::SetWidget()
@@ -98,13 +102,11 @@ float ABossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (Stat) {
-		if (Stat->GetHp() <= 0)
+		if (Stat->GetHp() <= 0 && !BossDied)
 		{
-			if (W_BossHp && W_BossHp->IsInViewport())
-			{
-				W_BossHp->RemoveFromViewport();
-				W_BossHp = nullptr;
-			}
+			BossDied = true;
+			OnDied.Broadcast();
+			GetWorldTimerManager().SetTimer(RemoveWidgetHandle, this, &ABossCharacter::RemoveWidget, 10.f, false);
 		}
 	}
 	return DamageAmount;
@@ -127,6 +129,12 @@ void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	Make_Projectile();
+}
+
+void ABossCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	GetWorldTimerManager().ClearTimer(RemoveWidgetHandle);
 }
 
 void ABossCharacter::Make_Projectile()
@@ -172,4 +180,12 @@ FVector ABossCharacter::SetMissleLocation()
 	FVector SpawnLocation = BossLocation + SpawnOffset * Radius; // 미사일이 소환될 위치 계산
 
 	return SpawnLocation;
+}
+void ABossCharacter::RemoveWidget()
+{
+	if (W_BossHp && W_BossHp->IsInViewport())
+	{
+		W_BossHp->RemoveFromViewport();
+		W_BossHp = nullptr;
+	}
 }

@@ -17,4 +17,23 @@ public:
 	ABossGameMode();
 
 	virtual void MonsterFactory() override;
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	void SetDelegate();
+
+	UFUNCTION()
+		void BossDied();
+
+	TSubclassOf<class AActor> PotalBP;
+
+	TArray<class AEnemyCharacter*> EnemyClassArray;
+
+	void ActivateSlowMotion(float SlowMotionTime, float Duration); // 슬로우 모션함수
+
+	FTimerHandle ResetTimer;
+
+	void ResetSlowMotion(); // 되돌리기
 };

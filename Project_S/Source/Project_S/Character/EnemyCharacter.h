@@ -8,6 +8,7 @@
 #include "Project_S/S_StructureAll.h"
 #include "EnemyCharacter.generated.h"
 using namespace SUtils;
+DECLARE_MULTICAST_DELEGATE(FOnDied);
 /**
  * 
  */
@@ -41,6 +42,8 @@ public:
 	E_MonsterType Type;
 
 	void SetState(bool NowState);
+
+	FOnDied OnDied;
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
@@ -51,8 +54,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	bool IsDead;
 
 	class AUserCharacter* Target;
 private:

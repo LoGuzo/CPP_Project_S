@@ -14,7 +14,7 @@ class PROJECT_S_API ALevelPotal : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ALevelPotal();
-
+	void SetLevelName(const FString& _LevelName);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -29,6 +29,11 @@ ALevelPotal::ALevelPotal()
 	}
 }
 
+void ALevelPotal::SetLevelName(const FString& _LevelName)
+{
+	LevelName = _LevelName;
+}
+
 // Called when the game starts or when spawned
 void ALevelPotal::BeginPlay()
 {

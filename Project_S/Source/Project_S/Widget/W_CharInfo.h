@@ -14,6 +14,8 @@ class PROJECT_S_API UW_CharInfo : public UMainUserWidget
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeDestruct() override;
+
 	void BindHp(class US_StatComponent* _StatComp);
 	void BindMp(class US_StatComponent* _StatComp);
 	void BindExp(class US_StatComponent* _StatComp);
@@ -24,6 +26,7 @@ public:
 	void UpdateExp();
 	void UpdateLvl();
 
+	void ShakeHealthBar();
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
 
@@ -41,4 +44,27 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* Txt_Lvl;
+
+	UPROPERTY()
+	FTimerHandle ShakeTimerHandle;
+
+	UPROPERTY()
+	FTimerHandle EndShakeHandle;
+
+	UPROPERTY()
+	FTimerHandle HealthUpdateTimerHandle;
+
+	UPROPERTY()
+	float HealthUpdateDuration;
+
+	UPROPERTY()
+	float HealthUpdateTime;
+
+	UPROPERTY()
+	float CurrentHealth;
+
+	UPROPERTY()
+	float TargetHealth;
+
+	void AnimateHealthBar();
 };

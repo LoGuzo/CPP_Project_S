@@ -207,7 +207,6 @@ void AEnemyCharacter::UseSkill(const FString& _SkillName)
 
 void AEnemyCharacter::DiedEnemy()
 {
-	NowAIController->UnPossess();
 	GetCharacterMovement()->GravityScale = 0.f;
 	OnlyHpBar->SetRenderOpacity(0.f);
 	IsAttacking = false;
@@ -233,7 +232,6 @@ void AEnemyCharacter::ResetStat()
 	LoadCharacterData();
 	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;
-	NowAIController->Possess(this);
 }
 
 

@@ -91,7 +91,7 @@ void AMonsterSpawner::EndOverlap(class UPrimitiveComponent* OverlappedComp, clas
 	}
 }
 
-void AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray)
+TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray)
 {
 	EnemyArray = _EnemyArray;
 	for (int32 i = 0; i < EnemyArray.Num(); i++)
@@ -143,6 +143,8 @@ void AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _EnemyArray)
 		}
 	}
 	IsSpawn = true;
+
+	return EnemyClassArray;
 }
 
 void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _MonsterType)

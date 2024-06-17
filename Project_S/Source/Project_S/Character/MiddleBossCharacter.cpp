@@ -25,11 +25,7 @@ float AMiddleBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& D
 	if (Stat) {
 		if (Stat->GetHp() <= 0)
 		{
-			if (W_BossHp && W_BossHp->IsInViewport())
-			{
-				W_BossHp->RemoveFromViewport();
-				W_BossHp = nullptr;
-			}
+			GetWorldTimerManager().SetTimer(RemoveWidgetHandle, this, &AMiddleBossCharacter::RemoveWidget, 10.f, false);
 		}
 	}
 	return DamageAmount;
@@ -52,4 +48,19 @@ void AMiddleBossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	W_BossHp = CreateWidget<UW_BossHp>(GetWorld(), U_BossHp);
+}
+
+void AMiddleBossCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	GetWorldTimerManager().ClearTimer(RemoveWidgetHandle);
+}
+
+void AMiddleBossCharacter::RemoveWidget()
+{
+	if (W_BossHp && W_BossHp->IsInViewport())
+	{
+		W_BossHp->RemoveFromViewport();
+		W_BossHp = nullptr;
+	}
 }

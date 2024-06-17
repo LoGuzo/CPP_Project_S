@@ -31,6 +31,7 @@ protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void PostInitializeComponents() override;
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 private:
 	int32 CntMissile;
 
@@ -52,4 +53,11 @@ private:
 	FVector SetMissleLocation();
 
 	void SetWidget();
+
+	UPROPERTY()
+	FTimerHandle RemoveWidgetHandle;
+
+	void RemoveWidget();
+
+	bool BossDied;
 };

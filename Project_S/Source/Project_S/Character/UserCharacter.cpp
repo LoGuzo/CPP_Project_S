@@ -133,7 +133,7 @@ void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	SetCharID(MyGameInstance->GetUserName());
+	SetCharID("LogH"/*MyGameInstance->GetUserName()*/);
 	LoadCharacterData();
 	SaveLocation = GetActorLocation();
 }
@@ -161,13 +161,17 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if (Stat->GetHp() <= 0)
+	if (Stat->GetHp() <= 0 && !IsDead)
 	{
-		//AnimInstance->PlaySome();
+		UserDied();
 	}
 	if (TCameraShake)
 	{
 		PlayCameraShake(TCameraShake);
+	}
+	if (HUDWidget)
+	{
+		HUDWidget->GetCharInfo()->ShakeHealthBar();
 	}
 	if (DamageCauser)
 	{
@@ -598,24 +602,31 @@ void AUserCharacter::SetHitFalse()
 
 float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation)
 {
-	// 피격자(현재 캐릭터)의 위치 가져오기
 	FVector VictimLocation = GetActorLocation();
 
-	// 공격자에서 피격자로 향하는 벡터 계산
 	FVector HitDirection = VictimLocation - AttackerLocation;
 	HitDirection.Normalize();
 
-	// 피격자의 로컬 좌표계에서 방향 벡터 가져오기
 	FVector ForwardVector = GetActorForwardVector();
 
-	// 공격 벡터를 피격자의 로컬 좌표계로 변환
 	FRotator Rotation = UKismetMathLibrary::MakeRotFromX(HitDirection);
 	FVector LocalHitDirection = UKismetMathLibrary::InverseTransformDirection(GetActorTransform(), HitDirection);
 
-	// 각도 계산
 	float HitAngle = FMath::RadiansToDegrees(FMath::Atan2(LocalHitDirection.Y, LocalHitDirection.X));
 
 	return HitAngle;
+}
+
+void AUserCharacter::UserDied()
+{
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("NoCollision"));
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+
+	GetMesh()->bPauseAnims = true;
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->DisableMovement();
 }
 
 

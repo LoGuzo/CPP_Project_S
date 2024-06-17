@@ -38,6 +38,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	class UC_SkillComponent* Skill;
+
+	bool IsDead;
 public:
 	bool IsAttacking;
 
