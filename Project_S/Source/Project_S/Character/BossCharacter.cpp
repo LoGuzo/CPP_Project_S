@@ -18,6 +18,11 @@ ABossCharacter::ABossCharacter()
 	{
 		U_BossHp = UW.Class;
 	}
+	static ConstructorHelpers::FObjectFinder<USoundWave> SoundObject(TEXT("SoundWave'/Game/Ancient_Golem/Sound/metal-hit-91-200421.metal-hit-91-200421'"));
+	if (SoundObject.Succeeded())
+	{
+		ParticleSound = SoundObject.Object;
+	}
 	CntMissile = 0;
 	ProjectileClass = AProjectile_Missle::StaticClass();
 }

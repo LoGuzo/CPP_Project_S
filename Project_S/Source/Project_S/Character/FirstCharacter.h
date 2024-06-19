@@ -40,6 +40,15 @@ protected:
 	class UC_SkillComponent* Skill;
 
 	bool IsDead;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	UAudioComponent* AudioComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundWave* ParticleSound;
+
+	UPROPERTY(EditAnywhere, Category = "Particles")
+	class UParticleSystem* HitParticleEffect;
 public:
 	bool IsAttacking;
 

@@ -19,9 +19,5 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) override;
-
-	class UParticleSystem* GetParticle() { return HitParticleEffect; }
 private:
-	UPROPERTY(EditAnywhere, Category = "Particles")
-	class UParticleSystem* HitParticleEffect;
 };

@@ -3,7 +3,6 @@
 
 #include "SwordWeapon.h"
 #include "DrawDebugHelpers.h"
-#include "Particles/ParticleSystem.h"
 #include "Project_S/Character/FirstCharacter.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/S_StatComponent.h"
@@ -12,11 +11,6 @@
 ASwordWeapon::ASwordWeapon() {
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
 	Weapon->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/ParagonGreystone/FX/Particles/Greystone/Abilities/Deflect/FX/P_Greystone_Deflect_Remove.P_Greystone_Deflect_Remove'"));
-	if (AttackP.Succeeded())
-	{
-		HitParticleEffect = AttackP.Object;
-	}
 }
 
 void ASwordWeapon::BeginPlay()

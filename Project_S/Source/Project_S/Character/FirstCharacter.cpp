@@ -3,6 +3,10 @@
 
 #include "FirstCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "Sound/SoundWave.h"
+#include "Components/AudioComponent.h"
+#include "Particles/ParticleSystem.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 
@@ -14,11 +18,30 @@ AFirstCharacter::AFirstCharacter()
 	IsAttacking = false;
 	Stat = CreateDefaultSubobject<US_StatComponent>(TEXT("STAT"));
 	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	AudioComponent->SetupAttachment(RootComponent);
+	AudioComponent->bAutoActivate = false;
+	static ConstructorHelpers::FObjectFinder<USoundWave> SoundObject(TEXT("SoundWave'/Game/Mannequin/Animations/Sound/hit_sound.hit_sound'"));
+	if (SoundObject.Succeeded())
+	{
+		ParticleSound = SoundObject.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/ParagonGreystone/FX/Particles/Greystone/Abilities/Deflect/FX/P_Greystone_Deflect_Remove.P_Greystone_Deflect_Remove'"));
+	if (AttackP.Succeeded())
+	{
+		HitParticleEffect = AttackP.Object;
+	}
 }
 
 float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	Stat->OnAttacked(DamageAmount);
+	if (ParticleSound && AudioComponent)
+	{
+		AudioComponent->SetSound(ParticleSound);
+		AudioComponent->Play();
+	}
 	return DamageAmount;
 }
 
@@ -62,6 +85,8 @@ void AFirstCharacter::MeleeAttackCheck(float _Range)
 			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
 			if (Enemy)
 			{
+				if(HitParticleEffect)
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, hitResult.Actor->GetActorLocation());
 				if (MyCharType == E_CharacterType::E_Monster)
 				{
 					if (Enemy->MyCharType == E_CharacterType::E_User) {
@@ -112,6 +137,8 @@ void AFirstCharacter::ScopeAttackCheck(float _Range)
 			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
 			if (Enemy)
 			{
+				if (HitParticleEffect)
+					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, hitResult.Actor->GetActorLocation());
 				if (MyCharType == E_CharacterType::E_Monster)
 				{
 					if (Enemy->MyCharType == E_CharacterType::E_User) {
