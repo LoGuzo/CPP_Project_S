@@ -16,6 +16,8 @@ class UW_Equip;
 class UW_Skill;
 class UW_QuickSlotMenu;
 class UC_QuickSlotComponent;
+class UW_Respawn;
+class AUserCharacter;
 
 UCLASS()
 class PROJECT_S_API US_CharacterWidget : public UUserWidget
@@ -34,8 +36,11 @@ public:
 	void ShowSkillW();
 	void RemoveSillW() const;
 
-	void ShowQuick(class UC_QuickSlotComponent* _QuickComponent);
+	void ShowQuick(UC_QuickSlotComponent* _QuickComponent);
 	void ShowQuickDynamic();
+
+	void ShowRespawn(AUserCharacter* _UserCharacter);
+	void RemoveRespawn() const;
 
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
 	const UW_QuickSlotMenu* GetQuickWidget() { return PotionSlot; }
@@ -43,7 +48,7 @@ public:
 
 private:
 	class UDO_DragDrop* DO_Drag;
-	TWeakObjectPtr<class UC_QuickSlotComponent> QuickComponent;
+	TWeakObjectPtr<UC_QuickSlotComponent> QuickComponent;
 
 	UPROPERTY(meta = (BindWidget))
 	UW_QuickSlotMenu* SkillSlot;
@@ -65,4 +70,8 @@ private:
 	TSubclassOf<UW_Skill> U_SkillWidget;
 
 	UW_Skill* SkillWidget;
+
+	TSubclassOf<UW_Respawn> U_RespawnWidget;
+
+	UW_Respawn* RespawnWidget;
 };

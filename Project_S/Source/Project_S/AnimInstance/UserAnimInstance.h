@@ -40,6 +40,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* OneHandSwordAM;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* WakeUpAM;
+
 	FSkillTable* NowSkill;
 
 	AUserCharacter* Player;
@@ -63,6 +66,7 @@ public:
 	void ColliderNotify();
 	void AnyMoveNotify();
 
+	void WakeUpPlayAM();
 	void OnHandSwordPlayAM();
 	void JumpToSection(int32 _SectionIndex);
 	FName GetAttackMontageName(int32 _SectionIndex);

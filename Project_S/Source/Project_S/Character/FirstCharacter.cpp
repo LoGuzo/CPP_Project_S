@@ -35,8 +35,14 @@ AFirstCharacter::AFirstCharacter()
 
 float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (IsDead)
+		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	Stat->OnAttacked(DamageAmount);
+	if (Stat->GetHp() <= 0)
+		IsDead = true;
+	if (HitParticleEffect)
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
 	if (ParticleSound && AudioComponent)
 	{
 		AudioComponent->SetSound(ParticleSound);
@@ -85,8 +91,6 @@ void AFirstCharacter::MeleeAttackCheck(float _Range)
 			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
 			if (Enemy)
 			{
-				if(HitParticleEffect)
-					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, hitResult.Actor->GetActorLocation());
 				if (MyCharType == E_CharacterType::E_Monster)
 				{
 					if (Enemy->MyCharType == E_CharacterType::E_User) {
@@ -137,8 +141,6 @@ void AFirstCharacter::ScopeAttackCheck(float _Range)
 			auto Enemy = Cast<AFirstCharacter>(hitResult.Actor.Get());
 			if (Enemy)
 			{
-				if (HitParticleEffect)
-					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, hitResult.Actor->GetActorLocation());
 				if (MyCharType == E_CharacterType::E_Monster)
 				{
 					if (Enemy->MyCharType == E_CharacterType::E_User) {

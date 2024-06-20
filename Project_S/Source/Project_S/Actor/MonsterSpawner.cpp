@@ -45,6 +45,8 @@ void AMonsterSpawner::BeginPlay()
 
 void AMonsterSpawner::BeginOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (SpawnerName == "Boss_Spawner")
+		return;
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		if (OtherActor->GetClass() == AUserCharacter::StaticClass())
@@ -66,6 +68,8 @@ void AMonsterSpawner::BeginOverlap(class UPrimitiveComponent* OverlappedComp, cl
 
 void AMonsterSpawner::EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (SpawnerName == "Boss_Spawner")
+		return;
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		if (OtherActor->GetClass() == AUserCharacter::StaticClass())

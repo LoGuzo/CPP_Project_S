@@ -65,12 +65,11 @@ protected:
 
 	float CalculateHitDirectionAngle(const FVector& AttackerLocation);
 
-	UFUNCTION(BlueprintCallable)
 	void UserDied();
 private:
 	E_CharClass ClassType;
 
-	class AWeaponActor* MyWeapon = nullptr;
+	class AWeaponActor* MyWeapon;
 
 	TWeakPtr<FCharacterClass> ClassData;
 
@@ -165,4 +164,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Camera")
 	void PlayCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass);
+
+	void UserReset();
 };

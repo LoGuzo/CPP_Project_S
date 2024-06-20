@@ -67,5 +67,7 @@ public:
 	void SetSaveLocation(FVector _SaveLocation);
 	FVector GetSaveLocation() { return SaveLocation; }
 
+	bool GetIsDead() { return IsDead; }
+
 	E_CharacterType GetType() { return MyCharType; }
 };

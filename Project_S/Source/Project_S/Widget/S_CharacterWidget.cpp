@@ -7,6 +7,7 @@
 #include "W_CharInfo.h"
 #include "W_Equip.h"
 #include "W_Skill.h"
+#include "W_Respawn.h"
 #include "W_QuickSlotMenu.h"
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Character/UserCharacter.h"
@@ -30,6 +31,11 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 	if (UW_Sk.Succeeded())
 	{
 		U_SkillWidget = UW_Sk.Class;
+	}
+	static ConstructorHelpers::FClassFinder<UW_Respawn>UW_Respawn(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Respawn.WBP_Respawn_C'"));
+	if (UW_Respawn.Succeeded())
+	{
+		U_RespawnWidget = UW_Respawn.Class;
 	}
 }
 
@@ -107,5 +113,27 @@ void US_CharacterWidget::ShowQuickDynamic()
 	{
 		SkillSlot->ShowQSkillWidget(QuickComponent.Get());
 		PotionSlot->ShowQPotionWidget(QuickComponent.Get());
+	}
+}
+
+void US_CharacterWidget::ShowRespawn(AUserCharacter* _UserCharacter)
+{
+	if (U_RespawnWidget)
+	{
+		RespawnWidget = CreateWidget<UW_Respawn>(GetWorld(), U_RespawnWidget);
+		if (RespawnWidget)
+		{
+			RespawnWidget->AddToViewport();
+			RespawnWidget->SetUser(_UserCharacter);
+		}
+	}
+}
+
+void US_CharacterWidget::RemoveRespawn() const
+{
+	if (RespawnWidget)
+	{
+		RespawnWidget->RemoveFromParent();
+		RespawnWidget->SetUser(nullptr);
 	}
 }

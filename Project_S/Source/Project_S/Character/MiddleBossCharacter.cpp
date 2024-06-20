@@ -16,6 +16,8 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 
 float AMiddleBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (IsDead)
+		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	if (W_BossHp && !W_BossHp->IsInViewport())

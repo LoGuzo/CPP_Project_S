@@ -72,6 +72,7 @@ AUserCharacter::AUserCharacter()
 	bIsFlipFlopEquipmentActive = false;
 	bIsFlipFlopSkillWidgetActive = false;
 	IsAttacking = false;
+	MyWeapon = nullptr;
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -120,6 +121,8 @@ void AUserCharacter::SetMesh(E_CharClass _ClassType)
 				GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 			}
 		}
+		if (AnimInstance)
+			return;
 		AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
 		if (AnimInstance)
 		{
@@ -160,19 +163,18 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (IsDead)
+		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if (Stat->GetHp() <= 0 && !IsDead)
-	{
+	if (Stat->GetHp() <= 0)
 		UserDied();
-	}
+
 	if (TCameraShake)
-	{
 		PlayCameraShake(TCameraShake);
-	}
+
 	if (HUDWidget)
-	{
 		HUDWidget->GetCharInfo()->ShakeHealthBar();
-	}
+
 	if (DamageCauser)
 	{
 		float HitDirectionAngle = CalculateHitDirectionAngle(DamageCauser->GetActorLocation());
@@ -320,11 +322,13 @@ void AUserCharacter::TimelineProgress(float _Value)
 void AUserCharacter::SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon)
 {
 	// UserClass
+	if (MyWeapon)
+		return;
 	FName WeaponSocket(TEXT("r_hand_sword"));
 	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon);
 	MyWeapon->GetBoxCollision()->SetSimulatePhysics(false);
 	MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
-	if (nullptr != MyWeapon) {
+	if (MyWeapon) {
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 		MyWeapon->SetOwner(this);
@@ -337,7 +341,7 @@ void AUserCharacter::SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon)
 
 void AUserCharacter::RemoveMyWeapon()
 {
-	if (MyWeapon != nullptr)
+	if (!MyWeapon)
 	{
 		MyWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 		MyWeapon->SetOwner(nullptr);
@@ -363,6 +367,8 @@ void AUserCharacter::Attack()
 
 void AUserCharacter::AttackMontage()
 {
+	if (!AnimInstance)
+		return;
 	AnimInstance->OnHandSwordPlayAM();
 	AnimInstance->JumpToSection(AttackIndex);
 	AttackIndex = (AttackIndex + 1) % 3;
@@ -619,6 +625,9 @@ float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation
 
 void AUserCharacter::UserDied()
 {
+	IsDead = true;
+	if (HUDWidget)
+		HUDWidget->ShowRespawn(this);
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("NoCollision"));
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
@@ -627,6 +636,25 @@ void AUserCharacter::UserDied()
 
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->DisableMovement();
+}
+
+void AUserCharacter::UserReset()
+{
+	IsDead = false;
+	if(AnimInstance)
+		AnimInstance->WakeUpPlayAM();
+	if (HUDWidget)
+		HUDWidget->RemoveRespawn();
+	GetMesh()->SetSimulatePhysics(false);
+	GetMesh()->bPauseAnims = false;
+
+	GetMesh()->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
+	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+	LoadCharacterData();
 }
 
 

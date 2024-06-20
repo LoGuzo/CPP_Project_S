@@ -40,6 +40,7 @@ void ABossGameMode::MonsterFactory()
 		{
 			AMonsterSpawner* ASpawner = GetWorld()->SpawnActor<AMonsterSpawner>(Data->SpawnerLocation, FRotator(0.f, 30.f, 0.f));
 			ASpawner->SetActorScale3D(Data->SpawnerScale);
+			ASpawner->SetSpwenerName("Boss_Spawner");
 			EnemyClassArray = ASpawner->SpawnEnemy(Data->SpawnMonster);
 		}
 	}

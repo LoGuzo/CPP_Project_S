@@ -105,11 +105,12 @@ void ABossCharacter::SetWidget()
 
 float ABossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (IsDead)
+		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (Stat) {
-		if (Stat->GetHp() <= 0 && !BossDied)
+		if (Stat->GetHp() <= 0)
 		{
-			BossDied = true;
 			OnDied.Broadcast();
 			GetWorldTimerManager().SetTimer(RemoveWidgetHandle, this, &ABossCharacter::RemoveWidget, 10.f, false);
 		}

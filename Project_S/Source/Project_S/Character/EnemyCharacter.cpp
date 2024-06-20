@@ -53,13 +53,14 @@ void AEnemyCharacter::SetState(bool NowState)
 
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	if (IsDead)
+		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	if (Type != E_MonsterType::E_LastBoss && Type != E_MonsterType::E_MiddleBoss)
 		OnlyHpBar->SetRenderOpacity(1.f);
 	AFirstCharacter* User = Cast<AFirstCharacter>(DamageCauser);
-	if (Stat->GetHp() <= 0 && !IsDead)
+	if (Stat->GetHp() <= 0)
 	{
-		IsDead = true;
 		NowAIController->IsDead = true;
 		IsReadySpawn = true;
 		UseSkill(Skill->GetSlot(1).ItemName.ToString());

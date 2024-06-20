@@ -17,6 +17,11 @@ UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 	{
 		OneHandSwordAM = ATTACK.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> WAKEUP(TEXT("AnimMontage'/Game/Mannequin/Animations/Infinity/WakeUp_Montage.WakeUp_Montage'"));
+	if (WAKEUP.Succeeded())
+	{
+		WakeUpAM = WAKEUP.Object;
+	}
 }
 
 UUserAnimInstance::~UUserAnimInstance()
@@ -102,6 +107,14 @@ void UUserAnimInstance::OnHandSwordPlayAM()
 	if (!Montage_IsPlaying(OneHandSwordAM))
 	{
 		Montage_Play(OneHandSwordAM, 1.f);
+	}
+}
+
+void UUserAnimInstance::WakeUpPlayAM()
+{
+	if (!Montage_IsPlaying(WakeUpAM))
+	{
+		Montage_Play(WakeUpAM);
 	}
 }
 

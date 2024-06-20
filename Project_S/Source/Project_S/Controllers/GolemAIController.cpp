@@ -44,14 +44,17 @@ void AGolemAIController::AISerach()
 		SearchChacter.Add(SaveUser);
 	}
 	SetRandomCharacter();
-	GetWorldTimerManager().SetTimer(SearchHandle, this, &AGolemAIController::SetRandomCharacter, 30.f, true);
 }
 
 void AGolemAIController::Attack()
 {
 	const auto Enemy = Cast<AFirstCharacter>(GetPawn());
-	if (Enemy->IsAttacking == true || IsMoving)
+	if (Enemy->IsAttacking || IsMoving)
 		return;
+	if (User->GetIsDead())
+	{
+		SetRandomCharacter();
+	}
 	if (User && !IsDead)
 	{
 		int32 RandomPattern = RandRange(1, 3);
@@ -106,18 +109,34 @@ void AGolemAIController::Attack()
 
 void AGolemAIController::SetRandomCharacter()
 {
+	if (!SearchChacter.IsValidIndex(0))
+		return;
 	int32 RandomPattern = RandRange(0, SearchChacter.Num()-1);
 	User = SearchChacter[RandomPattern];
 	auto Boss = Cast<AEnemyCharacter>(GetPawn());
 	if (Boss)
-		Boss->SetTarget(User);
-	ChkState = E_State::E_Move;
+	{
+		if (Boss->GetIsDead())
+			return;
+		if (!User->GetIsDead())
+		{
+			Boss->SetTarget(User);
+			ChkState = E_State::E_Move;
+			GetWorldTimerManager().SetTimer(SearchHandle, this, &AGolemAIController::SetRandomCharacter, 10.f, true);
+		}
+		else
+		{
+			Boss->SetTarget(nullptr);
+			ChkState = E_State::E_None;
+			GetWorldTimerManager().SetTimer(SearchHandle, this, &AGolemAIController::SetRandomCharacter, 1.f, true);
+		}
+	}
 }
 
 void AGolemAIController::AIMove()
 {
 	const auto Enemy = Cast<AFirstCharacter>(GetPawn());
-	if (IsMoving == true || Enemy->IsAttacking == true)
+	if (IsMoving || Enemy->IsAttacking)
 		return;
 	IsMoving = true;
 	IsMoveAtFirst = true;
