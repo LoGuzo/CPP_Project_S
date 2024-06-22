@@ -7,6 +7,12 @@
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/C_SkillComponent.h"
 
+void AAggressiveAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	ChkState = E_State::E_Search;
+}
+
 void AAggressiveAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -66,7 +72,6 @@ void AAggressiveAIController::AISerach()
 		}
 	}
 	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
-
 }
 
 void AAggressiveAIController::Attack()

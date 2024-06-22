@@ -50,6 +50,11 @@ protected :
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 
 	void LookAtPlayer();
+
+	virtual void AISerach() {}; // 적탐색
+	virtual void AIMove() {}; // 이동
+	virtual void Attack() {}; // 공격
+	void ResetFirst(); // 초기화
 public:
 	bool IsDead;
 	E_State ChkState;
@@ -62,13 +67,10 @@ public:
 	float EndTime;
 	float PlayTime;
 
-	virtual void AISerach() {}; // 적탐색
-	virtual void AIMove() {}; // 이동
-	virtual void Attack() {}; // 공격
-	void ResetFirst(); // 초기화
-
 	void FSMState(); // 상태 변경
 	void SetMaxSpeed(float NewMaxSpeed); // MaxSpeed 조정
 
 	AUserCharacter* GetUser() { return User; }
+
+	void StartAISearch();
 };

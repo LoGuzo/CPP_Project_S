@@ -2,6 +2,7 @@
 
 
 #include "W_CharInfo.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Project_S/Component/S_StatComponent.h"
@@ -24,6 +25,11 @@ void UW_CharInfo::UpdateLvl()
 {
 	if (SStatComponent.IsValid())
 		Txt_Lvl->SetText(FText::FromString(FString::Printf(TEXT("Lv : %d"), SStatComponent->GetLevel())));
+}
+
+void UW_CharInfo::SetImg(UTexture2D* ClassImg)
+{
+	Img_Char->SetBrushFromTexture(ClassImg);
 }
 
 void UW_CharInfo::BindHp(class US_StatComponent* _StatComp)

@@ -22,11 +22,10 @@ private:
 	UPROPERTY()
 	TArray<FTimerHandle> SkillCooldownHandles;
 	TArray<class AUserCharacter*> SearchChacter;
+
 protected:
-	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
 
-public:
 	virtual void AISerach() override; // 적탐색
 	virtual void AIMove() override; // 이동
 	virtual void Attack() override; // 공격

@@ -15,7 +15,8 @@ class PROJECT_S_API AAggressiveAIController : public AEnemyAIController
 {
 	GENERATED_BODY()
 
-public:
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void AISerach() override; // ÀûÅ½»ö

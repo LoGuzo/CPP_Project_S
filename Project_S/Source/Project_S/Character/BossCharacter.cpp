@@ -88,10 +88,7 @@ void ABossCharacter::LoadCharacterData()
 			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		}
 	}
-	if (W_BossHp && !W_BossHp->IsInViewport())
-	{
-		W_BossHp->AddToViewport();
-	}
+	SetWidget();
 	SetState(true);
 }
 void ABossCharacter::SetWidget()
@@ -99,7 +96,6 @@ void ABossCharacter::SetWidget()
 	if (W_BossHp && !W_BossHp->IsInViewport())
 	{
 		W_BossHp->AddToViewport();
-		GetWorldTimerManager().ClearTimer(WidgetHandle);
 	}
 }
 
@@ -192,6 +188,13 @@ void ABossCharacter::RemoveWidget()
 	if (W_BossHp && W_BossHp->IsInViewport())
 	{
 		W_BossHp->RemoveFromViewport();
-		W_BossHp = nullptr;
+	}
+}
+
+void ABossCharacter::StartAISearch()
+{
+	if (NowAIController)
+	{
+		NowAIController->StartAISearch();
 	}
 }

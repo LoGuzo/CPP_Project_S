@@ -166,4 +166,8 @@ public:
 	void PlayCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass);
 
 	void UserReset();
+
+	void SetWidget();
+
+	void RemoveWidget();
 };

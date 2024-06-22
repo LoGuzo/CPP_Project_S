@@ -10,12 +10,6 @@
 #include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Character/EnemyCharacter.h"
 
-
-void AGolemAIController::OnPossess(APawn* InPawn)
-{
-	Super::OnPossess(InPawn);
-}
-
 void AGolemAIController::OnUnPossess()
 {
 	Super::OnUnPossess();

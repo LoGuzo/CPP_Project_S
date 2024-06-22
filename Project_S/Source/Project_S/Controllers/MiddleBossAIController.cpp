@@ -7,6 +7,11 @@
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/C_SkillComponent.h"
 
+void AMiddleBossAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	ChkState = E_State::E_Search;
+}
 
 void AMiddleBossAIController::Tick(float DeltaTime)
 {

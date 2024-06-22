@@ -2,6 +2,9 @@
 
 
 #include "BossGameMode.h"
+#include "LevelSequencePlayer.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Project_S/Actor/LevelPotal.h"
 #include "Project_S/Actor/MonsterSpawner.h"
@@ -23,11 +26,18 @@ ABossGameMode::ABossGameMode()
 	{
 		PotalBP = BP_Potal.Class;
 	}
+
+	static ConstructorHelpers::FObjectFinder<ULevelSequence> Boss_Seq(TEXT("LevelSequence'/Game/Ancient_Golem/BossSequence.BossSequence'"));
+	if (Boss_Seq.Succeeded())
+	{
+		BossSequence = Boss_Seq.Object;
+	}
 }
 void ABossGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	SetDelegate();
+	PlayCinematic();
 }
 
 void ABossGameMode::MonsterFactory()
@@ -46,13 +56,67 @@ void ABossGameMode::MonsterFactory()
 	}
 }
 
+void ABossGameMode::PlayCinematic()
+{
+	if (!BossSequence) return;
+	ALevelSequenceActor* ContextActor = nullptr;
+	ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), BossSequence, FMovieSceneSequencePlaybackSettings(), ContextActor);
+	if (SequencePlayer)
+	{
+		SequencePlayer->OnFinished.AddDynamic(this, &ABossGameMode::OnCinematicFinished);
+		SequencePlayer->Play();
+	}
+}
+
+void ABossGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+	if (NewPlayer)
+	{
+		AUserCharacter* UserCharacter = Cast<AUserCharacter>(NewPlayer->GetPawn());
+		UserCharacter->RemoveWidget();
+		UserCharacter->DisableInput(NewPlayer);
+		ConnectedPlayers.Add(NewPlayer); 
+	}
+	
+}
+
+void ABossGameMode::Logout(AController* Exiting)
+{
+	Super::Logout(Exiting);
+
+	APlayerController* ExitingPlayer = Cast<APlayerController>(Exiting);
+	if (ExitingPlayer)
+	{
+		ConnectedPlayers.Remove(ExitingPlayer);
+	}
+}
+
+void ABossGameMode::OnCinematicFinished()
+{
+	for (APlayerController* PlayerController : ConnectedPlayers)
+	{
+		AUserCharacter* UserCharacter = Cast<AUserCharacter>(PlayerController->GetPawn());
+		UserCharacter->SetWidget();
+		UserCharacter->EnableInput(PlayerController);
+	}
+	for (AEnemyCharacter* Enemy : EnemyClassArray)
+	{
+		ABossCharacter* BossCharacter = Cast<ABossCharacter>(Enemy);
+		BossCharacter->SetWidget();
+		BossCharacter->StartAISearch();
+	}
+}
+
 void ABossGameMode::SetDelegate()
 {
 	for (int32 i = 0; i < EnemyClassArray.Num(); i++)
 	{
 		if (EnemyClassArray[i]->GetClass() == ABossCharacter::StaticClass())
 		{
-			EnemyClassArray[i]->OnDied.AddUObject(this, &ABossGameMode::BossDied);
+			ABossCharacter* BossCharacter = Cast<ABossCharacter>(EnemyClassArray[i]);
+			BossCharacter->RemoveWidget();
+			BossCharacter->OnDied.AddUObject(this, &ABossGameMode::BossDied);
 		}
 	}
 }
@@ -62,7 +126,7 @@ void ABossGameMode::BossDied()
 	ActivateSlowMotion(0.3f, 2.0f);
 	if (PotalBP)
 	{
-		auto LevelPotal =  GetWorld()->SpawnActor<ALevelPotal>(PotalBP, FVector(-7442.f, -5852.f, 226.f), FRotator::ZeroRotator);
+		auto LevelPotal = GetWorld()->SpawnActor<ALevelPotal>(PotalBP, FVector(-7442.f, -5852.f, 226.f), FRotator::ZeroRotator);
 		LevelPotal->SetLevelName("DemoMap");
 	}
 }

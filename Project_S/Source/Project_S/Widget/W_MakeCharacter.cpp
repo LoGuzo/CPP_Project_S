@@ -28,6 +28,7 @@ void UW_MakeCharacter::NativeConstruct()
 {
 	Super::NativeConstruct();
 	NowPawn = Cast<AMakeCharacterPawn>(GetOwningPlayerPawn());
+	SetWarrior();
 	bIsRotating = false;
 }
 
@@ -38,6 +39,15 @@ void UW_MakeCharacter::SetWarrior()
 	{
 		NowPawn->SetMeshRotation();
 		NowPawn->LoadData("Warrior");
+		auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (MyGameInstance)
+		{
+			auto ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData("Warrior"));
+			if (ClassData.IsValid())
+			{
+				ClassImg = ClassData.Get()->Img_Class;
+			}
+		}
 	}
 	NowCharClass = E_CharClass::E_Warrior;
 }
@@ -48,6 +58,15 @@ void UW_MakeCharacter::SetMage()
 	{
 		NowPawn->SetMeshRotation();
 		NowPawn->LoadData("Magician");
+		auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (MyGameInstance)
+		{
+			auto ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData("Magician"));
+			if (ClassData.IsValid())
+			{
+				ClassImg = ClassData.Get()->Img_Class;
+			}
+		}
 	}
 	NowCharClass = E_CharClass::E_Magician;
 }
@@ -58,6 +77,15 @@ void UW_MakeCharacter::SetHealer()
 	{
 		NowPawn->SetMeshRotation();
 		NowPawn->LoadData("Healer");
+		auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (MyGameInstance)
+		{
+			auto ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData("Healer"));
+			if (ClassData.IsValid())
+			{
+				ClassImg = ClassData.Get()->Img_Class;
+			}
+		}
 	}
 	NowCharClass = E_CharClass::E_Healer;
 }
@@ -91,6 +119,7 @@ void UW_MakeCharacter::ValidateID(const FString& Username)
 		{
 			FMyCharacterData NewCharacterData;
 			NewCharacterData.CharID = Username;
+			NewCharacterData.Img_Class = ClassImg;
 			NewCharacterData.Type = NowCharClass;
 			NewCharacterData.Level = 1;
 			NewCharacterData.Exp = 0.f;

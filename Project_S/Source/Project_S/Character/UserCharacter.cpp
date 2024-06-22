@@ -206,7 +206,7 @@ void AUserCharacter::PostInitializeComponents()
 			HUDWidget->GetCharInfo()->BindMp(Stat);
 			HUDWidget->GetCharInfo()->BindExp(Stat);
 			HUDWidget->ShowQuick(QuickSlot);
-			HUDWidget->AddToViewport();
+			SetWidget();
 		}
 	}
 }
@@ -249,6 +249,10 @@ void AUserCharacter::LoadCharacterData()
 				Inventory->SetSlots(LoadData.Pin()->MyInventory);
 				QuickSlot->SetSkillSlots(LoadData.Pin()->MySkillQuick);
 				QuickSlot->SetPotionSlots(LoadData.Pin()->MyPotionQuick);
+				if (HUDWidget)
+				{
+					HUDWidget->GetCharInfo()->SetImg(LoadData.Pin()->Img_Class);
+				}
 			}
 			for (const FS_Slot& slot : Equip->GetSlots())
 			{
@@ -655,6 +659,18 @@ void AUserCharacter::UserReset()
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 
 	LoadCharacterData();
+}
+
+void AUserCharacter::SetWidget()
+{
+	if(HUDWidget)
+		HUDWidget->AddToViewport();
+}
+
+void AUserCharacter::RemoveWidget()
+{
+	if (HUDWidget && HUDWidget->IsInViewport())
+		HUDWidget->RemoveFromParent();
 }
 
 

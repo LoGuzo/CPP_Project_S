@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Project_SGameMode.h"
 #include "BossGameMode.generated.h"
+
 /**
  * 
  */
@@ -19,13 +20,24 @@ public:
 	virtual void MonsterFactory() override;
 
 protected:
+	void PlayCinematic();
+
+	class ULevelSequence* BossSequence;
+
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	virtual void Logout(AController* Exiting) override;
+
+	UFUNCTION()
+	void OnCinematicFinished();
+	
 	virtual void BeginPlay() override;
 
 private:
 	void SetDelegate();
 
 	UFUNCTION()
-		void BossDied();
+	void BossDied();
 
 	TSubclassOf<class AActor> PotalBP;
 
@@ -36,4 +48,6 @@ private:
 	FTimerHandle ResetTimer;
 
 	void ResetSlowMotion(); // 되돌리기
+
+	TArray<class APlayerController*> ConnectedPlayers;
 };

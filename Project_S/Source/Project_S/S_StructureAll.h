@@ -149,6 +149,9 @@ struct FMyCharacterData : public FTableRowBase
 	float Exp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* Img_Class;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FS_Slot> MyEquip;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -307,6 +310,9 @@ struct FCharacterClass : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	E_CharClass Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* Img_Class;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<USkeletalMesh> ClassMesh;

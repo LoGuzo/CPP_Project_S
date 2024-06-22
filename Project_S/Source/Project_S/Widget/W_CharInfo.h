@@ -26,12 +26,17 @@ public:
 	void UpdateExp();
 	void UpdateLvl();
 
+	void SetImg(class UTexture2D* _ClassImg);
+
 	void ShakeHealthBar();
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
 
 	UPROPERTY(meta = (BindWidget))
 	class UHorizontalBox* Box_Info;
+
+	UPROPERTY(meta = (BindWidget))
+	class UImage* Img_Char;
 
 	UPROPERTY(meta = (BindWidget))
 	class UProgressBar* PB_Hp;

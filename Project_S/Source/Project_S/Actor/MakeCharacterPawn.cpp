@@ -37,7 +37,6 @@ AMakeCharacterPawn::AMakeCharacterPawn()
 void AMakeCharacterPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	LoadData("Warrior");
 	SetActorLocation(FVector(230.f, 120.f, 20.f));
 	SetActorRotation(FRotator(0.f, 90.f, 0.f));
 }

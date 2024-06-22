@@ -63,4 +63,6 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UEditableTextBox* Text_CharacterName;
+
+	UTexture2D* ClassImg;
 };

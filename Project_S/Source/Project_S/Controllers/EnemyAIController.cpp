@@ -19,7 +19,6 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 	EndTime = GetWorld()->GetDeltaSeconds();
 	PlayTime = 1.f;
 	IsDead = false;
-	ChkState = E_State::E_Search;
 }
 
 void AEnemyAIController::OnUnPossess()
@@ -91,16 +90,18 @@ void AEnemyAIController::FSMState()
 }
 void AEnemyAIController::SetMaxSpeed(float NewMaxSpeed)
 {
-	// 제어하는 Pawn이 유효한지 확인
 	if (APawn* ControlledPawn = GetPawn())
 	{
-		// 제어하는 Pawn이 ACharacter인지 확인
 		if (ACharacter* ControlledCharacter = Cast<ACharacter>(ControlledPawn))
 		{
-			// CharacterMovementComponent를 통해 최대 속도를 설정
 			ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxSpeed;
 		}
 	}
+}
+
+void AEnemyAIController::StartAISearch()
+{
+	ChkState = E_State::E_Search;
 }
 
 void AEnemyAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
