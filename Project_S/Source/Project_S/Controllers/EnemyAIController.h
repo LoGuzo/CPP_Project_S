@@ -10,18 +10,6 @@
 /**
  * 
  */
-class FLocationAndRotator
-{
-private:
-	FVector TargetVector;
-	FRotator TargetRotator;
-public:
-	FLocationAndRotator(FVector _TargetVector, FRotator _TargetRotator)
-	{
-		TargetVector = _TargetVector;
-		TargetRotator = _TargetRotator;
-	}
-};
 
 UCLASS()
 class PROJECT_S_API AEnemyAIController : public AAIController
@@ -32,18 +20,9 @@ protected :
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
 
-	virtual void PreInitializeComponents() override;
-
-	TArray<TSharedPtr<FLocationAndRotator>> PathNode;
-	TArray<TWeakPtr<FLocationAndRotator>> WeakPathNode;
-	int32 PathIndex;
-
 	bool IsMoveAtFirst;
 	bool IsMoving;
 	FVector FirstLocation;
-
-	TArray<TSharedPtr<FVector>> Location;
-	TArray<TWeakPtr<FVector>> WeakLocation;
 
 	class AUserCharacter* User;
 

@@ -4,8 +4,8 @@
 #include "EnemyAIController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Character/UserCharacter.h"
-#include <Kismet/GameplayStatics.h>
 
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
@@ -26,19 +26,6 @@ void AEnemyAIController::OnUnPossess()
 	Super::OnUnPossess();
 	SetActorTickEnabled(false);
 	SetFocus(nullptr);
-	if (Location.Num() != 0)
-	{
-		Location.Reset();
-	}
-	if (WeakLocation.Num() != 0)
-	{
-		WeakLocation.Reset();
-	}
-}
-
-void AEnemyAIController::PreInitializeComponents()
-{
-	Super::PreInitializeComponents();
 }
 
 void AEnemyAIController::Tick(float DeltaTime)
@@ -109,6 +96,7 @@ void AEnemyAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFoll
 		IsMoving = false;
 	}
 }
+
 void AEnemyAIController::LookAtPlayer()
 {
 	if (User)

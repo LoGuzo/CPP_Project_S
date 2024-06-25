@@ -9,6 +9,7 @@
 #include "Project_S/Character/MiddleBossCharacter.h"
 #include "Project_S/Character/BossCharacter.h"
 #include "Project_S/Controllers/AggressiveAIController.h"
+#include "Project_S/Controllers/PatrolAIController.h"
 #include "Project_S/Controllers/MiddleBossAIController.h"
 #include "Project_S/Controllers/GolemAIController.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -119,7 +120,17 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		break;
 		case E_MonsterType::E_Patrol:
 		{
-
+			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
+			APatrolAIController* NewAI = Cast<APatrolAIController>(SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType));
+			if (NewAI)
+			{
+				NewAI->SetLocation(EnemyArray[i].PatrolLocation); // 패트롤 정보 설정
+			}
+			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
+			SpawnNewEnemy->LoadCharacterData();
+			EnemyArray[i].PatrolLocation;
+			EnemyClassArray.Add(SpawnNewEnemy);
 		}
 		break;
 		case E_MonsterType::E_MiddleBoss:
@@ -151,13 +162,14 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 	return EnemyClassArray;
 }
 
-void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _MonsterType)
+AAIController* AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _MonsterType)
 {
 	AAIController* NowAI = Cast<AAIController>(Enemy->GetController());
 	if (NowAI)
 	{
 		NowAI->Destroy(); // 기존 AI 컨트롤러 삭제
 	}
+	AAIController* NewAI = nullptr;
 	switch (_MonsterType)
 	{
 	case E_MonsterType::E_Normal:
@@ -167,34 +179,30 @@ void AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterType _Monste
 	break;
 	case E_MonsterType::E_Aggressive:
 	{
-		AAggressiveAIController* NewAI = GetWorld()->SpawnActor<AAggressiveAIController>(AAggressiveAIController::StaticClass());
-		NewAI->Possess(Enemy);
-		Enemy->SetEtc();
-		Enemy->SetState(false);
+		NewAI = GetWorld()->SpawnActor<AAggressiveAIController>(AAggressiveAIController::StaticClass());
 	}
 	break;
 	case E_MonsterType::E_Patrol:
 	{
-
+		NewAI = GetWorld()->SpawnActor<APatrolAIController>(APatrolAIController::StaticClass());
 	}
 	break;
 	case E_MonsterType::E_MiddleBoss:
 	{
-		AMiddleBossAIController* NewAI = GetWorld()->SpawnActor<AMiddleBossAIController>(AMiddleBossAIController::StaticClass());
-		NewAI->Possess(Enemy);
-		Enemy->SetEtc();
-		Enemy->SetState(false);
+		NewAI = GetWorld()->SpawnActor<AMiddleBossAIController>(AMiddleBossAIController::StaticClass());
 	}
 	break;
 	case E_MonsterType::E_LastBoss:
 	{
-		AGolemAIController* NewAI = GetWorld()->SpawnActor<AGolemAIController>(AGolemAIController::StaticClass());
-		NewAI->Possess(Enemy);
-		Enemy->SetEtc();
-		Enemy->SetState(false);
+		NewAI = GetWorld()->SpawnActor<AGolemAIController>(AGolemAIController::StaticClass());
 	}
 	break;
 	default:
 	break;
 	}
+	NewAI->Possess(Enemy);
+	Enemy->SetEtc();
+	Enemy->SetState(false);
+
+	return NewAI;
 }

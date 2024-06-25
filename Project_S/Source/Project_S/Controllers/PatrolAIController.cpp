@@ -2,11 +2,35 @@
 
 
 #include "PatrolAIController.h"
+#include "DrawDebugHelpers.h"
+#include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Character/FirstCharacter.h"
+#include "Project_S/Component/C_SkillComponent.h"
 
-/*void APatrolAIController::AISerach()
+void APatrolAIController::OnPossess(APawn* InPawn)
 {
-	if (IsMoving == true)
-		return;
+	Super::OnPossess(InPawn);
+	PathIndex = 0;
+	IsFindEnemy = false;
+	ChkState = E_State::E_Search;
+}
+
+void APatrolAIController::OnUnPossess()
+{
+	Super::OnUnPossess();
+}
+
+void APatrolAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (Location.Num() != 0)
+	{
+		Location.Reset();
+	}
+}
+
+void APatrolAIController::AISerach()
+{
 	auto CurrentPawn = GetPawn();
 	if (CurrentPawn == nullptr)
 		return;
@@ -33,23 +57,60 @@
 			User = Cast<AUserCharacter>(HItResult.GetActor());
 			if (User && User->GetController()->IsPlayerController())
 			{
-				CountSearch = 0;
-				IsMoveAtFirst = false;
+				SetMaxSpeed(600.f);
 				DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Green, false, 0.2f);
-
-				ChkState = E_State::E_Move;
+				MoveToActor(User);
+				ChkState = E_State::E_Attack;
 				return;
 			}
 		}
 	}
-	if (IsMoveAtFirst)
+	SetMaxSpeed(150.f);
+	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
+	ChkState = E_State::E_Move;
+}
+
+void APatrolAIController::AIMove()
+{
+	MoveToNextPatrolPoint();
+	ChkState = E_State::E_Search;
+}
+
+void APatrolAIController::Attack()
+{
+	if (IsMoving == true)
+		return;
+	if (User && !IsDead)
 	{
-		CountSearch++;
-		if (CountSearch > 4)
+		LookAtPlayer();
+		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
 		{
-			ChkState = E_State::E_Reset;
-			return;
+			const auto Enemy = Cast<AFirstCharacter>(GetPawn());
+			if (Enemy) {
+				Enemy->UseSkill(Enemy->GetSkillCom()->GetSlot(0).ItemName.ToString());
+				return;
+			}
 		}
 	}
-	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
-}*/
+	ChkState = E_State::E_Search;
+}
+
+void APatrolAIController::MoveToNextPatrolPoint()
+{
+	if (Location.Num() == 0)
+	{
+		return;
+	}
+	MoveToLocation(Location[PathIndex]);
+	IsMoving = true;
+	if (SDistance(Location[PathIndex], GetPawn()->GetActorLocation()) < 50.f)
+	{
+		PathIndex = (PathIndex + 1) % Location.Num();
+	}
+}
+
+void APatrolAIController::SetLocation(TArray<FVector> _Location)
+{
+	Location = _Location;
+}
+

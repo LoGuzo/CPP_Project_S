@@ -26,50 +26,56 @@ public:
 	void UpdateExp();
 	void UpdateLvl();
 
-	void SetImg(class UTexture2D* _ClassImg);
+	void SetImg(E_CharClass CharClass);
 
 	void ShakeHealthBar();
 private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
 
 	UPROPERTY(meta = (BindWidget))
-	class UHorizontalBox* Box_Info;
+		class UHorizontalBox* Box_Info;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* Img_Char;
+		class UImage* Img_Char;
 
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_Hp;
+		class UProgressBar* PB_Hp;
 
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_Mp;
+		class UProgressBar* PB_Mp;
 
 	UPROPERTY(meta = (BindWidget))
-	class UProgressBar* PB_Exp;
+		class UProgressBar* PB_Exp;
 
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Txt_Lvl;
+		class UTextBlock* Txt_Lvl;
 
 	UPROPERTY()
-	FTimerHandle ShakeTimerHandle;
+		FTimerHandle ShakeTimerHandle;
 
 	UPROPERTY()
-	FTimerHandle EndShakeHandle;
+		FTimerHandle EndShakeHandle;
 
 	UPROPERTY()
-	FTimerHandle HealthUpdateTimerHandle;
+		FTimerHandle HealthUpdateTimerHandle;
 
 	UPROPERTY()
-	float HealthUpdateDuration;
+		float HealthUpdateDuration;
 
 	UPROPERTY()
-	float HealthUpdateTime;
+		float HealthUpdateTime;
 
 	UPROPERTY()
-	float CurrentHealth;
+		float CurrentHealth;
 
 	UPROPERTY()
-	float TargetHealth;
+		float TargetHealth;
 
 	void AnimateHealthBar();
+
+	TMap<E_CharClass, FString> CharMap= { 
+		{E_CharClass::E_Warrior, "Warrior"}, 
+		{E_CharClass::E_Magician, "Magician"} ,
+		{E_CharClass::E_Healer, "Healer"} 
+	};
 };

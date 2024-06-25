@@ -229,9 +229,9 @@ void AEnemyCharacter::ResetStat()
 	NowAIController->IsDead = false;
 	IsReadySpawn = false;
 	GetMesh()->SetEnableGravity(true);
+	SetActorLocation(SaveLocation);
 	SetState(true);
 	LoadCharacterData();
-	SetActorLocation(SaveLocation);
 	GetCharacterMovement()->GravityScale = 1.f;
 }
 

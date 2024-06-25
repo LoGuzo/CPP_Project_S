@@ -12,7 +12,7 @@ CharacterClassManager::CharacterClassManager()
 
 CharacterClassManager::~CharacterClassManager()
 {
-	if (MyCharacter != nullptr)
+	if (MyCharacter.IsValid())
 	{
 		MyCharacter.Reset();
 	}

@@ -251,7 +251,7 @@ void AUserCharacter::LoadCharacterData()
 				QuickSlot->SetPotionSlots(LoadData.Pin()->MyPotionQuick);
 				if (HUDWidget)
 				{
-					HUDWidget->GetCharInfo()->SetImg(LoadData.Pin()->Img_Class);
+					HUDWidget->GetCharInfo()->SetImg(LoadData.Pin()->Type);
 				}
 			}
 			for (const FS_Slot& slot : Equip->GetSlots())

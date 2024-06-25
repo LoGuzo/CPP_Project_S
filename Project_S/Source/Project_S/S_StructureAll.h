@@ -149,9 +149,6 @@ struct FMyCharacterData : public FTableRowBase
 	float Exp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* Img_Class;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FS_Slot> MyEquip;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -259,6 +256,8 @@ struct FSpawnMonsterData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector SpawnLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FVector> PatrolLocation;
 };
 
 USTRUCT()

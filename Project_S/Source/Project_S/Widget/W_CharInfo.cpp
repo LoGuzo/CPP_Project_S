@@ -5,7 +5,9 @@
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Component/S_StatComponent.h"
+#include "Project_S/Instance/S_GameInstance.h"
 
 void UW_CharInfo::NativeDestruct()
 {
@@ -27,9 +29,17 @@ void UW_CharInfo::UpdateLvl()
 		Txt_Lvl->SetText(FText::FromString(FString::Printf(TEXT("Lv : %d"), SStatComponent->GetLevel())));
 }
 
-void UW_CharInfo::SetImg(UTexture2D* ClassImg)
+void UW_CharInfo::SetImg(E_CharClass CharClass)
 {
-	Img_Char->SetBrushFromTexture(ClassImg);
+	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (MyGameInstance)
+	{
+		auto ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData(CharMap.FindRef(CharClass)));
+		if (ClassData.IsValid())
+		{
+			Img_Char->SetBrushFromTexture(ClassData.Get()->Img_Class);
+		}
+	}
 }
 
 void UW_CharInfo::BindHp(class US_StatComponent* _StatComp)

@@ -34,7 +34,7 @@ protected:
 	UFUNCTION()
 	void EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void SpawnEnemyAI(class AEnemyCharacter* Enemy, E_MonsterType _MonsterType);
+	class AAIController* SpawnEnemyAI(class AEnemyCharacter* Enemy, E_MonsterType _MonsterType);
 
 private:
 	TWeakPtr<FSpawnData> SpawnerData;

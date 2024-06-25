@@ -40,6 +40,15 @@ void ABossGameMode::BeginPlay()
 	PlayCinematic();
 }
 
+void ABossGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (EnemyClassArray.Num() != 0)
+		EnemyClassArray.Reset();
+	if (ConnectedPlayers.Num() != 0)
+		ConnectedPlayers.Reset();
+}
+
 void ABossGameMode::MonsterFactory()
 {
 	if (HasAuthority()) // 서버에서만 실행되도록 확인
