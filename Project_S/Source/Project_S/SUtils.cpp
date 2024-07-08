@@ -5,7 +5,10 @@
 
 float SUtils::SDistance(const FVector Pos, const FVector OtherPos)
 {
-	FVector pos = Pos - OtherPos;
+	FVector AfterPos = FVector(Pos.X, Pos.Y, 0);
+	FVector AfterOtherPos = FVector(OtherPos.X, OtherPos.Y, 0);
+
+	FVector pos = AfterPos - AfterOtherPos;
 	float value = FMath::Sqrt((pos.X * pos.X) + (pos.Y * pos.Y) + (pos.Z * pos.Z));
 	return value;
 }

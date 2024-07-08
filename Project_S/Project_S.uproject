@@ -12,7 +12,8 @@
 				"Engine",
 				"UMG",
 				"AIModule",
-				"Niagara"
+				"Niagara",
+				"CoreUObject"
 			]
 		}
 	],
@@ -28,6 +29,10 @@
 		{
 			"Name": "Test",
 			"Enabled": false
+		},
+		{
+			"Name": "WeatherSystem",
+			"Enabled": true
 		}
 	]
 }

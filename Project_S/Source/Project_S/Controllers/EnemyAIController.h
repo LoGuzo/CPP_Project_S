@@ -28,7 +28,7 @@ protected :
 
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 
-	void LookAtPlayer();
+	void LookAtPlayer(const FVector& TargetLocation);
 
 	virtual void AISerach() {}; // 적탐색
 	virtual void AIMove() {}; // 이동

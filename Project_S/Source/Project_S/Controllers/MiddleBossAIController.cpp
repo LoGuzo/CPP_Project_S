@@ -83,7 +83,7 @@ void AMiddleBossAIController::Attack()
 		const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 		if (Enemy->IsAttacking == true)
 			return;
-		LookAtPlayer();
+		LookAtPlayer(User->GetActorLocation());
 		float ToUserDistance = SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation());
 		if (ToUserDistance <= 200.f * GetPawn()->GetActorScale3D().X)
 		{

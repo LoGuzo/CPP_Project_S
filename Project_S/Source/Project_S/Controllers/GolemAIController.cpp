@@ -54,7 +54,7 @@ void AGolemAIController::Attack()
 		int32 RandomPattern = RandRange(1, 3);
 		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 400.f * GetPawn()->GetActorScale3D().X)
 		{
-			LookAtPlayer();
+			LookAtPlayer(User->GetActorLocation());
 			Enemy->GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
 			switch (RandomPattern)
 			{

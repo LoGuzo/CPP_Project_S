@@ -80,7 +80,7 @@ void AAggressiveAIController::Attack()
 		return;
 	if (User && !IsDead)
 	{
-		LookAtPlayer();
+		LookAtPlayer(User->GetActorLocation());
 		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
 		{
 			const auto Enemy = Cast<AFirstCharacter>(GetPawn());

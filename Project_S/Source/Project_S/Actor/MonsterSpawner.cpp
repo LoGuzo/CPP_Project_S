@@ -8,6 +8,7 @@
 #include "Project_S/Character/EnemyCharacter.h"
 #include "Project_S/Character/MiddleBossCharacter.h"
 #include "Project_S/Character/BossCharacter.h"
+#include "Project_S/Controllers/AStarAIController.h"
 #include "Project_S/Controllers/AggressiveAIController.h"
 #include "Project_S/Controllers/PatrolAIController.h"
 #include "Project_S/Controllers/MiddleBossAIController.h"
@@ -105,7 +106,17 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		{
 		case E_MonsterType::E_Normal:
 		{
-
+			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
+			AAStarAIController* NewAI = Cast<AAStarAIController>(SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType));
+			if (NewAI)
+			{
+				NewAI->SetLocation(EnemyArray[i].PatrolLocation); // 패트롤 정보 설정
+			}
+			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
+			SpawnNewEnemy->LoadCharacterData();
+			EnemyArray[i].PatrolLocation;
+			EnemyClassArray.Add(SpawnNewEnemy);
 		}
 		break;
 		case E_MonsterType::E_Aggressive:
@@ -174,7 +185,7 @@ AAIController* AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterTy
 	{
 	case E_MonsterType::E_Normal:
 	{
-
+		NewAI = GetWorld()->SpawnActor<AAStarAIController>(AAStarAIController::StaticClass());
 	}
 	break;
 	case E_MonsterType::E_Aggressive:

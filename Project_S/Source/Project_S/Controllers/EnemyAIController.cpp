@@ -97,21 +97,18 @@ void AEnemyAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFoll
 	}
 }
 
-void AEnemyAIController::LookAtPlayer()
+void AEnemyAIController::LookAtPlayer(const FVector& TargetLocation)
 {
-	if (User)
-	{
-		FVector PlayerLocation = User->GetActorLocation();
-		FVector AILocation = GetPawn()->GetActorLocation();
-		FVector Direction = (PlayerLocation - AILocation).GetSafeNormal();
+	FVector PlayerLocation = TargetLocation;
+	FVector AILocation = GetPawn()->GetActorLocation();
+	FVector Direction = (PlayerLocation - AILocation).GetSafeNormal();
 
-		FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
-		LookAtRotation.Pitch = 0.0f;
-		LookAtRotation.Roll = 0.0f;
+	FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+	LookAtRotation.Pitch = 0.0f;
+	LookAtRotation.Roll = 0.0f;
 
-		GetPawn()->SetActorRotation(LookAtRotation);
+	GetPawn()->SetActorRotation(LookAtRotation);
 
-		SetControlRotation(LookAtRotation);
-	}
+	SetControlRotation(LookAtRotation);
 }
 
