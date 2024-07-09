@@ -37,6 +37,8 @@ void US_GameInstance::Shutdown()
 
 	if (MyDataManager.Num() != 0)
 	{
+		for (auto& data : MyDataManager)
+			ZeroMemory(data.Value);
 		MyDataManager.Empty();
 	}
 }

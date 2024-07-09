@@ -114,13 +114,13 @@ public:
 	//默认参数配置
 	void SetupDefaults();
 	//记录下雪状态
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated, BlueprintReadOnly)
 	bool bSnowIsComing = false;
 	//记录下雨状态
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated,BlueprintReadOnly)
 	bool bRainIsComing = false;
 	//记录是否在夜晚
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(Replicated,BlueprintReadOnly)
 	bool bIsNight = false;
 	//天气随机是否循环
 	bool WeatherRandomTimeLoop = true;
@@ -315,6 +315,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "WeatherSystem | SkyLight")
 		float SkyLightIntensityOfNight = 0.3f;
 	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -378,5 +379,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCurveFloat* FrozenCurve;
 private:
+	void UpdateWeather();
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerUpdateWeather();
 
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastUpdateWeather(bool bSnow, bool bRain, bool bNight);
 };

@@ -11,7 +11,7 @@
 /**
  * 
  */
-
+#define ZeroMemory(data) {delete data; data = nullptr;}
 UCLASS()
 class PROJECT_S_API US_GameInstance : public UGameInstance
 {

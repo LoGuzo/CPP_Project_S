@@ -25,6 +25,7 @@
 
 AUserCharacter::AUserCharacter()
 {
+	bReplicates = true;
 	MyCharType = E_CharacterType::E_User;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -39,7 +40,9 @@ AUserCharacter::AUserCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-
+	SetReplicateMovement(true);
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
+	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -115,8 +118,6 @@ void AUserCharacter::SetMesh(E_CharClass _ClassType)
 			if (MeshPath)
 			{
 				GetMesh()->SetSkeletalMesh(MeshPath);
-				GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
-				GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 				GetMesh()->SetAnimInstanceClass(ClassData.Pin()->ClassAnim.LoadSynchronous());
 				GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 			}

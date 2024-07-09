@@ -61,7 +61,7 @@ void AAStarAIController::MoveToLocationUsingAStar(const FVector& TargetLocation)
 	if (DetailPath.Num() == 0)
 	{
 		DetailPathIndex = 0;
-		PathFinder->FindPath(GetPawn()->GetActorLocation(), TargetLocation, DetailPath);
+		if (!PathFinder->FindPath(GetPawn()->GetActorLocation(), TargetLocation, DetailPath)) return;
 	}
 	WalkStop = NowState::E_Walk;
 	if (SDistance(DetailPath[DetailPathIndex], GetPawn()->GetActorLocation()) < 100.f)

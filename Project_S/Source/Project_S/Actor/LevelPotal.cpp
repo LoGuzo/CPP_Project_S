@@ -45,7 +45,8 @@ void ALevelPotal::BeginPlay()
 void ALevelPotal::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	ParticleComponent->ReleaseToPool();
+	if(ParticleComponent)
+		ParticleComponent->ReleaseToPool();
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 }
 

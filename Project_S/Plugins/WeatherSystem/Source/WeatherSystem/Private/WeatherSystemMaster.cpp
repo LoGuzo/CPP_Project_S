@@ -1,115 +1,158 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WeatherSystemMaster.h"
 #include "Math/UnrealMathUtility.h"
+#include "Net/UnrealNetwork.h"
 #include "TimerManager.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
-
-// Sets default values
 AWeatherSystemMaster::AWeatherSystemMaster()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	SetupDefaults();//配置默认设置
+	SetupDefaults();
+	bReplicates = true;
+	bAlwaysRelevant = true;
 }
 
-//UE_LOG(LogTemp, Error, TEXT("ReverseTEST")); 
-// Called every frame
 void AWeatherSystemMaster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bSnowIsComing||bRainIsComing) { GetPlayerLocation(); }
+	if (bSnowIsComing || bRainIsComing) {
+		GetPlayerLocation();
+	}
 }
-// Called when the game starts or when spawned
+
+void AWeatherSystemMaster::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AWeatherSystemMaster, bSnowIsComing);
+	DOREPLIFETIME(AWeatherSystemMaster, bRainIsComing);
+	DOREPLIFETIME(AWeatherSystemMaster, bIsNight);
+}
+
 void AWeatherSystemMaster::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//随机天气的间隔时间
-	GetWorldTimerManager().SetTimer(RandomWeatherTimerHandle, this, &AWeatherSystemMaster::WeatherRandomFunc, WeatherRandomTime, WeatherRandomTimeLoop,1.0f);
-	//雷声的间隔时间
-	GetWorldTimerManager().SetTimer(ThunderTimerHandle, this, &AWeatherSystemMaster::ThunderAudioPlay, ThunderWaitingTime, true ,1.0f);
+	if (HasAuthority()) {
+		GetWorldTimerManager().SetTimer(RandomWeatherTimerHandle, this, &AWeatherSystemMaster::WeatherRandomFunc, WeatherRandomTime, WeatherRandomTimeLoop, 1.0f);
+		GetWorldTimerManager().SetTimer(ThunderTimerHandle, this, &AWeatherSystemMaster::ThunderAudioPlay, ThunderWaitingTime, true, 1.0f);
+	}
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaterBase::StaticClass(), WaterArray);
 
 	SunTimeLine->Play();
 
 	UpdateSunFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateSunTimeLine);
-	if (SunAngleCurve)
-	SunTimeLine->AddInterpFloat(SunAngleCurve, UpdateSunFloat);
-	
+	if (SunAngleCurve) {
+		SunTimeLine->AddInterpFloat(SunAngleCurve, UpdateSunFloat);
+	}
+
 	UpdateIsNightFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateIsNightTimeLine);
-	if (IsNightCurve)
-	IsNightTimeLine->AddInterpFloat(IsNightCurve, UpdateIsNightFloat);
-	
+	if (IsNightCurve) {
+		IsNightTimeLine->AddInterpFloat(IsNightCurve, UpdateIsNightFloat);
+	}
+
 	UpdateSnowOrRainFallingFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateSnowOrRainFallingTimeLine);
-	if (SnowOrRainFallingCurve)
-	SnowOrRainFallingTimeLine->AddInterpFloat(SnowOrRainFallingCurve, UpdateSnowOrRainFallingFloat);
-	
+	if (SnowOrRainFallingCurve) {
+		SnowOrRainFallingTimeLine->AddInterpFloat(SnowOrRainFallingCurve, UpdateSnowOrRainFallingFloat);
+	}
+
 	UpdateRainFallingFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateRainFallingTimeLine);
-	if (RainFallingCurve)
-	RainFallingTimeLine->AddInterpFloat(RainFallingCurve, UpdateRainFallingFloat);
-	
+	if (RainFallingCurve) {
+		RainFallingTimeLine->AddInterpFloat(RainFallingCurve, UpdateRainFallingFloat);
+	}
+
 	UpdateSnowFallingFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateSnowFallingTimeLine);
-	if (SnowFallingCurve)
-	SnowFallingTimeLine->AddInterpFloat(SnowFallingCurve, UpdateSnowFallingFloat);
-	
+	if (SnowFallingCurve) {
+		SnowFallingTimeLine->AddInterpFloat(SnowFallingCurve, UpdateSnowFallingFloat);
+	}
+
 	UpdateGetWetFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateGetWetTimeLine);
-	if (GetWetCurve)
-	GetWetTimeLine->AddInterpFloat(GetWetCurve, UpdateGetWetFloat);
+	if (GetWetCurve) {
+		GetWetTimeLine->AddInterpFloat(GetWetCurve, UpdateGetWetFloat);
+	}
 
 	UpdateFrozenFloat.BindDynamic(this, &AWeatherSystemMaster::UpdateFrozenTimeLine);
-	if (FrozenCurve)
-	FrozenTimeLine->AddInterpFloat(FrozenCurve, UpdateFrozenFloat);
+	if (FrozenCurve) {
+		FrozenTimeLine->AddInterpFloat(FrozenCurve, UpdateFrozenFloat);
+	}
 }
 
 void AWeatherSystemMaster::WeatherRandomFunc()
-{  
-	if (AlwaysRain && AlwaysSnow)
-	{
+{
+	if (!HasAuthority()) return; // 辑滚俊辑父 角青
+
+	if (AlwaysRain && AlwaysSnow) {
 		WeatherMin = 5;
 		WeatherMax = 5;
 		WeatherRandomTimeLoop = false;
-	} 
-	else
-	{
-		if (AlwaysSunny)
-		{
-			WeatherMin = 3;
-			WeatherMax = 3;
-			WeatherRandomTimeLoop = false;
-		}
-		else {
-			if (AlwaysRain)
-			{
-				WeatherMin = 10;
-				WeatherMax = 10;
-				WeatherRandomTimeLoop = false;
-			}
-			else
-			{
-				if (AlwaysSnow)
-				{
-					WeatherMin = 0;
-					WeatherMax = 0;
-					WeatherRandomTimeLoop = false;
-				}
-				else {
-					WeatherMin = 0;
-					WeatherMax = 10;
-					WeatherRandomTimeLoop = true;
-				}
-			}
-		}
 	}
+	else if (AlwaysSunny) {
+		WeatherMin = 3;
+		WeatherMax = 3;
+		WeatherRandomTimeLoop = false;
+	}
+	else if (AlwaysRain) {
+		WeatherMin = 10;
+		WeatherMax = 10;
+		WeatherRandomTimeLoop = false;
+	}
+	else if (AlwaysSnow) {
+		WeatherMin = 0;
+		WeatherMax = 0;
+		WeatherRandomTimeLoop = false;
+	}
+	else {
+		WeatherMin = 0;
+		WeatherMax = 10;
+		WeatherRandomTimeLoop = true;
+	}
+
 	WeatherSet = FMath::RandRange(WeatherMin, WeatherMax);
-	if (WeatherSet == 5)
-	{
+	if (WeatherSet == 5) {
 		bRainIsComing = true;
 		bSnowIsComing = true;
+	}
+	else if (WeatherSet <= 2) {
+		bSnowIsComing = true;
+		bRainIsComing = false;
+	}
+	else if (WeatherSet >= 8) {
+		bSnowIsComing = false;
+		bRainIsComing = true;
+	}
+	else {
+		bSnowIsComing = false;
+		bRainIsComing = false;
+	}
+
+	// 悼扁拳等 惑怕甫 葛电 努扼捞攫飘俊霸 诀单捞飘
+	MulticastUpdateWeather(bSnowIsComing, bRainIsComing, bIsNight);
+}
+
+void AWeatherSystemMaster::MulticastUpdateWeather_Implementation(bool bSnow, bool bRain, bool bNight)
+{
+	bSnowIsComing = bSnow;
+	bRainIsComing = bRain;
+	bIsNight = bNight;
+
+	UpdateWeather();
+}
+
+void AWeatherSystemMaster::ServerUpdateWeather_Implementation()
+{
+	WeatherRandomFunc();
+}
+
+bool AWeatherSystemMaster::ServerUpdateWeather_Validate()
+{
+	return true;
+}
+
+void AWeatherSystemMaster::UpdateWeather()
+{
+	if (bSnowIsComing && bRainIsComing) {
 		SnowOrRainFallingTimeLine->Play();
 		SnowFallingTimeLine->Play();
 		FrozenTimeLine->Play();
@@ -118,55 +161,36 @@ void AWeatherSystemMaster::WeatherRandomFunc()
 		DirectionalLight->SetEnableLightShaftBloom(false);
 		DirectionalLight->SetEnableLightShaftOcclusion(false);
 		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSnowOrRain);
-		//UE_LOG(LogTemp, Error, TEXT("WeatherSystem_RainAndSnowFalling"));
+	}
+	else if (bSnowIsComing) {
+		SnowOrRainFallingTimeLine->Play();
+		SnowFallingTimeLine->Play();
+		FrozenTimeLine->Play();
+		RainFallingTimeLine->Reverse();
+		GetWetTimeLine->Reverse();
+		DirectionalLight->SetEnableLightShaftBloom(false);
+		DirectionalLight->SetEnableLightShaftOcclusion(false);
+		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSnowOrRain);
+	}
+	else if (bRainIsComing) {
+		SnowOrRainFallingTimeLine->Play();
+		SnowFallingTimeLine->Reverse();
+		FrozenTimeLine->Reverse();
+		RainFallingTimeLine->Play();
+		GetWetTimeLine->Play();
+		DirectionalLight->SetEnableLightShaftBloom(false);
+		DirectionalLight->SetEnableLightShaftOcclusion(false);
+		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSnowOrRain);
 	}
 	else {
-		if (WeatherSet <= 2)
-		{
-			bSnowIsComing = true;
-			bRainIsComing = false;
-			SnowOrRainFallingTimeLine->Play();
-			SnowFallingTimeLine->Play();
-			FrozenTimeLine->Play();
-			RainFallingTimeLine->Reverse();
-			GetWetTimeLine->Reverse();
-			DirectionalLight->SetEnableLightShaftBloom(false);
-			DirectionalLight->SetEnableLightShaftOcclusion(false);
-			UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSnowOrRain);
-			//UE_LOG(LogTemp, Error, TEXT("WeatherSystem_SnowFalling"));
-			
-		}
-		else {
-			if (WeatherSet >= 8)
-			{
-				bSnowIsComing = false;
-				bRainIsComing = true;
-				SnowOrRainFallingTimeLine->Play();
-				SnowFallingTimeLine->Reverse();
-				FrozenTimeLine->Reverse();
-				RainFallingTimeLine->Play();
-				GetWetTimeLine->Play();
-				DirectionalLight->SetEnableLightShaftBloom(false);
-				DirectionalLight->SetEnableLightShaftOcclusion(false);
-				UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSnowOrRain);
-				//UE_LOG(LogTemp, Error, TEXT("WeatherSystem_RainFalling"));
-			
-			}
-			else
-			{
-				bSnowIsComing = false;
-				bRainIsComing = false;
-				SnowOrRainFallingTimeLine->Reverse();
-				SnowFallingTimeLine->Reverse();
-				FrozenTimeLine->Reverse();
-				RainFallingTimeLine->Reverse();
-				GetWetTimeLine->Reverse();
-				DirectionalLight->SetEnableLightShaftBloom(true);
-				DirectionalLight->SetEnableLightShaftOcclusion(true);
-				UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSunny);
-				//UE_LOG(LogTemp, Error, TEXT("WeatherSystem_Sunny"));
-			}
-		}
+		SnowOrRainFallingTimeLine->Reverse();
+		SnowFallingTimeLine->Reverse();
+		FrozenTimeLine->Reverse();
+		RainFallingTimeLine->Reverse();
+		GetWetTimeLine->Reverse();
+		DirectionalLight->SetEnableLightShaftBloom(true);
+		DirectionalLight->SetEnableLightShaftOcclusion(true);
+		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Speed")), WindSpeedOfSunny);
 	}
 }
 
@@ -176,12 +200,11 @@ void AWeatherSystemMaster::UpdateIsNightTimeLine(float IsNightOutput)
 	UKismetMaterialLibrary::SetVectorParameterValue(this, MPC, FName(TEXT("SnowColor")), FMath::Lerp(SnowColorOfDay, SnowColorOfNight, IsNightOutput));
 	UKismetMaterialLibrary::SetVectorParameterValue(this, MPC, FName(TEXT("RainColor")), FMath::Lerp(RainColorOfDay, RainColorOfNight, IsNightOutput));
 
-	if (bSnowIsComing || bRainIsComing)
-	{
-		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("StarsMask")),0.0f);
-		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("CloudDisappear")),0.5f);
-		BirdsAudio->SetVolumeMultiplier( 0.0f);
-		CicadaAudio->SetVolumeMultiplier( 0.0f);
+	if (bSnowIsComing || bRainIsComing) {
+		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("StarsMask")), 0.0f);
+		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("CloudDisappear")), 0.5f);
+		BirdsAudio->SetVolumeMultiplier(0.0f);
+		CicadaAudio->SetVolumeMultiplier(0.0f);
 	}
 	else {
 		UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("StarsMask")), FMath::Lerp(0.0f, 3.0f, IsNightOutput));
@@ -193,60 +216,52 @@ void AWeatherSystemMaster::UpdateIsNightTimeLine(float IsNightOutput)
 
 void AWeatherSystemMaster::UpdateSunTimeLine(float SunOutput)
 {
-	if (AlwaysDayTime)
-	{
-		DirectionalLight->SetRelativeRotation((FRotator(233.0f, 0.0f, 0.0f)));
+	if (AlwaysDayTime) {
+		DirectionalLight->SetRelativeRotation(FRotator(233.0f, 0.0f, 0.0f));
 		bIsNight = false;
 		IsNightTimeLine->Reverse();
-	} 
-	else
-	{
-		if (AlwaysNight)
-		{
-			DirectionalLight->SetRelativeRotation((FRotator(100.0f, 0.0f, 0.0f)));
+	}
+	else if (AlwaysNight) {
+		DirectionalLight->SetRelativeRotation(FRotator(100.0f, 0.0f, 0.0f));
+		bIsNight = true;
+		IsNightTimeLine->Play();
+	}
+	else {
+		DirectionalLight->SetRelativeRotation(FRotator(SunOutput, 0.0f, 0.0f));
+		if (SunOutput == 360.0f) {
+			SunTimeLine->PlayFromStart();
+		}
+		else if (SunOutput >= 2.5f && SunOutput <= 167.5f) {
 			bIsNight = true;
 			IsNightTimeLine->Play();
 		}
-		else
-		{
-			DirectionalLight->SetRelativeRotation((FRotator(SunOutput, 0.0f, 0.0f)));
-			if (SunOutput == 360.0f)
-			{
-				SunTimeLine->PlayFromStart();
-			}
-			else {
-				if (SunOutput >= 2.5f && SunOutput <= 167.5f)
-				{
-					bIsNight = true;
-					IsNightTimeLine->Play();
-				}
-				else
-				{
-					bIsNight = false;
-					IsNightTimeLine->Reverse();
-				}
-			}
+		else {
+			bIsNight = false;
+			IsNightTimeLine->Reverse();
 		}
 	}
-	
 }
 
 void AWeatherSystemMaster::GetPlayerLocation()
 {
-	FVector PlayerLocation = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation()+(FVector(0.0f,0.0f,500.0f));
-	SnowFX->SetWorldLocation(PlayerLocation);
-	RainFX->SetWorldLocation(PlayerLocation);
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController) {
+		APawn* PlayerPawn = PlayerController->GetPawn();
+		if (PlayerPawn) {
+			FVector PlayerLocation = PlayerPawn->GetActorLocation() + FVector(0.0f, 0.0f, 500.0f);
+			SnowFX->SetWorldLocation(PlayerLocation);
+			RainFX->SetWorldLocation(PlayerLocation);
+		}
+	}
 }
 
 void AWeatherSystemMaster::ThunderAudioPlay()
 {
-	if (bRainIsComing)
-	{
+	if (bRainIsComing) {
 		ThunderAudio->Play();
 		ThunderAudio->SetVolumeMultiplier(FMath::RandRange(ThunderMinVolume, ThunderMaxVolume));
 	}
-	else
-	{
+	else {
 		ThunderAudio->Stop();
 	}
 }
@@ -261,9 +276,8 @@ void AWeatherSystemMaster::UpdateSnowOrRainFallingTimeLine(float SnowOrRainFalli
 	SkyAtmosphere->SetSkyLuminanceFactor(FMath::Lerp(SnowColorOfDay, DarkClouds, SnowOrRainFallingOutput));
 	UKismetMaterialLibrary::SetScalarParameterValue(this, MPC_Tree, FName(TEXT("Wind_Weight")), FMath::Lerp(WindWeightOfSunny, WindWeightOfSnowOrRain, SnowOrRainFallingOutput));
 	UKismetMaterialLibrary::SetVectorParameterValue(this, MPC, FName(TEXT("CloudColor")), FMath::Lerp(SnowColorOfDay, DarkClouds, SnowOrRainFallingOutput));
-	UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("StarsMask")),0.0f);
-	if (bIsNight)
-	{
+	UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("StarsMask")), 0.0f);
+	if (bIsNight) {
 		BirdsAudio->SetVolumeMultiplier(0.0f);
 		CicadaAudio->SetVolumeMultiplier(0.0f);
 	}
@@ -271,7 +285,6 @@ void AWeatherSystemMaster::UpdateSnowOrRainFallingTimeLine(float SnowOrRainFalli
 		BirdsAudio->SetVolumeMultiplier(FMath::Lerp(FMath::RandRange(0.5f, 1.0f), 0.0f, SnowOrRainFallingOutput));
 		CicadaAudio->SetVolumeMultiplier(FMath::Lerp(FMath::RandRange(0.5f, 1.0f), 0.0f, SnowOrRainFallingOutput));
 	}
-	
 }
 
 void AWeatherSystemMaster::UpdateRainFallingTimeLine(float RainFallingOutput)
@@ -300,28 +313,24 @@ void AWeatherSystemMaster::UpdateFrozenTimeLine(float FrozenOutput)
 	UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("SnowBlend")), FMath::Lerp(3.0f, SnowBlendMax, FrozenOutput));
 	UKismetMaterialLibrary::SetScalarParameterValue(this, MPC, FName(TEXT("WaterFrozen")), FMath::Lerp(0.0f, 1000.0f, FrozenOutput));
 	if (FrozenOutput >= 0.1 && WaterArray.Num()) {
-		for (int i = 0; i < WaterArray.Num(); i++)
-		{
+		for (int i = 0; i < WaterArray.Num(); i++) {
 			Cast<AWaterBase>(WaterArray[i])->SetWaterBloackAll();
 		}
-	}	
-	else {
-		if (WaterArray.Num())
-		{
-			for (int i = 0; i < WaterArray.Num(); i++)
-			{
-				Cast<AWaterBase>(WaterArray[i])->SetWaterNoCollision();
-			}
+	}
+	else if (WaterArray.Num()) {
+		for (int i = 0; i < WaterArray.Num(); i++) {
+			Cast<AWaterBase>(WaterArray[i])->SetWaterNoCollision();
 		}
 	}
 }
 
 void AWeatherSystemMaster::SetupDefaults()
 {
-	//根组件
+	// Root Component
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	AWeatherSystemMaster::SetRootComponent(RootComponent);
-	//太阳光
+
+	// Directional Light
 	DirectionalLight = CreateDefaultSubobject<UDirectionalLightComponent>(TEXT("DirectionalLight"));
 	DirectionalLight->SetupAttachment(RootComponent);
 	DirectionalLight->SetMobility(EComponentMobility::Movable);
@@ -338,7 +347,8 @@ void AWeatherSystemMaster::SetupDefaults()
 	DirectionalLight->DynamicShadowCascades = 5.0f;
 	DirectionalLight->CascadeDistributionExponent = 4.0f;
 	DirectionalLight->CascadeTransitionFraction = 0.3f;
-	//天空光
+
+	// Sky Light
 	SkyLight = CreateDefaultSubobject<USkyLightComponent>(TEXT("SkyLight"));
 	SkyLight->SetupAttachment(RootComponent);
 	SkyLight->SetMobility(EComponentMobility::Movable);
@@ -347,12 +357,14 @@ void AWeatherSystemMaster::SetupDefaults()
 	CubemapTemp = LoadObject<UTextureCube>(NULL, TEXT("TextureCube'/WeatherSystem/HDRI/CubeMap.CubeMap'"));
 	SkyLight->Cubemap = CubemapTemp;
 	SkyLight->bCloudAmbientOcclusion = true;
-	//天空大气
+
+	// Sky Atmosphere
 	SkyAtmosphere = CreateDefaultSubobject<USkyAtmosphereComponent>(TEXT("SkyAtmosphere"));
 	SkyAtmosphere->SetupAttachment(RootComponent);
 	SkyAtmosphere->SetMobility(EComponentMobility::Movable);
 	SkyAtmosphere->SetSkyLuminanceFactor(FVector(0.5f, 0.625f, 1.0f));
-	//后处理
+
+	// Post Process
 	PostProcessComp = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcess"));
 	PostProcessComp->SetupAttachment(RootComponent);
 	PostProcessComp->SetMobility(EComponentMobility::Movable);
@@ -368,7 +380,8 @@ void AWeatherSystemMaster::SetupDefaults()
 	PostProcessComp->Settings.ColorGradingIntensity = 0.5f;
 	LUT = LoadObject<UTexture2D>(NULL, TEXT("Texture2D'/WeatherSystem/HDRI/RGBTableAutoMap.RGBTableAutoMap'"));
 	PostProcessComp->Settings.ColorGradingLUT = LUT;
-	//体积云
+
+	// Volumetric Cloud
 	VolumetricCloud = CreateDefaultSubobject<UVolumetricCloudComponent>(TEXT("VolumetricCloud"));
 	VolumetricCloud->SetupAttachment(RootComponent);
 	VolumetricCloud->SetMobility(EComponentMobility::Movable);
@@ -376,12 +389,14 @@ void AWeatherSystemMaster::SetupDefaults()
 	CloudMaterial = LoadObject<UMaterialInstance>(NULL, TEXT("MaterialInstanceConstant'/WeatherSystem/FX/Materials/M_SimpleVolumetricCloud_Inst.M_SimpleVolumetricCloud_Inst'"));
 	VolumetricCloud->SetMaterial(CloudMaterial);
 	VolumetricCloud->bUsePerSampleAtmosphericLightTransmittance = true;
-	//高度雾
+
+	// Exponential Height Fog
 	ExponentialHeightFog = CreateDefaultSubobject<UExponentialHeightFogComponent>(TEXT("ExponentialHeightFog"));
 	ExponentialHeightFog->SetupAttachment(RootComponent);
 	ExponentialHeightFog->SetMobility(EComponentMobility::Movable);
 	ExponentialHeightFog->SetRelativeLocation(FVector(0.0f, 0.0f, 5000.0f));
-	//天空球
+
+	// Sky Sphere
 	SkySphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SkySphere"));
 	SkySphere->SetupAttachment(RootComponent);
 	SkySphereMesh = LoadObject<UStaticMesh>(NULL, TEXT("StaticMesh'/WeatherSystem/Sky/SM_SkySphere.SM_SkySphere'"));
@@ -391,82 +406,92 @@ void AWeatherSystemMaster::SetupDefaults()
 	SkySphere->SetMaterial(0, SkyMaterial);
 	SkySphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SkySphere->CastShadow = false;
-	//下雨特效
+
+	// Rain FX
 	RainFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("RainFX"));
 	RainFX->SetupAttachment(RootComponent);
 	RainFX->SetVisibility(true);
 	NS_RainFall = LoadObject<UNiagaraSystem>(NULL, TEXT("NiagaraSystem'/WeatherSystem/FX/NS_RainFall.NS_RainFall'"));
 	RainFX->SetAsset(NS_RainFall);
-	//下雨音效
+
+	// Rain Audio
 	RainAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("RainAudio"));
 	RainAudio->SetupAttachment(RootComponent);
 	RainSound = LoadObject<USoundCue>(NULL, TEXT("SoundCue'/WeatherSystem/Sounds/Cue/Rain_Cue.Rain_Cue'"));
 	RainAudio->SetSound(RainSound);
 	RainAudio->VolumeMultiplier = 0.0f;
-	//打雷音效
+
+	// Thunder Audio
 	ThunderAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("ThunderAudio"));
 	ThunderAudio->SetupAttachment(RootComponent);
 	ThunderSound = LoadObject<USoundCue>(NULL, TEXT("SoundCue'/WeatherSystem/Sounds/Cue/Thunder_Cue.Thunder_Cue'"));
 	ThunderAudio->SetSound(ThunderSound);
 	ThunderAudio->VolumeMultiplier = 0.0f;
-	//下雪特效
+
+	// Snow FX
 	SnowFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("SnowFX"));
 	SnowFX->SetupAttachment(RootComponent);
 	SnowFX->SetVisibility(true);
 	NS_SnowFall = LoadObject<UNiagaraSystem>(NULL, TEXT("NiagaraSystem'/WeatherSystem/FX/NS_SnowFall.NS_SnowFall'"));
 	SnowFX->SetAsset(NS_SnowFall);
-	//下雪音效
+
+	// Snow Audio
 	SnowAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("SnowAudio"));
 	SnowAudio->SetupAttachment(RootComponent);
 	SnowSound = LoadObject<USoundCue>(NULL, TEXT("SoundCue'/WeatherSystem/Sounds/Cue/Snow_Cue.Snow_Cue'"));
 	SnowAudio->SetSound(SnowSound);
 	SnowAudio->VolumeMultiplier = 0.0f;
-	//刮风音效
+
+	// Wind Audio
 	WindAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("WindAudio"));
 	WindAudio->SetupAttachment(RootComponent);
 	WindSound = LoadObject<USoundCue>(NULL, TEXT("SoundCue'/WeatherSystem/Sounds/Cue/Wind_Cue.Wind_Cue'"));
 	WindAudio->SetSound(WindSound);
 	WindAudio->VolumeMultiplier = 0.0f;
-	//鸟音效
+
+	// Birds Audio
 	BirdsAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("BirdsAudio"));
 	BirdsAudio->SetupAttachment(RootComponent);
 	BirdsSound = LoadObject<USoundCue>(NULL, TEXT("SoundCue'/WeatherSystem/Sounds/Cue/Birds_Cue.Birds_Cue'"));
 	BirdsAudio->SetSound(BirdsSound);
-	//蝉音效
+
+	// Cicada Audio
 	CicadaAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("CicadaAudio"));
 	CicadaAudio->SetupAttachment(RootComponent);
 	CicadaSound = LoadObject<USoundCue>(NULL, TEXT("SoundCue'/WeatherSystem/Sounds/Cue/Cicada_Loop.Cicada_Loop'"));
 	CicadaAudio->SetSound(CicadaSound);
-	//夜晚
+
+	// Timelines
 	IsNightTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("IsNightTimeLine"));
 	IsNightCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/IsNightLerp.IsNightLerp'"));
-	//昼夜更替
+
 	SunTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("SunTimeLine"));
 	SunAngleCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/SunAngle.SunAngle'"));
-	//下雪或下雨
+
 	SnowOrRainFallingTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("SnowOrRainFallingTimeLine"));
 	SnowOrRainFallingCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/SnowOrRainFalling.SnowOrRainFalling'"));
-	//下雨淋湿
+
 	GetWetTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("GetWetTimeLine"));
 	GetWetCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/GetWet.GetWet'"));
-	//下雪雪地积雪水面冻结
+
 	FrozenTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("FrozenTimeLine"));
 	FrozenCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/Frozen.Frozen'"));
-	//下雨
+
 	RainFallingTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("RainFallingTimeLine"));
 	RainFallingCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/RainFalling.RainFalling'"));
-	//下雪
+
 	SnowFallingTimeLine = CreateDefaultSubobject<UTimelineComponent>(TEXT("SnowFallingTimeLine"));
 	SnowFallingCurve = LoadObject<UCurveFloat>(NULL, TEXT("CurveFloat'/WeatherSystem/Curve/SnowFalling.SnowFalling'"));
-	//MPC参数
+
+	// Material Parameter Collections
 	MPC = LoadObject<UMaterialParameterCollection>(NULL, TEXT("MaterialParameterCollection'/WeatherSystem/MPC/MPC_Weather.MPC_Weather'"));
 	MPC_Tree = LoadObject<UMaterialParameterCollection>(NULL, TEXT("MaterialParameterCollection'/WeatherSystem/MPC/MPC_Tree_Wind.MPC_Tree_Wind'"));
+
+	// Color Defaults
 	SnowColorOfDay = FLinearColor(0.5f, 0.65f, 1.0f, 1.0f);
 	SnowColorOfNight = FLinearColor(0.25f, 0.325f, 0.5f, 1.0f);
 	DarkClouds = FLinearColor(0.035f, 0.0395f, 0.05f, 1.0f);
 	RainColorOfDay = SnowColorOfDay;
 	RainColorOfNight = SnowColorOfNight;
-	
 }
-
 

@@ -17,6 +17,7 @@
 
 AEnemyCharacter::AEnemyCharacter()
 {
+	bReplicates = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
@@ -37,6 +38,8 @@ AEnemyCharacter::AEnemyCharacter()
 	IsDead = false;
 	IsReadySpawn = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	GetCharacterMovement()->GravityScale = 0.f;
+	SetReplicateMovement(true);
 	SetActorHiddenInGame(true);
 }
 
@@ -46,9 +49,15 @@ void AEnemyCharacter::SetState(bool NowState)
 	SetActorEnableCollision(NowState);
 	SetActorTickEnabled(NowState);
 	if (NowState)
+	{
+		GetCharacterMovement()->GravityScale = 1.f;
 		NowAIController->Possess(this);
+	}
 	else
+	{
+		GetCharacterMovement()->GravityScale = 0.f;
 		NowAIController->UnPossess();
+	}
 }
 
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -208,7 +217,6 @@ void AEnemyCharacter::UseSkill(const FString& _SkillName)
 
 void AEnemyCharacter::DiedEnemy()
 {
-	GetCharacterMovement()->GravityScale = 0.f;
 	OnlyHpBar->SetRenderOpacity(0.f);
 	IsAttacking = false;
 	DropItem();
@@ -228,11 +236,9 @@ void AEnemyCharacter::ResetStat()
 	IsDead = false;
 	NowAIController->IsDead = false;
 	IsReadySpawn = false;
-	GetMesh()->SetEnableGravity(true);
 	SetActorLocation(SaveLocation);
 	SetState(true);
 	LoadCharacterData();
-	GetCharacterMovement()->GravityScale = 1.f;
 }
 
 
