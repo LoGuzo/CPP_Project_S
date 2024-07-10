@@ -372,6 +372,24 @@ void AUserCharacter::Attack()
 
 void AUserCharacter::AttackMontage()
 {
+	if (HasAuthority())
+		Multi_AttackMontage();
+	else
+		Server_AttackMontage();
+}
+
+void AUserCharacter::Server_AttackMontage_Implementation()
+{
+	Multi_AttackMontage();
+}
+
+bool AUserCharacter::Server_AttackMontage_Validate()
+{
+	return true;
+}
+
+void AUserCharacter::Multi_AttackMontage_Implementation()
+{
 	if (!AnimInstance)
 		return;
 	AnimInstance->OnHandSwordPlayAM();
@@ -530,24 +548,42 @@ void AUserCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass)
 
 void AUserCharacter::Dash()
 {
-	// Get the last input vector (movement direction)
+	if (HasAuthority())
+		Multi_Dash();
+	else
+		Server_Dash();
+}
+void AUserCharacter::Server_Dash_Implementation()
+{
+	Multi_Dash();
+}
+
+bool AUserCharacter::Server_Dash_Validate()
+{
+	return true;
+}
+
+void AUserCharacter::Multi_Dash_Implementation()
+{
 	FVector LastInputVector = GetCharacterMovement()->GetLastInputVector();
 	if (LastInputVector.IsNearlyZero())
 	{
-		// If no movement input, dash in the forward direction
 		LastInputVector = GetActorForwardVector();
 	}
 	else
 	{
-		// Normalize the input vector to get the direction
 		LastInputVector = LastInputVector.GetSafeNormal();
 	}
 	LastInputVector.Z = 0;
 
 	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
 	LaunchCharacter(LastInputVector * 5000.f, true, true);
+
 	if (AnimInstance)
+	{
 		AnimInstance->SetOnDash(true);
+	}
+
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::StopDashing, 0.1f, false);
 }
@@ -565,7 +601,12 @@ void AUserCharacter::ResetDash()
 		AnimInstance->SetOnDash(false);
 }
 
-void AUserCharacter::UseSkill(const FString& _SkillName)
+void AUserCharacter::Multi_UseSkill(const FString& SkillName)
+{
+	Super::Multi_UseSkill(SkillName);
+}
+
+void AUserCharacter::Multi_UseSkill_Implementation(const FString& _SkillName)
 {
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)

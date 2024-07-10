@@ -55,7 +55,7 @@ public:
 	class US_StatComponent* GetStatCom() { return Stat; }
 	class UC_SkillComponent* GetSkillCom() { return Skill; }
 
-	virtual void UseSkill(const FString& _SkillName) {};
+	virtual void UseSkill(const FString& _SkillName);
 
 	void MeleeAttackCheck(float _Range);
 	void ScopeAttackCheck(float _Range);
@@ -70,4 +70,13 @@ public:
 	bool GetIsDead() { return IsDead; }
 
 	E_CharacterType GetType() { return MyCharType; }
+
+protected:
+	UFUNCTION(Server, Reliable, WithValidation)
+	virtual void Server_UseSkill(const FString& _SkillName);
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void Multi_UseSkill(const FString& _SkillName);
+
+	virtual void Multi_UseSkill_Implementation(const FString& SkillName);
 };

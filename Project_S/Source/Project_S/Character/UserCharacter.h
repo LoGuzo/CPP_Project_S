@@ -36,8 +36,6 @@ public:
 	void SaveCharacterData();
 	void LoadCharacterData();
 	void SetClass(E_CharClass _ClassType);
-	virtual void UseSkill(const FString& _SkillName) override;
-
 	void PickUpItem();
 protected:
 	void SetMesh(E_CharClass _ClassType);
@@ -66,6 +64,10 @@ protected:
 	float CalculateHitDirectionAngle(const FVector& AttackerLocation);
 
 	void UserDied();
+
+	virtual void Multi_UseSkill(const FString& _SkillName) override;
+
+	virtual void Multi_UseSkill_Implementation(const FString& SkillName) override;
 private:
 	E_CharClass ClassType;
 
@@ -104,6 +106,12 @@ private:
 
 	void Dash();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_Dash();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_Dash();
+
 	void StopDashing();
 
 	void ResetDash();
@@ -140,6 +148,12 @@ public:
 	void Attack();
 	
 	void AttackMontage();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_AttackMontage();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_AttackMontage();
 	
 	UFUNCTION()
 	void OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted);

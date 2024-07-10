@@ -61,6 +61,29 @@ void AFirstCharacter::SetSaveLocation(FVector _SaveLocation)
 	SaveLocation = _SaveLocation;
 }
 
+void AFirstCharacter::UseSkill(const FString& _SkillName)
+{
+	if (HasAuthority())
+		Multi_UseSkill(_SkillName);
+	else
+		Server_UseSkill(_SkillName);
+}
+
+void AFirstCharacter::Server_UseSkill_Implementation(const FString& _SkillName)
+{
+	Multi_UseSkill(_SkillName);
+}
+
+bool AFirstCharacter::Server_UseSkill_Validate(const FString& SkillName)
+{
+	return true;
+}
+
+void AFirstCharacter::Multi_UseSkill_Implementation(const FString& _SkillName)
+{
+}
+
+
 void AFirstCharacter::MeleeAttackCheck(float _Range)
 {
 	TArray<FHitResult> HitResults;
