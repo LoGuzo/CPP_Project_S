@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
 #include "Project_S/Component/S_StatComponent.h"
@@ -17,7 +18,6 @@
 
 AEnemyCharacter::AEnemyCharacter()
 {
-	bReplicates = true;
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
@@ -39,7 +39,6 @@ AEnemyCharacter::AEnemyCharacter()
 	IsReadySpawn = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	GetCharacterMovement()->GravityScale = 0.f;
-	SetReplicateMovement(true);
 	SetActorHiddenInGame(true);
 }
 
@@ -110,7 +109,25 @@ void AEnemyCharacter::PostInitializeComponents()
 	}
 }
 
-void AEnemyCharacter::SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial)
+void AEnemyCharacter::SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
+{
+	if (HasAuthority())
+		Multi_SetMesh(_MonsterMesh, _MonsterMaterial);
+	else
+		Server_SetMesh(_MonsterMesh, _MonsterMaterial);
+}
+
+void AEnemyCharacter::Server_SetMesh_Implementation(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
+{
+	Multi_SetMesh(_MonsterMesh, _MonsterMaterial);
+}
+
+bool AEnemyCharacter::Server_SetMesh_Validate(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
+{
+	return true;
+}
+
+void AEnemyCharacter::Multi_SetMesh_Implementation(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
 {
 	USkeletalMesh* MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
 	if (MeshPath)
@@ -152,6 +169,14 @@ void AEnemyCharacter::DropItem()
 			}
 		}
 	}
+}
+
+void AEnemyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AEnemyCharacter, AnimInstance);
+	DOREPLIFETIME(AEnemyCharacter, MyMaterialInstanceDynamic);
 }
 
 void AEnemyCharacter::LoadCharacterData()

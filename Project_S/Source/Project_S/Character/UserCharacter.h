@@ -40,6 +40,12 @@ public:
 protected:
 	void SetMesh(E_CharClass _ClassType);
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SetMesh(E_CharClass _ClassType);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_SetMesh(E_CharClass _ClassType);
+
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
@@ -71,6 +77,7 @@ protected:
 private:
 	E_CharClass ClassType;
 
+	UPROPERTY(Replicated)
 	class AWeaponActor* MyWeapon;
 
 	TWeakPtr<FCharacterClass> ClassData;
@@ -98,6 +105,7 @@ private:
 
 	class UC_QuickSlotComponent* QuickSlot;
 
+	UPROPERTY(Replicated)
 	class UUserAnimInstance* AnimInstance;
 
 	bool IsAttacking;
@@ -136,14 +144,28 @@ private:
 	void UsePotion(const int32 StackSize, const FString& ItemName);
 
 	void SetHitFalse();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public:
 	void UseQuickSlot();
 	
 	void AttackCheck();
 
-	void SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon);
+	void SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);
 
 	void RemoveMyWeapon();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_RemoveMyWeapon();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_RemoveMyWeapon();
 
 	void Attack();
 	

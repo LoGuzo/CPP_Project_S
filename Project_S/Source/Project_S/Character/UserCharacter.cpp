@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Project_S/MappingClass.h"
+#include "Net/UnrealNetwork.h"
 #include "Project_S/AnimInstance/UserAnimInstance.h"
 #include "Project_S/Component/C_EqiupComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
@@ -25,7 +26,6 @@
 
 AUserCharacter::AUserCharacter()
 {
-	bReplicates = true;
 	MyCharType = E_CharacterType::E_User;
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -40,7 +40,6 @@ AUserCharacter::AUserCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-	SetReplicateMovement(true);
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 	// Create a camera boom (pulls in towards the player if there is a collision)
@@ -107,6 +106,24 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 }
 void AUserCharacter::SetMesh(E_CharClass _ClassType)
 {
+	if (HasAuthority())
+		Multi_SetMesh(_ClassType);
+	else
+		Server_SetMesh(_ClassType);
+}
+
+void AUserCharacter::Server_SetMesh_Implementation(E_CharClass _ClassType)
+{
+	Multi_SetMesh(_ClassType);
+}
+
+bool AUserCharacter::Server_SetMesh_Validate(E_CharClass _ClassType)
+{
+	return true;
+}
+
+void AUserCharacter::Multi_SetMesh_Implementation(E_CharClass _ClassType)
+{
 	MappingClass* CharacterTypeMapping = new MappingClass();
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
@@ -133,6 +150,7 @@ void AUserCharacter::SetMesh(E_CharClass _ClassType)
 		}
 	}
 }
+
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -324,29 +342,68 @@ void AUserCharacter::TimelineProgress(float _Value)
 	GetMesh()->SetRelativeRotation(FRotator(BeforeRot.Pitch, FMath::Lerp(BeforeRot.Yaw, BeforeRot.Yaw + float(360 * 12), _Value), BeforeRot.Roll));
 }
 
-void AUserCharacter::SetMyWeapon(const TSubclassOf<class AA_Item>_MyWeapon)
+void AUserCharacter::SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon)
 {
-	// UserClass
+	if (HasAuthority())
+		Multi_SetMyWeapon(_MyWeapon);
+	else
+		Server_SetMyWeapon(_MyWeapon);
+}
+
+void AUserCharacter::Server_SetMyWeapon_Implementation(TSubclassOf<class AA_Item> _MyWeapon)
+{
+	Multi_SetMyWeapon(_MyWeapon);
+}
+
+bool AUserCharacter::Server_SetMyWeapon_Validate(TSubclassOf<class AA_Item> _MyWeapon)
+{
+	return true;
+}
+
+void AUserCharacter::Multi_SetMyWeapon_Implementation(TSubclassOf<class AA_Item> _MyWeapon)
+{
 	if (MyWeapon)
 		return;
+
 	FName WeaponSocket(TEXT("r_hand_sword"));
-	MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(_MyWeapon);
-	MyWeapon->GetBoxCollision()->SetSimulatePhysics(false);
-	MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
-	if (MyWeapon) {
+	if(!HasAuthority())
+		MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(*_MyWeapon);
+	if (MyWeapon)
+	{
+		MyWeapon->GetBoxCollision()->SetSimulatePhysics(false);
+		MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 		MyWeapon->SetOwner(this);
-	}
-	if (AnimInstance)
-	{
-		AnimInstance->SetHaveWeapon(true);
+
+		if (AnimInstance)
+		{
+			AnimInstance->SetHaveWeapon(true);
+		}
 	}
 }
 
 void AUserCharacter::RemoveMyWeapon()
 {
-	if (!MyWeapon)
+	if (HasAuthority())
+		Multi_RemoveMyWeapon();
+	else
+		Server_RemoveMyWeapon();
+}
+
+void AUserCharacter::Server_RemoveMyWeapon_Implementation()
+{
+	Multi_RemoveMyWeapon();
+}
+
+bool AUserCharacter::Server_RemoveMyWeapon_Validate()
+{
+	return true;
+}
+
+void AUserCharacter::Multi_RemoveMyWeapon_Implementation()
+{
+	if (MyWeapon)
 	{
 		MyWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 		MyWeapon->SetOwner(nullptr);
@@ -650,6 +707,14 @@ void AUserCharacter::SetHitFalse()
 		AnimInstance->SetIsHit(false);
 		GetWorldTimerManager().ClearTimer(HitHandle);
 	}
+}
+
+void AUserCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AUserCharacter, AnimInstance);
+	DOREPLIFETIME(AUserCharacter, MyWeapon);
 }
 
 float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation)

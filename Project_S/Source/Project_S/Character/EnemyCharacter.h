@@ -62,8 +62,10 @@ private:
 
 	class UOnlyHpBar* OnlyHpBar;
 
+	UPROPERTY(Replicated)
 	class UMonsterAnimInstance* AnimInstance;
 
+	UPROPERTY(Replicated)
 	class UMaterialInstanceDynamic* MyMaterialInstanceDynamic;
 
 	UC_SkillComponent* Pattern;
@@ -73,7 +75,13 @@ private:
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
 
-	void SetMesh(TSoftObjectPtr<UStreamableRenderAsset> _MonsterMesh, TSoftObjectPtr<UMaterialInterface> _MonsterMaterial);
+	void SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial);
+	
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial);
+	
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial);
 
 	TWeakPtr<FMonsterData> LoadData;
 
@@ -82,4 +90,6 @@ private:
 	TArray<FString> Item;
 
 	void DropItem();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
