@@ -189,8 +189,8 @@ void AEnemyCharacter::DropItem()
 					{
 						FVector RandomOffset = FVector(RandRange(-100.0f, 100.0f), RandRange(-100.0f, 100.0f), 0.0f);
 						FVector SpawnLocation = GetActorLocation() + RandomOffset;
-						AA_Item* DropItem = GetWorld()->SpawnActor<AA_Item>(ItemData.Get()->ItemClass, SpawnLocation, FRotator::ZeroRotator);
-						DropItem->SetItem(Item[i]);
+						class AA_Item* DropItems = GetWorld()->SpawnActor<AA_Item>(ItemData.Get()->ItemClass, SpawnLocation, FRotator::ZeroRotator);
+						DropItems->SetItem(Item[i]);
 					}
 				}
 			}

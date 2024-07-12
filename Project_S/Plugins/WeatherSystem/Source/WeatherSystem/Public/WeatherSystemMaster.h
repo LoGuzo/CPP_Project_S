@@ -117,7 +117,7 @@ public:
 	UPROPERTY(Replicated, BlueprintReadOnly)
 	bool bSnowIsComing = false;
 	//记录下雨状态
-	UPROPERTY(Replicated,BlueprintReadOnly)
+	UPROPERTY(Replicated, BlueprintReadOnly)
 	bool bRainIsComing = false;
 	//记录是否在夜晚
 	UPROPERTY(Replicated,BlueprintReadOnly)

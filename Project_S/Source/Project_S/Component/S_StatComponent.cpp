@@ -78,7 +78,7 @@ void US_StatComponent::SetHp_Implementation(float _Hp)
 	OnHpChanged.Broadcast();
 }
 
-void US_StatComponent::SetMaxHp(float _MaxHp)
+void US_StatComponent::SetMaxHp_Implementation(float _MaxHp)
 {
 	MaxHp = _MaxHp;
 }
@@ -140,4 +140,5 @@ void US_StatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(US_StatComponent, Hp);
+	DOREPLIFETIME(US_StatComponent, MaxHp);
 }

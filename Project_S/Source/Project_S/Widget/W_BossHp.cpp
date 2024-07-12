@@ -22,6 +22,7 @@ void UW_BossHp::UpdateHp()
 {
 	if (StatComp.IsValid())
 	{
+        UE_LOG(LogTemp, Warning, TEXT("%f"), StatComp->GetHp());
         TargetHealth = StatComp->GetHpRatio();
         CurrentHealth = PB_Hp->Percent;
         HealthUpdateDuration = 1.f;
@@ -37,10 +38,10 @@ void UW_BossHp::SetTxtName(const int32 Lvl, const FString& Name)
 		Txt_LvName->SetText(FText::FromString(FString::Printf(TEXT("LV.%d %s"), Lvl, *Name)));
 }
 
+
 void UW_BossHp::AnimateHealthBar()
 {
     HealthUpdateTime += GetWorld()->GetDeltaSeconds();
-
     if (HealthUpdateTime >= HealthUpdateDuration)
     {
         GetWorld()->GetTimerManager().ClearTimer(HealthUpdateTimerHandle);

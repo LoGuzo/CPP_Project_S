@@ -4,6 +4,7 @@
 #include "MiddleBossCharacter.h"
 #include "Project_S/Widget/W_BossHp.h"
 #include "Project_S/Component/S_StatComponent.h"
+#include "Project_S/Controllers/UserPlayerController.h"
 
 AMiddleBossCharacter::AMiddleBossCharacter()
 {
@@ -23,7 +24,9 @@ float AMiddleBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& D
 	if (Stat) {
 		if (Stat->GetHp() <= 0)
 		{
-			GetWorldTimerManager().SetTimer(RemoveWidgetHandle, this, &AMiddleBossCharacter::RemoveWidget, 10.f, false);
+			FTimerDelegate TimerDel;
+			TimerDel.BindUFunction(this, FName("SyncRemoveWidget"), EventInstigator);
+			GetWorldTimerManager().SetTimer(RemoveWidgetHandle, TimerDel, 10.f, false);
 		}
 	}
 	return DamageAmount;
@@ -44,16 +47,23 @@ void AMiddleBossCharacter::LoadCharacterData()
 	{
 		if (Stat)
 		{
-			W_BossHp->BindHp(Stat);
 			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		}
 	}
 }
 
+
 void AMiddleBossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	W_BossHp = CreateWidget<UW_BossHp>(GetWorld(), U_BossHp);
+	if (W_BossHp)
+	{
+		if (Stat)
+		{
+			W_BossHp->BindHp(Stat);
+		}
+	}
 }
 
 void AMiddleBossCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -67,6 +77,14 @@ void AMiddleBossCharacter::RemoveWidget()
 	if (W_BossHp && W_BossHp->IsInViewport())
 	{
 		W_BossHp->RemoveFromViewport();
-		W_BossHp = nullptr;
+	}
+}
+
+void AMiddleBossCharacter::SyncRemoveWidget(AController* PlayerController)
+{
+	AUserPlayerController* UserPlayerController = Cast<AUserPlayerController>(PlayerController);
+	if (UserPlayerController)
+	{
+		UserPlayerController->SyncRemoveEnemyHpBar(this);
 	}
 }

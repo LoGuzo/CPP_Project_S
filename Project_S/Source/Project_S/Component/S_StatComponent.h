@@ -37,6 +37,7 @@ public:
 	void SetMonsterLevel(int32 _Level);
 	UFUNCTION(NetMultiCast, Reliable)
 	void SetHp(float _Hp);
+	UFUNCTION(NetMultiCast, Reliable)
 	void SetMaxHp(float _MaxHp);
 	void SetMp(float _Mp);
 	void SetMaxMp(float _MaxMp);
@@ -61,6 +62,7 @@ public:
 
 private:
 
+	// Level
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 MaxLevel;
 
@@ -71,7 +73,7 @@ private:
 	UPROPERTY(Replicated, EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	float Hp;
 
-	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(Replicated, EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	float MaxHp;
 
 	// Mp

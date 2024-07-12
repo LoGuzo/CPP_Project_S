@@ -318,12 +318,32 @@ void AUserCharacter::Tick(float DeltaTime)
 	CurveTimeLine.TickTimeline(DeltaTime);
 }
 
-void AUserCharacter::PickUpItem()
+void AUserCharacter::Server_PickUpItem_Implementation()
+{
+	Multi_PickUpItem();
+}
+
+bool AUserCharacter::Server_PickUpItem_Validate()
+{
+	return true;
+}
+void AUserCharacter::Multi_PickUpItem_Implementation()
 {
 	if (GetCurItem() != nullptr) {
 		GetCurItem()->GetC_ItemComponent()->Interact(this);
 		Inventory->OnInventoryUpdated.Broadcast();
 		QuickSlot->OnQuickUpdated.Broadcast();
+	}
+}
+void AUserCharacter::PickUpItem()
+{
+	if (HasAuthority())
+	{
+		Multi_PickUpItem();
+	}
+	else
+	{
+		Server_PickUpItem();
 	}
 }
 
@@ -358,6 +378,7 @@ void AUserCharacter::Multi_SetMyWeapon_Implementation(TSubclassOf<class AA_Item>
 	if (HasAuthority())
 	{
 		MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(*_MyWeapon);
+		MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
 		OnRep_MyWeapon();
 	}
 }
@@ -368,11 +389,9 @@ void AUserCharacter::OnRep_MyWeapon()
 	{
 		FName WeaponSocket(TEXT("r_hand_sword"));
 		MyWeapon->GetBoxCollision()->SetSimulatePhysics(false);
-		MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 		MyWeapon->SetOwner(this);
-
 		if (AnimInstance)
 		{
 			AnimInstance->SetHaveWeapon(true);
@@ -712,6 +731,8 @@ void AUserCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AUserCharacter, MyWeapon);
+	DOREPLIFETIME(AUserCharacter, Inventory);
+	DOREPLIFETIME(AUserCharacter, QuickSlot);
 }
 
 float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation)

@@ -24,8 +24,17 @@ void AUserPlayerController::BeginPlay()
 	}
 }
 
-void AUserPlayerController::SyncEnemyHpBar_Implementation(class AEnemyCharacter* _Enemy)
+void AUserPlayerController::SyncEnemyHpBar_Implementation(AEnemyCharacter* _Enemy)
 {
 	if (_Enemy)
 		_Enemy->ShowHpBar();
+}
+
+
+void AUserPlayerController::SyncRemoveEnemyHpBar_Implementation(AEnemyCharacter* _Enemy)
+{
+	if (_Enemy)
+	{
+		_Enemy->RemoveWidget();
+	}
 }

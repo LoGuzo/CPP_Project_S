@@ -36,6 +36,11 @@ public:
 	void SaveCharacterData();
 	void LoadCharacterData();
 	void SetClass(E_CharClass _ClassType);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void Server_PickUpItem();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_PickUpItem();
 	void PickUpItem();
 	void SetUserWidget();
 protected:
@@ -96,10 +101,12 @@ private:
 
 	class AA_Item* Curitem;
 
+	UPROPERTY(Replicated)
 	class UC_InventoryComponent* Inventory;
 
 	class UC_EqiupComponent* Equip;
 
+	UPROPERTY(Replicated)
 	class UC_QuickSlotComponent* QuickSlot;
 
 	class UUserAnimInstance* AnimInstance;

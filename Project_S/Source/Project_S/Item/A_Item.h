@@ -43,13 +43,15 @@ protected:
 private:
 	void SetDrop();
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(ReplicatedUsing = OnRep_ItemSet)
 	FString Name;
 
 	UPROPERTY(VisibleAnywhere)
 	E_ItemType Type;
 
 public:	
+	UFUNCTION()
+	void OnRep_ItemSet();
 
 	UBoxComponent* GetBoxCollision() { return BoxCollision; }
 
@@ -58,4 +60,6 @@ public:
 	void SetName(const FString& _ItemName);
 
 	void SetItem(const FString& _ItemName);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

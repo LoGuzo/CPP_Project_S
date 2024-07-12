@@ -3,6 +3,7 @@
 
 #include "A_Item.h"
 #include "Project_S/Character/UserCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -24,7 +25,12 @@ AA_Item::AA_Item()
 void AA_Item::SetItem(const FString& _ItemName)
 {
 	Name = _ItemName;
-	ItemCom->SetItem(_ItemName);
+	OnRep_ItemSet();
+}
+
+void AA_Item::OnRep_ItemSet()
+{
+	ItemCom->SetItem(Name);
 	SetW_Mesh(ItemCom->GetItemMesh());
 	SetType(ItemCom->GetType());
 }
@@ -75,4 +81,11 @@ void AA_Item::BeginPlay()
 void AA_Item::SetDrop()
 {
 	BoxCollision->SetSimulatePhysics(false);
+}
+
+void AA_Item::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AA_Item, Name);
 }
