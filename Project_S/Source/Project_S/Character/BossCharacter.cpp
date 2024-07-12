@@ -31,9 +31,7 @@ void ABossCharacter::SetBossMesh()
 {
 	//SetActorScale3D(FVector(5.f, 5.f, 5.f));
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
-	FVector MeshLocation = FVector(0.f, 0.f, -300.f);
-	FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
-	GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -300.f), FRotator(0.f, -90.f, 0.f));
 	GetMesh()->SetRelativeScale3D(FVector(1.f, 1.f, 3.f));
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Ancient_Golem/Demo/Boss_AnimBP.Boss_AnimBP_C'"));
 	if (ANIM.Succeeded())
@@ -91,6 +89,7 @@ void ABossCharacter::LoadCharacterData()
 	SetWidget();
 	SetState(true);
 }
+
 void ABossCharacter::SetWidget()
 {
 	if (W_BossHp && !W_BossHp->IsInViewport())

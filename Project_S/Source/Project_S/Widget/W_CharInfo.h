@@ -71,6 +71,10 @@ private:
 	UPROPERTY()
 		float TargetHealth;
 
+protected:
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	UWidgetAnimation* Shake_Hp;
+
 	void AnimateHealthBar();
 
 	TMap<E_CharClass, FString> CharMap= { 

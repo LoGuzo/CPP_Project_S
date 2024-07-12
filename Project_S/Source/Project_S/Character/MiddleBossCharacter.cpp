@@ -20,10 +20,6 @@ float AMiddleBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& D
 		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	if (W_BossHp && !W_BossHp->IsInViewport())
-	{
-		W_BossHp->AddToViewport();
-	}
 	if (Stat) {
 		if (Stat->GetHp() <= 0)
 		{
@@ -31,6 +27,14 @@ float AMiddleBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& D
 		}
 	}
 	return DamageAmount;
+}
+
+void AMiddleBossCharacter::ShowHpBar()
+{
+	if (W_BossHp && !W_BossHp->IsInViewport())
+	{
+		W_BossHp->AddToViewport();
+	}
 }
 
 void AMiddleBossCharacter::LoadCharacterData()

@@ -35,6 +35,7 @@ public:
 
 	void SetLevel(int32 _Level);
 	void SetMonsterLevel(int32 _Level);
+	UFUNCTION(NetMultiCast, Reliable)
 	void SetHp(float _Hp);
 	void SetMaxHp(float _MaxHp);
 	void SetMp(float _Mp);
@@ -67,7 +68,7 @@ private:
 	int32 Level;
 
 	// Hp
-	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(Replicated, EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	float Hp;
 
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
@@ -94,4 +95,6 @@ private:
 	float Attack;
 
 	TWeakPtr<FCharacterData> StatData;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

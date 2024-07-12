@@ -2,6 +2,8 @@
 
 
 #include "UserPlayerController.h"
+#include "Project_S/Character/UserCharacter.h"
+#include "Project_S/Character/EnemyCharacter.h"
 
 AUserPlayerController::AUserPlayerController()
 {
@@ -13,4 +15,17 @@ void AUserPlayerController::BeginPlay()
 	Super::BeginPlay();
 	FInputModeGameOnly InputMode;
 	SetInputMode(InputMode);
+
+	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
+
+	if (UserCharacter)
+	{
+		UserCharacter->SetUserWidget();
+	}
+}
+
+void AUserPlayerController::SyncEnemyHpBar_Implementation(class AEnemyCharacter* _Enemy)
+{
+	if (_Enemy)
+		_Enemy->ShowHpBar();
 }

@@ -42,6 +42,7 @@ AUserCharacter::AUserCharacter()
 	GetCharacterMovement()->AirControl = 0.2f;
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -106,24 +107,6 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 }
 void AUserCharacter::SetMesh(E_CharClass _ClassType)
 {
-	if (HasAuthority())
-		Multi_SetMesh(_ClassType);
-	else
-		Server_SetMesh(_ClassType);
-}
-
-void AUserCharacter::Server_SetMesh_Implementation(E_CharClass _ClassType)
-{
-	Multi_SetMesh(_ClassType);
-}
-
-bool AUserCharacter::Server_SetMesh_Validate(E_CharClass _ClassType)
-{
-	return true;
-}
-
-void AUserCharacter::Multi_SetMesh_Implementation(E_CharClass _ClassType)
-{
 	MappingClass* CharacterTypeMapping = new MappingClass();
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
@@ -131,7 +114,7 @@ void AUserCharacter::Multi_SetMesh_Implementation(E_CharClass _ClassType)
 		ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData(CharacterTypeMapping->GetCharacterDescription(_ClassType)));
 		if (ClassData.IsValid())
 		{
-			USkeletalMesh* MeshPath = ClassData.Pin()->ClassMesh.LoadSynchronous();
+			MeshPath = ClassData.Pin()->ClassMesh.LoadSynchronous();
 			if (MeshPath)
 			{
 				GetMesh()->SetSkeletalMesh(MeshPath);
@@ -191,8 +174,10 @@ float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	if (TCameraShake)
 		PlayCameraShake(TCameraShake);
 
-	if (HUDWidget)
+	if (HUDWidget && HUDWidget->GetCharInfo())
+	{
 		HUDWidget->GetCharInfo()->ShakeHealthBar();
+	}
 
 	if (DamageCauser)
 	{
@@ -215,6 +200,11 @@ void AUserCharacter::ResetStat()
 void AUserCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+}
+
+void AUserCharacter::SetUserWidget()
+{
 	if (CharacterUI)
 	{
 		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
@@ -365,11 +355,18 @@ void AUserCharacter::Multi_SetMyWeapon_Implementation(TSubclassOf<class AA_Item>
 	if (MyWeapon)
 		return;
 
-	FName WeaponSocket(TEXT("r_hand_sword"));
-	if(!HasAuthority())
+	if (HasAuthority())
+	{
 		MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(*_MyWeapon);
+		OnRep_MyWeapon();
+	}
+}
+
+void AUserCharacter::OnRep_MyWeapon()
+{
 	if (MyWeapon)
 	{
+		FName WeaponSocket(TEXT("r_hand_sword"));
 		MyWeapon->GetBoxCollision()->SetSimulatePhysics(false);
 		MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
@@ -674,6 +671,7 @@ void AUserCharacter::Multi_UseSkill_Implementation(const FString& _SkillName)
 			AnimInstance->PlaySome(SkillData);
 	}
 }
+
 void AUserCharacter::UseItem(const int32 QuickIndex)
 {
 	UsePotion(QuickSlot->GetPotionSlots()[QuickIndex].Amount, QuickSlot->GetPotionSlots()[QuickIndex].ItemName.ToString());
@@ -713,7 +711,6 @@ void AUserCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AUserCharacter, AnimInstance);
 	DOREPLIFETIME(AUserCharacter, MyWeapon);
 }
 

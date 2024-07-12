@@ -21,8 +21,6 @@ class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 public:
 	AEnemyCharacter();
 
-	virtual void UseSkill(const FString& _SkillName) override;
-
 	void DiedEnemy();
 
 	virtual void AnyMove() {};
@@ -44,6 +42,8 @@ public:
 	void SetState(bool NowState);
 
 	FOnDied OnDied;
+
+	virtual void ShowHpBar();
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
@@ -56,16 +56,34 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	class AUserCharacter* Target;
+
+	UPROPERTY(ReplicatedUsing = OnRep_MeshPath)
+	USkeletalMesh* MeshPath;
+
+	UPROPERTY(ReplicatedUsing = OnRep_MaterialPath)
+	UMaterialInstance* MaterialPath;
+
+	UFUNCTION()
+	void OnRep_MeshPath();
+
+	UFUNCTION()
+	void OnRep_MaterialPath();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void Multi_UseSkill(const FString& _SkillName) override;
+
+	virtual void Multi_UseSkill_Implementation(const FString& SkillName) override;
+
+	void SyncHpBar(AController* PlayerController);
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
 
 	class UOnlyHpBar* OnlyHpBar;
 
-	UPROPERTY(Replicated)
 	class UMonsterAnimInstance* AnimInstance;
 
-	UPROPERTY(Replicated)
 	class UMaterialInstanceDynamic* MyMaterialInstanceDynamic;
 
 	UC_SkillComponent* Pattern;
@@ -76,12 +94,6 @@ private:
 	FTimerHandle UnusedHandle;
 
 	void SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial);
-	
-	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial);
-	
-	UFUNCTION(NetMulticast, Reliable)
-	void Multi_SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial);
 
 	TWeakPtr<FMonsterData> LoadData;
 
@@ -90,6 +102,4 @@ private:
 	TArray<FString> Item;
 
 	void DropItem();
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

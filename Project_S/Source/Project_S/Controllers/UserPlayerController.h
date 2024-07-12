@@ -19,4 +19,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	UFUNCTION(Client, Reliable)
+	void SyncEnemyHpBar(class AEnemyCharacter* _Enemy);
 };

@@ -37,14 +37,9 @@ public:
 	void LoadCharacterData();
 	void SetClass(E_CharClass _ClassType);
 	void PickUpItem();
+	void SetUserWidget();
 protected:
 	void SetMesh(E_CharClass _ClassType);
-
-	UFUNCTION(Server, Reliable, WithValidation)
-	void Server_SetMesh(E_CharClass _ClassType);
-
-	UFUNCTION(NetMulticast, Reliable)
-	void Multi_SetMesh(E_CharClass _ClassType);
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -74,10 +69,12 @@ protected:
 	virtual void Multi_UseSkill(const FString& _SkillName) override;
 
 	virtual void Multi_UseSkill_Implementation(const FString& SkillName) override;
+
+	USkeletalMesh* MeshPath;
 private:
 	E_CharClass ClassType;
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_MyWeapon)
 	class AWeaponActor* MyWeapon;
 
 	TWeakPtr<FCharacterClass> ClassData;
@@ -105,7 +102,6 @@ private:
 
 	class UC_QuickSlotComponent* QuickSlot;
 
-	UPROPERTY(Replicated)
 	class UUserAnimInstance* AnimInstance;
 
 	bool IsAttacking;
@@ -152,6 +148,9 @@ public:
 	void AttackCheck();
 
 	void SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);
+
+	UFUNCTION()
+	void OnRep_MyWeapon();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);

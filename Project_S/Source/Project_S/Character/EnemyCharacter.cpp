@@ -9,6 +9,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Project_S/AnimInstance/MonsterAnimInstance.h"
 #include "Project_S/Controllers/EnemyAIController.h"
+#include "Project_S/Controllers/UserPlayerController.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 #include "Project_S/Instance/S_GameInstance.h"
@@ -29,7 +30,7 @@ AEnemyCharacter::AEnemyCharacter()
 		HpBar->SetWidgetClass(UW.Class);
 		HpBar->SetDrawSize(FVector2D(200.f, 500.f));
 	}
-
+	GetMesh()->SetRelativeLocationAndRotation(FVector(-20.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Monster/Animations/BP_MutantAnimInstance.BP_MutantAnimInstance_C'"));
 	if (ANIM.Succeeded())
 	{
@@ -55,7 +56,8 @@ void AEnemyCharacter::SetState(bool NowState)
 	else
 	{
 		GetCharacterMovement()->GravityScale = 0.f;
-		NowAIController->UnPossess();
+		if (HasAuthority())
+			NowAIController->UnPossess();
 	}
 }
 
@@ -64,8 +66,10 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	if (IsDead)
 		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	if (Type != E_MonsterType::E_LastBoss && Type != E_MonsterType::E_MiddleBoss)
-		OnlyHpBar->SetRenderOpacity(1.f);
+	if (Type != E_MonsterType::E_LastBoss)
+	{
+		SyncHpBar(EventInstigator);
+	}
 	AFirstCharacter* User = Cast<AFirstCharacter>(DamageCauser);
 	if (Stat->GetHp() <= 0)
 	{
@@ -75,6 +79,23 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		User->GetStatCom()->SetExp(User->GetStatCom()->GetExp() + Stat->GetMaxExp());
 	}
 	return DamageAmount;
+}
+
+void AEnemyCharacter::ShowHpBar()
+{
+	if (OnlyHpBar)
+	{
+		OnlyHpBar->SetRenderOpacity(1.f);
+	}
+}
+
+void AEnemyCharacter::SyncHpBar(AController* PlayerController)
+{
+	AUserPlayerController* UserPlayerController = Cast<AUserPlayerController>(PlayerController);
+	if (UserPlayerController)
+	{
+		UserPlayerController->SyncEnemyHpBar(this);
+	}
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -112,39 +133,45 @@ void AEnemyCharacter::PostInitializeComponents()
 void AEnemyCharacter::SetMesh(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
 {
 	if (HasAuthority())
-		Multi_SetMesh(_MonsterMesh, _MonsterMaterial);
-	else
-		Server_SetMesh(_MonsterMesh, _MonsterMaterial);
+	{
+		MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
+		MaterialPath = Cast<UMaterialInstance>(_MonsterMaterial.LoadSynchronous());
+
+		OnRep_MeshPath();
+		OnRep_MaterialPath();
+	}
 }
 
-void AEnemyCharacter::Server_SetMesh_Implementation(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
+void AEnemyCharacter::OnRep_MeshPath()
 {
-	Multi_SetMesh(_MonsterMesh, _MonsterMaterial);
-}
-
-bool AEnemyCharacter::Server_SetMesh_Validate(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
-{
-	return true;
-}
-
-void AEnemyCharacter::Multi_SetMesh_Implementation(const TSoftObjectPtr<UStreamableRenderAsset>& _MonsterMesh, const TSoftObjectPtr<UMaterialInterface>& _MonsterMaterial)
-{
-	USkeletalMesh* MeshPath = Cast<USkeletalMesh>(_MonsterMesh.LoadSynchronous());
-	if (MeshPath)
+	if (MeshPath && GetMesh())
 	{
 		GetMesh()->SetSkeletalMesh(MeshPath);
-		UMaterialInstance* MaterialPath = Cast<UMaterialInstance>(_MonsterMaterial.LoadSynchronous());
-		if (MaterialPath)
-		{
-			MyMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(MaterialPath, this);
-			GetMesh()->SetMaterial(0, MyMaterialInstanceDynamic);
-		}
 		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
-		FVector MeshLocation = FVector(-20.f, 0.f, -90.f);
-		FRotator MeshRotator = FRotator(0.f, -90.f, 0.f);
-		GetMesh()->SetRelativeLocationAndRotation(MeshLocation, MeshRotator);
 		HpBar->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("HpBar"));
 	}
+	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->SetMonster(this);
+	}
+}
+
+void AEnemyCharacter::OnRep_MaterialPath()
+{
+	if (MaterialPath && GetMesh())
+	{
+		MyMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(MaterialPath, this);
+		GetMesh()->SetMaterial(0, MyMaterialInstanceDynamic);
+	}
+}
+
+void AEnemyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AEnemyCharacter, MeshPath);
+	DOREPLIFETIME(AEnemyCharacter, MaterialPath);
 }
 
 void AEnemyCharacter::DropItem()
@@ -169,14 +196,6 @@ void AEnemyCharacter::DropItem()
 			}
 		}
 	}
-}
-
-void AEnemyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AEnemyCharacter, AnimInstance);
-	DOREPLIFETIME(AEnemyCharacter, MyMaterialInstanceDynamic);
 }
 
 void AEnemyCharacter::LoadCharacterData()
@@ -207,12 +226,6 @@ void AEnemyCharacter::LoadCharacterData()
 			}
 		}
 	}
-	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-	if (AnimInstance)
-	{
-		AnimInstance->SetMonster(this);
-	}
-	UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
 void AEnemyCharacter::SetTarget(AUserCharacter* _Target)
@@ -226,7 +239,12 @@ void AEnemyCharacter::SetEtc()
 	SaveLocation = GetActorLocation();
 }
 
-void AEnemyCharacter::UseSkill(const FString& _SkillName)
+void AEnemyCharacter::Multi_UseSkill(const FString& SkillName)
+{
+	Super::Multi_UseSkill(SkillName);
+}
+
+void AEnemyCharacter::Multi_UseSkill_Implementation(const FString& _SkillName)
 {
 	const auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)

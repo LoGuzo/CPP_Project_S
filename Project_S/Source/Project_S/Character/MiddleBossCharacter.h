@@ -18,6 +18,8 @@ public:
 	AMiddleBossCharacter();
 
 	virtual void LoadCharacterData() override;
+
+	virtual void ShowHpBar() override;
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void PostInitializeComponents() override;

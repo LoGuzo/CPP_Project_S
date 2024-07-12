@@ -2,9 +2,10 @@
 
 
 #include "S_StatComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Instance/S_GameInstance.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 US_StatComponent::US_StatComponent()
@@ -12,10 +13,11 @@ US_StatComponent::US_StatComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
+	SetIsReplicatedByDefault(true);
 	// ...
 	bWantsInitializeComponent = true;
 	Level = 1;
+
 }
 
 
@@ -68,7 +70,7 @@ void US_StatComponent::SetMonsterLevel(int32 _Level)
 	Level = _Level;
 }
 
-void US_StatComponent::SetHp(float _Hp)
+void US_StatComponent::SetHp_Implementation(float _Hp)
 {
 	Hp = _Hp;
 	if (Hp < 0)
@@ -133,4 +135,9 @@ void US_StatComponent::SetAttack(float _Attack)
 	Attack = _Attack;
 }
 
+void US_StatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(US_StatComponent, Hp);
+}

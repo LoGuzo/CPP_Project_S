@@ -23,6 +23,7 @@ public:
 	AFirstCharacter();
 
 private:
+	UPROPERTY(Replicated, VisibleAnywhere)
 	FString CharID;
 
 protected:
@@ -33,7 +34,7 @@ protected:
 
 	virtual void ResetStat() {};
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(Replicated, VisibleAnywhere)
 	class US_StatComponent* Stat;
 
 	UPROPERTY(VisibleAnywhere)
@@ -49,6 +50,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Particles")
 	class UParticleSystem* HitParticleEffect;
+
 public:
 	bool IsAttacking;
 
@@ -57,8 +59,11 @@ public:
 
 	virtual void UseSkill(const FString& _SkillName);
 
+
 	void MeleeAttackCheck(float _Range);
+
 	void ScopeAttackCheck(float _Range);
+
 	void ShotAttackCheck();
 
 	FString GetCharID() { return CharID; }
@@ -79,4 +84,6 @@ protected:
 	virtual void Multi_UseSkill(const FString& _SkillName);
 
 	virtual void Multi_UseSkill_Implementation(const FString& SkillName);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

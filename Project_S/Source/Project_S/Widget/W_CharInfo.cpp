@@ -86,21 +86,10 @@ void UW_CharInfo::UpdateExp()
 
 void UW_CharInfo::ShakeHealthBar()
 {
-	FVector2D OriginalPosition = PB_Hp->RenderTransform.Translation;
-	float ShakeAmount = 5.0f;
-	float ShakeSpeed = 10.0f;
-
-	GetWorld()->GetTimerManager().SetTimer(ShakeTimerHandle, [this, OriginalPosition, ShakeAmount, ShakeSpeed]()
-		{
-			FVector2D ShakeOffset = FVector2D(FMath::Sin(GetWorld()->GetTimeSeconds() * ShakeSpeed) * ShakeAmount, 0.0f);
-			PB_Hp->SetRenderTranslation(OriginalPosition + ShakeOffset);
-		}, 0.016f, true);
-
-	GetWorld()->GetTimerManager().SetTimer(EndShakeHandle, [this, OriginalPosition]()
-		{
-			GetWorld()->GetTimerManager().ClearTimer(ShakeTimerHandle);
-			PB_Hp->SetRenderTranslation(OriginalPosition);
-		}, 0.5f, false);
+	if (Shake_Hp)
+	{
+		PlayAnimation(Shake_Hp);
+	}
 }
 
 void UW_CharInfo::AnimateHealthBar()

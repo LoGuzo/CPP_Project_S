@@ -7,6 +7,7 @@
 #include "Components/AudioComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Component/C_SkillComponent.h"
 
@@ -15,6 +16,7 @@ AFirstCharacter::AFirstCharacter()
 {
 	bReplicates = true;
 	SetReplicateMovement(true);
+	GetMesh()->SetIsReplicated(true);
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	IsAttacking = false;
@@ -84,7 +86,6 @@ bool AFirstCharacter::Server_UseSkill_Validate(const FString& SkillName)
 void AFirstCharacter::Multi_UseSkill_Implementation(const FString& _SkillName)
 {
 }
-
 
 void AFirstCharacter::MeleeAttackCheck(float _Range)
 {
@@ -192,5 +193,14 @@ void AFirstCharacter::ShotAttackCheck()
 {
 
 }
+
+void AFirstCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFirstCharacter, Stat);
+	DOREPLIFETIME(AFirstCharacter, CharID);
+}
+
 
 
