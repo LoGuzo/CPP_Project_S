@@ -88,8 +88,6 @@ private:
 
 	class UMaterialInstanceDynamic* MyMaterialInstanceDynamic;
 
-	UC_SkillComponent* Pattern;
-
 	TWeakPtr<FMonsterPattern> NowPattern;
 
 	UPROPERTY()

@@ -36,6 +36,7 @@ void AMiddleBossCharacter::ShowHpBar()
 {
 	if (W_BossHp && !W_BossHp->IsInViewport())
 	{
+		W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		W_BossHp->AddToViewport();
 	}
 }
@@ -43,13 +44,6 @@ void AMiddleBossCharacter::ShowHpBar()
 void AMiddleBossCharacter::LoadCharacterData()
 {
 	Super::LoadCharacterData();
-	if (W_BossHp)
-	{
-		if (Stat)
-		{
-			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
-		}
-	}
 }
 
 

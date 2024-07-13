@@ -56,7 +56,7 @@ float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	return DamageAmount;
 }
 
-void AFirstCharacter::SetCharID(FString _CharID)
+void AFirstCharacter::SetCharID(const FString& _CharID)
 {
 	CharID = _CharID;
 }

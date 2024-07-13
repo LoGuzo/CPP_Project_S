@@ -136,7 +136,6 @@ void AWeatherSystemMaster::MulticastUpdateWeather_Implementation(bool bSnow, boo
 	bSnowIsComing = bSnow;
 	bRainIsComing = bRain;
 	bIsNight = bNight;
-
 	UpdateWeather();
 }
 

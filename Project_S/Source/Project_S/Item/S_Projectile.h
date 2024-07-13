@@ -22,10 +22,12 @@ protected:
 	UPROPERTY()
 	class UParticleSystem* HitParticleEffect;
 
-	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	UPROPERTY(Replicated, VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* ProjectileMesh;
 	class AFirstCharacter* Owner;
 	void ScopeAttackCheck(float _Range);
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public:	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
 	class USphereComponent* CollisionComponent;
@@ -47,5 +49,4 @@ private:
 	int32 Cnt;
 	int32 MaxCnt;
 	int32 Type;
-
 };

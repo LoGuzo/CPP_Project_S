@@ -26,8 +26,10 @@ public:
 
 	virtual void LoadCharacterData() override;
 
+	UFUNCTION(NetMulticast, Reliable)
 	void SetWidget();
 
+	UFUNCTION(NetMulticast, Reliable)
 	void RemoveWidget();
 
 	void StartAISearch();

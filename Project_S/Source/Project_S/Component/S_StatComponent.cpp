@@ -141,4 +141,5 @@ void US_StatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(US_StatComponent, Hp);
 	DOREPLIFETIME(US_StatComponent, MaxHp);
+	DOREPLIFETIME(US_StatComponent, Level);
 }

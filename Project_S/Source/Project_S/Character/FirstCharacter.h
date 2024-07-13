@@ -67,7 +67,8 @@ public:
 	void ShotAttackCheck();
 
 	FString GetCharID() { return CharID; }
-	void SetCharID(FString _CharID);
+
+	void SetCharID(const FString& _CharID);
 
 	void SetSaveLocation(FVector _SaveLocation);
 	FVector GetSaveLocation() { return SaveLocation; }

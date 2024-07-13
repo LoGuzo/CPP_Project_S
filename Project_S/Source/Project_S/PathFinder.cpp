@@ -7,7 +7,7 @@
 
 APathFinder::APathFinder()
 {
-    UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(this);
+    UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
     NavMesh = Cast<ARecastNavMesh>(NavSys ? NavSys->GetMainNavData() : nullptr);
 }
 

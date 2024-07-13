@@ -788,14 +788,22 @@ void AUserCharacter::UserReset()
 
 void AUserCharacter::SetWidget()
 {
-	if(HUDWidget)
+	if (HUDWidget && !HUDWidget->IsInViewport())
+	{
 		HUDWidget->AddToViewport();
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		EnableInput(PlayerController);
+	}
 }
 
 void AUserCharacter::RemoveWidget()
 {
 	if (HUDWidget && HUDWidget->IsInViewport())
+	{
 		HUDWidget->RemoveFromParent();
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		DisableInput(PlayerController);
+	}
 }
 
 

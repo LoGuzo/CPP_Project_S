@@ -6,6 +6,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
 #include "Sound/SoundWave.h"
+#include "Net/UnrealNetwork.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -51,7 +52,15 @@ AProjectile_Missle::AProjectile_Missle()
 void AProjectile_Missle::BeginPlay()
 {
 	Super::BeginPlay();
-
+	if (NiagaraSystem)
+	{
+		NiagaraComponent->SetAsset(NiagaraSystem);
+		NiagaraComponent->Activate(false);
+	}
+	if (ParticleSound && AudioComponent)
+	{
+		AudioComponent->SetSound(ParticleSound);
+	}
 }
 
 void AProjectile_Missle::Tick(float DeltaTime)
@@ -72,9 +81,9 @@ void AProjectile_Missle::SetTarget(FVector _Location, FVector _Target)
 		SetActorLocation(_Location);
 		SetActorRotation(Owner->GetActorRotation());
 		StartMoving = true;
-		if (NiagaraSystem)
+		if (NiagaraComponent)
 		{
-			NiagaraComponent->SetAsset(NiagaraSystem);
+			NiagaraComponent->Activate(true);
 		}
 		SetActorHiddenInGame(false);
 		SetActorEnableCollision(true);
@@ -87,7 +96,7 @@ void AProjectile_Missle::SetTarget(FVector _Location, FVector _Target)
 
 void AProjectile_Missle::MoveTowardsTarget(float DeltaTime)
 {
-	if (FVector::Dist(GetActorLocation(), Target) <= 10.0f) // 목표 지점에 거의 도착했을 때
+	if (FVector::Dist(GetActorLocation(), Target) <= 50.0f) // 목표 지점에 거의 도착했을 때
 	{
 		// 폭발 효과를 트리거
 		Explode();
@@ -104,17 +113,20 @@ void AProjectile_Missle::RotateTowardsTarget(float DeltaTime)
 	SetActorRotation(NewRotation);
 }
 
-void AProjectile_Missle::Explode()
+void AProjectile_Missle::SetParticle_Implementation()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
-	ScopeAttackCheck(300);
-	if (ParticleSound && AudioComponent)
+	if (AudioComponent)
 	{
-		AudioComponent->SetSound(ParticleSound);
 		AudioComponent->Play();
 	}
+}
+
+void AProjectile_Missle::Explode()
+{
+	ScopeAttackCheck(300);
+	SetParticle();
 	StartMoving = false;
-	NiagaraComponent->SetAsset(nullptr);
 	ProjectileMovementComponent->StopMovementImmediately();
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);

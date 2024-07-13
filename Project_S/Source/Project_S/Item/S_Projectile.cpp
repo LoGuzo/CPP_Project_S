@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Misc/OutputDeviceNull.h"
+#include "Net/UnrealNetwork.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Character/FirstCharacter.h"
 
@@ -15,7 +16,9 @@ AS_Projectile::AS_Projectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	bReplicates = true;
+	bAlwaysRelevant = true;
+	SetReplicateMovement(true);
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	CollisionComponent->InitSphereRadius(30.f);
 	CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));
@@ -43,6 +46,13 @@ void AS_Projectile::BeginPlay()
 void AS_Projectile::SetProjectileOwner(AFirstCharacter* _Owner)
 {
 	Owner = _Owner;
+}
+
+void AS_Projectile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AS_Projectile, ProjectileMesh);
 }
 
 void AS_Projectile::ScopeAttackCheck(float _Range)

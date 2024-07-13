@@ -37,7 +37,7 @@ void ABossGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	SetDelegate();
-	PlayCinematic();
+	//PlayCinematic();
 }
 
 void ABossGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -84,10 +84,8 @@ void ABossGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		AUserCharacter* UserCharacter = Cast<AUserCharacter>(NewPlayer->GetPawn());
 		UserCharacter->RemoveWidget();
-		UserCharacter->DisableInput(NewPlayer);
 		ConnectedPlayers.Add(NewPlayer); 
 	}
-	
 }
 
 void ABossGameMode::Logout(AController* Exiting)
@@ -125,6 +123,7 @@ void ABossGameMode::SetDelegate()
 		{
 			ABossCharacter* BossCharacter = Cast<ABossCharacter>(EnemyClassArray[i]);
 			BossCharacter->RemoveWidget();
+			BossCharacter->StartAISearch();
 			BossCharacter->OnDied.AddUObject(this, &ABossGameMode::BossDied);
 		}
 	}

@@ -22,7 +22,6 @@ void UW_BossHp::UpdateHp()
 {
 	if (StatComp.IsValid())
 	{
-        UE_LOG(LogTemp, Warning, TEXT("%f"), StatComp->GetHp());
         TargetHealth = StatComp->GetHpRatio();
         CurrentHealth = PB_Hp->Percent;
         HealthUpdateDuration = 1.f;

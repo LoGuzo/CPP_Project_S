@@ -24,6 +24,26 @@ void AUserPlayerController::BeginPlay()
 	}
 }
 
+void AUserPlayerController::SetUserWidget()
+{
+	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
+
+	if (UserCharacter)
+	{
+		UserCharacter->SetWidget();
+	}
+}
+
+void AUserPlayerController::RemoveUserWidget()
+{
+	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
+
+	if (UserCharacter)
+	{
+		UserCharacter->RemoveWidget();
+	}
+}
+
 void AUserPlayerController::SyncEnemyHpBar_Implementation(AEnemyCharacter* _Enemy)
 {
 	if (_Enemy)

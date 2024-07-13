@@ -66,7 +66,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 MaxLevel;
 
-	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(Replicated, EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 Level;
 
 	// Hp

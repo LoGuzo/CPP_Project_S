@@ -59,6 +59,8 @@ void AEnemyCharacter::SetState(bool NowState)
 		if (HasAuthority())
 			NowAIController->UnPossess();
 	}
+	if (Skill->GetSlots().Num() > 2)
+		UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -219,10 +221,19 @@ void AEnemyCharacter::LoadCharacterData()
 				Type = LoadData.Pin()->Type;
 				Item = LoadData.Pin()->DropItem;
 				Skill->SetSlots(LoadData.Pin()->MonsterSkill);
-				if (!GetMesh()->SkeletalMesh)
+				SetMesh(LoadData.Pin()->MonsterMesh, LoadData.Pin()->MonsterMaterial);
+				/*if (!GetMesh()->SkeletalMesh)
 				{
 					SetMesh(LoadData.Pin()->MonsterMesh, LoadData.Pin()->MonsterMaterial);
 				}
+				else
+				{
+					AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
+					if (AnimInstance)
+					{
+						AnimInstance->SetMonster(this);
+					}
+				}*/
 			}
 		}
 	}

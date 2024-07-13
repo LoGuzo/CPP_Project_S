@@ -35,7 +35,6 @@ class PROJECT_S_API APathFinder : public AActor
 
 public:
     APathFinder();
-
     bool FindPath(const FVector& StartLocation, const FVector& EndLocation, TArray<FVector>& OutPath);
 
 private:

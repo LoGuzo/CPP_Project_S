@@ -73,27 +73,21 @@ void ABossCharacter::SetBossMesh()
 
 void ABossCharacter::AnyMove()
 {
-	SetActorLocation(NowAIController->GetUser()->GetActorLocation());
+	if(NowAIController)
+		SetActorLocation(NowAIController->GetUser()->GetActorLocation());
 }
 
 void ABossCharacter::LoadCharacterData()
 {
 	Super::LoadCharacterData();
-	if (W_BossHp)
-	{
-		if (Stat)
-		{
-			W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
-		}
-	}
-	SetWidget();
 	SetState(true);
 }
 
-void ABossCharacter::SetWidget()
+void ABossCharacter::SetWidget_Implementation()
 {
 	if (W_BossHp && !W_BossHp->IsInViewport())
 	{
+		W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
 		W_BossHp->AddToViewport();
 	}
 }
@@ -147,9 +141,12 @@ void ABossCharacter::Make_Projectile()
 		{
 			for (int32 i=0; i < 5; i++)
 			{
-				AProjectile_Missle* Missle = World->SpawnActor<AProjectile_Missle>(ProjectileClass);
-				Missle->SetProjectileOwner(this);
-				MyProjectiles.Emplace(Missle);
+				if (HasAuthority())
+				{
+					AProjectile_Missle* Missle = World->SpawnActor<AProjectile_Missle>(ProjectileClass);
+					Missle->SetProjectileOwner(this);
+					MyProjectiles.Emplace(Missle);
+				}
 			}
 		}
 	}
@@ -182,7 +179,8 @@ FVector ABossCharacter::SetMissleLocation()
 
 	return SpawnLocation;
 }
-void ABossCharacter::RemoveWidget()
+
+void ABossCharacter::RemoveWidget_Implementation()
 {
 	if (W_BossHp && W_BossHp->IsInViewport())
 	{
