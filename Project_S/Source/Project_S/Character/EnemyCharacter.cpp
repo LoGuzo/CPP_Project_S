@@ -59,7 +59,7 @@ void AEnemyCharacter::SetState(bool NowState)
 		if (HasAuthority())
 			NowAIController->UnPossess();
 	}
-	if (Skill->GetSlots().Num() > 2)
+	if (Skill->GetSlots().Num() > 2 && Type != E_MonsterType::E_LastBoss)
 		UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
@@ -222,18 +222,6 @@ void AEnemyCharacter::LoadCharacterData()
 				Item = LoadData.Pin()->DropItem;
 				Skill->SetSlots(LoadData.Pin()->MonsterSkill);
 				SetMesh(LoadData.Pin()->MonsterMesh, LoadData.Pin()->MonsterMaterial);
-				/*if (!GetMesh()->SkeletalMesh)
-				{
-					SetMesh(LoadData.Pin()->MonsterMesh, LoadData.Pin()->MonsterMaterial);
-				}
-				else
-				{
-					AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
-					if (AnimInstance)
-					{
-						AnimInstance->SetMonster(this);
-					}
-				}*/
 			}
 		}
 	}

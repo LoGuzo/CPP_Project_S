@@ -14,7 +14,11 @@ UCLASS()
 class PROJECT_S_API UW_Inventory : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+public:
+	UW_Inventory(const FObjectInitializer& ObjectInitializer);
+	virtual void NativePreConstruct() override;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UWrapBox* Box_Wrap;
@@ -28,9 +32,6 @@ private:
 	UFUNCTION()
 	void ClosePop();
 public:
-	UW_Inventory(const FObjectInitializer& ObjectInitializer);
-	virtual void NativePreConstruct() override;
-
 	void ShowInventory(UC_InventoryComponent* _InventoryCom);
 	void ShowInventoryDrop();
 	void UpdateSlots(const TArray<FS_Slot>& Slots);

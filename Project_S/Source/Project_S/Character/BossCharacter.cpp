@@ -83,12 +83,21 @@ void ABossCharacter::LoadCharacterData()
 	SetState(true);
 }
 
-void ABossCharacter::SetWidget_Implementation()
+void ABossCharacter::ShowHpBar()
 {
 	if (W_BossHp && !W_BossHp->IsInViewport())
 	{
 		W_BossHp->SetTxtName(Stat->GetLevel(), GetCharID());
+		W_BossHp->UpdateHp();
 		W_BossHp->AddToViewport();
+	}
+}
+
+void ABossCharacter::RemoveWidget()
+{
+	if (W_BossHp && W_BossHp->IsInViewport())
+	{
+		W_BossHp->RemoveFromViewport();
 	}
 }
 
@@ -178,14 +187,6 @@ FVector ABossCharacter::SetMissleLocation()
 	FVector SpawnLocation = BossLocation + SpawnOffset * Radius; // 미사일이 소환될 위치 계산
 
 	return SpawnLocation;
-}
-
-void ABossCharacter::RemoveWidget_Implementation()
-{
-	if (W_BossHp && W_BossHp->IsInViewport())
-	{
-		W_BossHp->RemoveFromViewport();
-	}
 }
 
 void ABossCharacter::StartAISearch()

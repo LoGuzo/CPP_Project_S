@@ -11,6 +11,7 @@
 #include "SpawnerManager.h"
 #include "UserIDManager.h"
 #include "CharacterClassManager.h"
+#include "PartyManager.h"
 #include "Kismet/GameplayStatics.h"
 
 US_GameInstance::US_GameInstance()
@@ -24,6 +25,7 @@ US_GameInstance::US_GameInstance()
 	MyDataManager.Emplace(E_DataType::E_SpawnerData, new SpawnerManager());
 	MyDataManager.Emplace(E_DataType::E_UserIDData, new UserIDManager());
 	MyDataManager.Emplace(E_DataType::E_CharClassData, new CharacterClassManager());
+	PartyManager = NewObject<UPartyManager>();
 }
 
 void US_GameInstance::Init()

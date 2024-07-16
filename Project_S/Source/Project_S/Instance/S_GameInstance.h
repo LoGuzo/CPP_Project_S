@@ -23,7 +23,6 @@ private:
 	FUserID UserData;
 	int32 SelectedSlotIndex = -1;
 
-
 public:
 	US_GameInstance();
 
@@ -48,4 +47,6 @@ public:
 
 	void NextLevel(const FString& _LevelName);
 	void NextLoadingLevel(const FString& _LevelName);
+
+	class UPartyManager* PartyManager;
 };

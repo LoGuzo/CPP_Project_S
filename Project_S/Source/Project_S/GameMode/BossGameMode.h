@@ -20,6 +20,9 @@ public:
 	virtual void MonsterFactory() override;
 
 protected:
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastPlayLevelSequence();
+
 	void PlayCinematic();
 
 	class ULevelSequence* BossSequence;
@@ -52,4 +55,8 @@ private:
 	void ResetSlowMotion(); // 되돌리기
 
 	TArray<class APlayerController*> ConnectedPlayers;
+
+	void DelayedStart();
+
+	class ABossCharacter* BossCharacter;
 };

@@ -159,6 +159,7 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		ClassData.Reset();
 	}
+	RemoveMyWeapon();
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 	GetWorldTimerManager().ClearTimer(HitHandle);
 }

@@ -26,11 +26,9 @@ public:
 
 	virtual void LoadCharacterData() override;
 
-	UFUNCTION(NetMulticast, Reliable)
-	void SetWidget();
+	virtual void ShowHpBar();
 
-	UFUNCTION(NetMulticast, Reliable)
-	void RemoveWidget();
+	virtual void RemoveWidget() override;
 
 	void StartAISearch();
 protected:

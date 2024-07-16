@@ -36,8 +36,7 @@ ABossGameMode::ABossGameMode()
 void ABossGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	SetDelegate();
-	//PlayCinematic();
+	GetWorld()->GetTimerManager().SetTimer(ResetTimer, this, &ABossGameMode::DelayedStart, 3.f, false);
 }
 
 void ABossGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -65,15 +64,29 @@ void ABossGameMode::MonsterFactory()
 	}
 }
 
-void ABossGameMode::PlayCinematic()
+void ABossGameMode::MulticastPlayLevelSequence_Implementation()
 {
-	if (!BossSequence) return;
+	if (!BossSequence) return; // Check if the sequence is loaded
 	ALevelSequenceActor* ContextActor = nullptr;
 	ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), BossSequence, FMovieSceneSequencePlaybackSettings(), ContextActor);
+
 	if (SequencePlayer)
 	{
 		SequencePlayer->OnFinished.AddDynamic(this, &ABossGameMode::OnCinematicFinished);
 		SequencePlayer->Play();
+	}
+}
+
+void ABossGameMode::PlayCinematic()
+{
+	if (HasAuthority()) // Ensure this is running on the server
+	{
+		MulticastPlayLevelSequence();
+		for (APlayerController* PlayerController : ConnectedPlayers)
+		{
+			AUserCharacter* UserCharacter = Cast<AUserCharacter>(PlayerController->GetPawn());
+			UserCharacter->RemoveWidget();
+		}
 	}
 }
 
@@ -83,7 +96,9 @@ void ABossGameMode::PostLogin(APlayerController* NewPlayer)
 	if (NewPlayer)
 	{
 		AUserCharacter* UserCharacter = Cast<AUserCharacter>(NewPlayer->GetPawn());
-		UserCharacter->RemoveWidget();
+		AUserPlayerController* User = Cast<AUserPlayerController>(NewPlayer);
+		if(BossCharacter)
+			User->SyncEnemyHpBar(BossCharacter);
 		ConnectedPlayers.Add(NewPlayer); 
 	}
 }
@@ -92,7 +107,7 @@ void ABossGameMode::Logout(AController* Exiting)
 {
 	Super::Logout(Exiting);
 
-	APlayerController* ExitingPlayer = Cast<APlayerController>(Exiting);
+	AUserPlayerController* ExitingPlayer = Cast<AUserPlayerController>(Exiting);
 	if (ExitingPlayer)
 	{
 		ConnectedPlayers.Remove(ExitingPlayer);
@@ -105,12 +120,11 @@ void ABossGameMode::OnCinematicFinished()
 	{
 		AUserCharacter* UserCharacter = Cast<AUserCharacter>(PlayerController->GetPawn());
 		UserCharacter->SetWidget();
-		UserCharacter->EnableInput(PlayerController);
 	}
 	for (AEnemyCharacter* Enemy : EnemyClassArray)
 	{
-		ABossCharacter* BossCharacter = Cast<ABossCharacter>(Enemy);
-		BossCharacter->SetWidget();
+		BossCharacter = Cast<ABossCharacter>(Enemy);
+		//BossCharacter->SetWidget();
 		BossCharacter->StartAISearch();
 	}
 }
@@ -121,10 +135,15 @@ void ABossGameMode::SetDelegate()
 	{
 		if (EnemyClassArray[i]->GetClass() == ABossCharacter::StaticClass())
 		{
-			ABossCharacter* BossCharacter = Cast<ABossCharacter>(EnemyClassArray[i]);
-			BossCharacter->RemoveWidget();
+			BossCharacter = Cast<ABossCharacter>(EnemyClassArray[i]);
 			BossCharacter->StartAISearch();
+			//BossCharacter->UseSkill("Golem_Ready");
 			BossCharacter->OnDied.AddUObject(this, &ABossGameMode::BossDied);
+			for (APlayerController* PlayerController : ConnectedPlayers)
+			{
+				AUserPlayerController* User = Cast<AUserPlayerController>(PlayerController);
+				User->SyncEnemyHpBar(BossCharacter);
+			}
 		}
 	}
 }
@@ -149,4 +168,10 @@ void ABossGameMode::ActivateSlowMotion(float SlowMotionTime, float Duration)
 void ABossGameMode::ResetSlowMotion()
 {
 	GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
+}
+
+void ABossGameMode::DelayedStart()
+{
+	SetDelegate();
+	//PlayCinematic();
 }
