@@ -17,6 +17,9 @@ class PROJECT_S_API UW_PartyHp : public UMainUserWidget
 public:
 	UW_PartyHp(const FObjectInitializer& ObjectInitializer);
 
+protected:
+	virtual void NativePreConstruct() override;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UWrapBox* Wrap_Slot;

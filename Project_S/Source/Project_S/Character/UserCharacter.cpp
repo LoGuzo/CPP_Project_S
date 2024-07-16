@@ -9,6 +9,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Project_S/MappingClass.h"
@@ -55,6 +56,12 @@ AUserCharacter::AUserCharacter()
 	FollowCamera->SetRelativeLocation(FVector(-110.f, 0.f, 212.f));
 	FollowCamera->SetRelativeRotation(FRotator(-20.f, 0.f, 0.f));
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Animations/Infinity/BP_WarriorAnim.BP_WarriorAnim_C'"));
+	if (ANIM.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(ANIM.Class);
+	}
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
@@ -107,6 +114,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 }
 void AUserCharacter::SetMesh(E_CharClass _ClassType)
 {
+	ClassType = _ClassType;
 	MappingClass* CharacterTypeMapping = new MappingClass();
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
@@ -114,32 +122,38 @@ void AUserCharacter::SetMesh(E_CharClass _ClassType)
 		ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData(CharacterTypeMapping->GetCharacterDescription(_ClassType)));
 		if (ClassData.IsValid())
 		{
-			MeshPath = ClassData.Pin()->ClassMesh.LoadSynchronous();
-			if (MeshPath)
-			{
-				GetMesh()->SetSkeletalMesh(MeshPath);
-				GetMesh()->SetAnimInstanceClass(ClassData.Pin()->ClassAnim.LoadSynchronous());
-				GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
-			}
+			MeshPath = Cast<USkeletalMesh>(ClassData.Pin()->ClassMesh.LoadSynchronous());
+			//GetMesh()->SetAnimInstanceClass(ClassData.Pin()->ClassAnim.LoadSynchronous());
+			OnRep_MeshPath();
 		}
-		if (AnimInstance)
-			return;
-		AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
-		if (AnimInstance)
-		{
-			AnimInstance->SetPlayer(this);
-			AnimInstance->OnAttackHit.AddUObject(this, &AUserCharacter::AttackCheck);
-			AnimInstance->OnMontageEnded.AddDynamic(this, &AUserCharacter::OnAttackMontageEnd);
-		}
+	}
+}
+
+void AUserCharacter::OnRep_MeshPath()
+{
+	if (MeshPath && GetMesh())
+	{
+		GetMesh()->SetSkeletalMesh(MeshPath);
+		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+	}
+	AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
+	if (AnimInstance)
+	{
+		AnimInstance->SetPlayer(this);
+		AnimInstance->OnAttackHit.AddUObject(this, &AUserCharacter::AttackCheck);
+		AnimInstance->OnMontageEnded.AddDynamic(this, &AUserCharacter::OnAttackMontageEnd);
+	}
+	if (HUDWidget)
+	{
+		HUDWidget->GetCharInfo()->SetImg(ClassType);
 	}
 }
 
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	SetCharID("LogH"/*MyGameInstance->GetUserName()*/);
-	LoadCharacterData();
+	//SetCharID("LogH"/*MyGameInstance->GetUserName()*/);
+	//LoadCharacterData();
 	SaveLocation = GetActorLocation();
 }
 
@@ -221,6 +235,11 @@ void AUserCharacter::SetUserWidget()
 	}
 }
 
+void AUserCharacter::SetMyParty(UPartySystem* _MyParty)
+{
+	MyParty = _MyParty;
+}
+
 void AUserCharacter::SaveCharacterData()
 {
 	FMyCharacterData NowCharData;
@@ -244,6 +263,12 @@ void AUserCharacter::SaveCharacterData()
 
 void AUserCharacter::LoadCharacterData()
 {
+	FTimerHandle LoadDelay;
+	GetWorldTimerManager().SetTimer(LoadDelay, this, &AUserCharacter::DelayedLoadCharacterData, 1.f, false);
+}
+
+void AUserCharacter::DelayedLoadCharacterData()
+{
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
@@ -259,10 +284,6 @@ void AUserCharacter::LoadCharacterData()
 				Inventory->SetSlots(LoadData.Pin()->MyInventory);
 				QuickSlot->SetSkillSlots(LoadData.Pin()->MySkillQuick);
 				QuickSlot->SetPotionSlots(LoadData.Pin()->MyPotionQuick);
-				if (HUDWidget)
-				{
-					HUDWidget->GetCharInfo()->SetImg(LoadData.Pin()->Type);
-				}
 			}
 			for (const FS_Slot& slot : Equip->GetSlots())
 			{
@@ -731,6 +752,8 @@ void AUserCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(AUserCharacter, MeshPath);
+	DOREPLIFETIME(AUserCharacter, ClassType);
 	DOREPLIFETIME(AUserCharacter, MyWeapon);
 	DOREPLIFETIME(AUserCharacter, Inventory);
 	DOREPLIFETIME(AUserCharacter, QuickSlot);

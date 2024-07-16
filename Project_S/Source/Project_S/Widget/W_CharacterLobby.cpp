@@ -6,8 +6,10 @@
 #include "Components/Button.h"
 #include "Components/HorizontalBox.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerState.h"
 #include "Project_S/Actor/LobbyCharacter.h"
 #include "Project_S/Controllers/LobbyController.h"
+#include "Project_S/Controllers/MainPlayerController.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
 UW_CharacterLobby::UW_CharacterLobby(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -76,6 +78,7 @@ void UW_CharacterLobby::NativeDestruct()
 void UW_CharacterLobby::GameStart()
 {
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	APlayerState* UserState = GetOwningPlayer()->PlayerState;
 	if (MyGameInstance)
 	{
 		MyGameInstance->SetUserName(HaveChar[MyGameInstance->GetIndex()]);

@@ -4,6 +4,7 @@
 #include "UserPlayerController.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Character/EnemyCharacter.h"
+#include "Project_S/Instance/S_GameInstance.h"
 
 AUserPlayerController::AUserPlayerController()
 {
@@ -15,9 +16,7 @@ void AUserPlayerController::BeginPlay()
 	Super::BeginPlay();
 	FInputModeGameOnly InputMode;
 	SetInputMode(InputMode);
-
 	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
-
 	if (UserCharacter)
 	{
 		UserCharacter->SetUserWidget();

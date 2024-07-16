@@ -35,6 +35,7 @@ public:
 
 	void SaveCharacterData();
 	void LoadCharacterData();
+	void DelayedLoadCharacterData();
 	void SetClass(E_CharClass _ClassType);
 
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -43,6 +44,9 @@ public:
 	void Multi_PickUpItem();
 	void PickUpItem();
 	void SetUserWidget();
+
+	void SetMyParty(class UPartySystem* _MyParty);
+
 protected:
 	void SetMesh(E_CharClass _ClassType);
 
@@ -75,8 +79,15 @@ protected:
 
 	virtual void Multi_UseSkill_Implementation(const FString& SkillName) override;
 
+	UPROPERTY(ReplicatedUsing = OnRep_MeshPath)
 	USkeletalMesh* MeshPath;
+
+	UFUNCTION()
+	void OnRep_MeshPath();
 private:
+	class UPartySystem* MyParty;
+
+	UPROPERTY(Replicated)
 	E_CharClass ClassType;
 
 	UPROPERTY(ReplicatedUsing = OnRep_MyWeapon)

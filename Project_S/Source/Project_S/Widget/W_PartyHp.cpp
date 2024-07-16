@@ -12,3 +12,8 @@ UW_PartyHp::UW_PartyHp(const FObjectInitializer& ObjectInitalizer) :Super(Object
 		TW_PartyHpSlot = UW.Class;
 	}
 }
+
+void UW_PartyHp::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+}

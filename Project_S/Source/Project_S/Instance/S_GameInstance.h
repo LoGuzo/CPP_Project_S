@@ -49,4 +49,7 @@ public:
 	void NextLoadingLevel(const FString& _LevelName);
 
 	class UPartyManager* PartyManager;
+
+	UFUNCTION(Exec)
+	void Hosting(const FString& MapName);
 };

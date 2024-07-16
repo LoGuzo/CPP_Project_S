@@ -19,7 +19,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	
 private:
 	TSubclassOf<UUserWidget> W_LoadingScene;
 	class UMainUserWidget* LoadingScene;

@@ -16,4 +16,7 @@ class PROJECT_S_API ALobbyGameMode : public AGameModeBase
 	
 public:
 	ALobbyGameMode();
+
+protected:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 };

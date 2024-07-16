@@ -13,14 +13,27 @@ UCLASS()
 class PROJECT_S_API UW_PartySystem : public UMainUserWidget
 {
 	GENERATED_BODY()
-	
+public:
+	UW_PartySystem(const FObjectInitializer& ObjectInitializer);
+
+protected:
+	virtual void NativePreConstruct() override;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Make;
+	
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Btn_Remove;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Add;
 
 	UPROPERTY(meta = (BindWidget))
 	class UVerticalBox* Box_Slot;
+
+	TSubclassOf<class UUserWidget> TW_PartySlot;
+	class UW_PartySlot* W_PartySlot;
+
+	void MakeParty();
 };

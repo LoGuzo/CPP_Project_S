@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
+#include "MainPlayerController.h"
 #include "UserPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_S_API AUserPlayerController : public APlayerController
+class PROJECT_S_API AUserPlayerController : public AMainPlayerController
 {
 	GENERATED_BODY()
 	
@@ -19,6 +19,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
 public:
 	UFUNCTION(Client, Reliable)
 	void SyncEnemyHpBar(class AEnemyCharacter* _Enemy);
@@ -28,4 +29,6 @@ public:
 
 	void SetUserWidget();
 	void RemoveUserWidget();
+
+	//void SetCharacterName
 };

@@ -2,6 +2,8 @@
 
 #include "Project_SGameMode.h"
 #include "UObject/ConstructorHelpers.h"
+#include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Actor/MonsterSpawner.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Controllers/UserPlayerController.h"
@@ -13,6 +15,10 @@ AProject_SGameMode::AProject_SGameMode()
 	DefaultPawnClass = AUserCharacter::StaticClass();
 
 	PlayerControllerClass = AUserPlayerController::StaticClass();
+	UserID.Add("LogH");
+	UserID.Add("LogMage");
+	UserID.Add("LogHealer");
+	UserIndex = 0;
 }
 
 void AProject_SGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -24,6 +30,21 @@ void AProject_SGameMode::InitGame(const FString& MapName, const FString& Options
 		SpawnerData = MyInstance->MyDataManager.FindRef(E_DataType::E_SpawnerData)->GetDataMap();
 		MonsterData = MyInstance->MyDataManager.FindRef(E_DataType::E_MonsterData)->GetDataMap();
 		ItemData = MyInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetDataMap();
+	}
+}
+
+void AProject_SGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+	if (NewPlayer)
+	{
+		AUserCharacter* UserCharacter = Cast<AUserCharacter>(NewPlayer->GetPawn());
+		if (UserCharacter)
+		{
+			UserCharacter->SetCharID(UserID[UserIndex]);
+			UserCharacter->LoadCharacterData();
+		}
+		UserIndex = (UserIndex + 1) % UserID.Num();
 	}
 }
 

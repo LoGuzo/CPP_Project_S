@@ -4,6 +4,9 @@
 #include "LoadingGameMode.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_S/Actor/UserPlayerState.h"
+#include "Project_S/Controllers/UserPlayerController.h"
+#include "Project_S/Controllers/LoadingController.h"
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Widget/MainUserWidget.h"
 
@@ -14,6 +17,7 @@ ALoadingGameMode::ALoadingGameMode()
 	{
 		W_LoadingScene = LoadScene.Class;
 	}
+	PlayerControllerClass = ALoadingController::StaticClass();
 }
 
 void ALoadingGameMode::BeginPlay()
@@ -43,16 +47,20 @@ void ALoadingGameMode::NextLevel()
 		LatentInfo.ExecutionFunction = FName("OnLevelLoaded");  // 콜백 함수 이름
 		LatentInfo.Linkage = 0;
 		LatentInfo.UUID = __LINE__;
-
 		UGameplayStatics::LoadStreamLevel(this, FName(*MyGameInstance->GetNextLevelName()), true, false, LatentInfo);
 	}
 }
 
 void ALoadingGameMode::OnLevelLoaded()
 {
-	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	/*auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
 		MyGameInstance->NextLevel(MyGameInstance->GetNextLevelName());
+	}*/
+	APlayerController* UserPlayerController = GetWorld()->GetFirstPlayerController();
+	if (UserPlayerController)
+	{
+		UserPlayerController->ClientTravel(TEXT("127.0.0.1"), ETravelType::TRAVEL_Absolute, true);
 	}
 }

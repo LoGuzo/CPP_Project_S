@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
+#include "MainPlayerController.h"
 #include "LobbyController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_S_API ALobbyController : public APlayerController
+class PROJECT_S_API ALobbyController : public AMainPlayerController
 {
 	GENERATED_BODY()
 	

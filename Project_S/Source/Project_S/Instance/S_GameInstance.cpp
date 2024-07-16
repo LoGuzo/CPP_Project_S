@@ -12,6 +12,7 @@
 #include "UserIDManager.h"
 #include "CharacterClassManager.h"
 #include "PartyManager.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
 US_GameInstance::US_GameInstance()
@@ -69,4 +70,11 @@ void US_GameInstance::NextLoadingLevel(const FString& _LevelName)
 {
 	NextLevelName = _LevelName;
 	UGameplayStatics::OpenLevel(GetWorld(), FName("LoadingMap"));
+}
+
+void US_GameInstance::Hosting(const FString& MapName)
+{
+	UserName = TEXT("LogH");
+	FString MapPath = FString::Printf(TEXT("%s?listen"), *MapName);
+	GetWorld()->ServerTravel(MapPath, true);
 }
