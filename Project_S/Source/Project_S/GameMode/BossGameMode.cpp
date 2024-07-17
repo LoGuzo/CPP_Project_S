@@ -36,7 +36,7 @@ ABossGameMode::ABossGameMode()
 void ABossGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetTimerManager().SetTimer(ResetTimer, this, &ABossGameMode::DelayedStart, 3.f, false);
+	GetWorld()->GetTimerManager().SetTimer(ResetTimer, this, &ABossGameMode::DelayedStart, 2.f, false);
 }
 
 void ABossGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -95,10 +95,6 @@ void ABossGameMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 	if (NewPlayer)
 	{
-		AUserCharacter* UserCharacter = Cast<AUserCharacter>(NewPlayer->GetPawn());
-		AUserPlayerController* User = Cast<AUserPlayerController>(NewPlayer);
-		if(BossCharacter)
-			User->SyncEnemyHpBar(BossCharacter);
 		ConnectedPlayers.Add(NewPlayer); 
 	}
 }
@@ -124,7 +120,7 @@ void ABossGameMode::OnCinematicFinished()
 	for (AEnemyCharacter* Enemy : EnemyClassArray)
 	{
 		BossCharacter = Cast<ABossCharacter>(Enemy);
-		//BossCharacter->SetWidget();
+		BossCharacter->ShowHpBar();
 		BossCharacter->StartAISearch();
 	}
 }
@@ -172,6 +168,6 @@ void ABossGameMode::ResetSlowMotion()
 
 void ABossGameMode::DelayedStart()
 {
-	SetDelegate();
 	//PlayCinematic();
+	SetDelegate();
 }

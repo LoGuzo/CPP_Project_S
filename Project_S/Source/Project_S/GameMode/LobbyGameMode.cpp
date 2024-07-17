@@ -9,13 +9,3 @@ ALobbyGameMode::ALobbyGameMode()
 {
 	PlayerControllerClass = ALobbyController::StaticClass();
 }
-
-void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
-{
-	Super::PostLogin(NewPlayer);
-	if (NewPlayer)
-	{
-		APlayerState* UserState = NewPlayer->PlayerState;
-		UE_LOG(LogTemp, Warning, TEXT("Ab %s"), *UserState->GetPlayerName());
-	}
-}

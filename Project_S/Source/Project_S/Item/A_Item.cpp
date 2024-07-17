@@ -12,6 +12,7 @@ AA_Item::AA_Item()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
+	SetReplicateMovement(true);
 	ItemCom = CreateDefaultSubobject<UC_ItemComponent>(TEXT("ITEMCOM"));
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("COLLISION"));
 	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 50.0f)); 

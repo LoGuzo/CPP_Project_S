@@ -10,6 +10,7 @@
 #include "W_Respawn.h"
 #include "W_QuickSlotMenu.h"
 #include "Kismet/GameplayStatics.h"
+#include "Materials/MaterialParameterCollection.h"
 #include "Project_S/Character/UserCharacter.h"
 #include "Project_S/Component/C_InventoryComponent.h"
 #include "Project_S/Component/C_QuickSlotComponent.h"
@@ -17,6 +18,7 @@
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
+	UpdateCanTick();
 	static ConstructorHelpers::FClassFinder<UInventoryMenu>UW_Inven(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
 	if (UW_Inven.Succeeded())
 	{
