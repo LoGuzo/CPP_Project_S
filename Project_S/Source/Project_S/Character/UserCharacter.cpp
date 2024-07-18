@@ -149,6 +149,12 @@ void AUserCharacter::OnRep_MeshPath()
 	}
 }
 
+void AUserCharacter::ShotAttackCheck()
+{
+	if (MyWeapon)
+		MyWeapon->Fire();
+}
+
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -487,8 +493,17 @@ void AUserCharacter::Multi_AttackMontage_Implementation()
 {
 	if (!AnimInstance)
 		return;
-	AnimInstance->OnHandSwordPlayAM();
-	AnimInstance->JumpToSection(AttackIndex);
+	switch (ClassType)
+	{
+	case E_CharClass::E_Warrior:
+		AnimInstance->OnHandSwordPlayAM();
+		AnimInstance->JumpToSection(AttackIndex, 0);
+		break;
+	case E_CharClass::E_Magician:
+		AnimInstance->OnHandStaffPlayAM();
+		AnimInstance->JumpToSection(AttackIndex, 1);
+		break;
+	}
 	AttackIndex = (AttackIndex + 1) % 3;
 }
 

@@ -10,7 +10,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
+
 #include "Particles/ParticleSystem.h"
 #include "Project_S/Character/FirstCharacter.h"
 
@@ -111,15 +111,6 @@ void AProjectile_Missle::RotateTowardsTarget(float DeltaTime)
 
 	FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, DeltaTime, 5.0f);
 	SetActorRotation(NewRotation);
-}
-
-void AProjectile_Missle::SetParticle_Implementation()
-{
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
-	if (AudioComponent)
-	{
-		AudioComponent->Play();
-	}
 }
 
 void AProjectile_Missle::Explode()

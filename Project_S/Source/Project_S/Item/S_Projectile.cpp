@@ -8,6 +8,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Misc/OutputDeviceNull.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_S/Component/S_StatComponent.h"
 #include "Project_S/Character/FirstCharacter.h"
 
@@ -103,3 +104,11 @@ void AS_Projectile::ScopeAttackCheck(float _Range)
 	DrawDebugSphere(GetWorld(), Center, AttackRange, 10, DrawColor, false, 2.f);
 }
 
+void AS_Projectile::SetParticle_Implementation()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
+	if (AudioComponent)
+	{
+		AudioComponent->Play();
+	}
+}

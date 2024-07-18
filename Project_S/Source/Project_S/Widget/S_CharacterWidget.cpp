@@ -18,7 +18,6 @@
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	UpdateCanTick();
 	static ConstructorHelpers::FClassFinder<UInventoryMenu>UW_Inven(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
 	if (UW_Inven.Succeeded())
 	{

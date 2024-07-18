@@ -186,7 +186,7 @@ bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& In
 		}
 		else
 		{
-			if (ItemKey.ToString() == "None" && DO_Drag->GetItemConName() == GetItemConName())
+			if (ItemKey.ToString() == "None" || DO_Drag->GetItemConName() == GetItemConName())
 			{
 				EquipCom->InvenToEquip(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
 			}

@@ -41,6 +41,9 @@ private:
 	UAnimMontage* OneHandSwordAM;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* OneHandStaffAM;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Montage, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* WakeUpAM;
 
 	FSkillTable* NowSkill;
@@ -68,7 +71,8 @@ public:
 
 	void WakeUpPlayAM();
 	void OnHandSwordPlayAM();
-	void JumpToSection(int32 _SectionIndex);
+	void OnHandStaffPlayAM();
+	void JumpToSection(int32 _SectionIndex, int32 Class);
 	FName GetAttackMontageName(int32 _SectionIndex);
 
 	void SetPlayer(AUserCharacter* _Player);
@@ -81,4 +85,7 @@ public:
 
 	UFUNCTION()
 	void AnimNotify_AnyMove();
+
+	UFUNCTION()
+	void AnimNotify_Shot();
 };

@@ -14,16 +14,17 @@ class PROJECT_S_API AWeaponActor : public AA_Item
 public:	
 	//Sets default values for this actor's properties
 	AWeaponActor();
-	
+
+protected:
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* Weapon;
 
-	/*UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AS_Projectile> ProjectileClass;*/
+	class UParticleSystem* ParticleEffect;
 
-protected:
-
-private:
-
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	UParticleSystemComponent* WeaponParticle;
 public:
+
+	UFUNCTION()
+	virtual void Fire() PURE_VIRTUAL(AWeaponActor::SetProjectile, ;);
 };

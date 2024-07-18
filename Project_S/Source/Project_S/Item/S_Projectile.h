@@ -43,6 +43,13 @@ public:
 
 	void SetProjectileOwner(class AFirstCharacter* _Owner);
 
+	virtual void SetProjectile() {};
+
+	virtual void Explode() {};
+
+	UFUNCTION(NetMulticast, Reliable)
+	void SetParticle();
+
 	//Decal 마법진과 같은 것을 사용할때
 
 private:

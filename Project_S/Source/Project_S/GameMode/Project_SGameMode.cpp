@@ -15,8 +15,8 @@ AProject_SGameMode::AProject_SGameMode()
 	DefaultPawnClass = AUserCharacter::StaticClass();
 
 	PlayerControllerClass = AUserPlayerController::StaticClass();
-	UserID.Add("LogH");
 	UserID.Add("LogMage");
+	UserID.Add("LogH");
 	UserID.Add("LogHealer");
 	UserIndex = 0;
 }

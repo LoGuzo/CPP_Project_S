@@ -64,7 +64,7 @@ public:
 
 	void ScopeAttackCheck(float _Range);
 
-	void ShotAttackCheck();
+	virtual void ShotAttackCheck();
 
 	FString GetCharID() { return CharID; }
 

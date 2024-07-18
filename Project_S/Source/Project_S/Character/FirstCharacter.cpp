@@ -192,7 +192,7 @@ void AFirstCharacter::ScopeAttackCheck(float _Range)
 
 void AFirstCharacter::ShotAttackCheck()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Chk"));
 }
 
 void AFirstCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

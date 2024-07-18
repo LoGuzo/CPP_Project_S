@@ -34,11 +34,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UNiagaraSystem* NiagaraSystem;
 
-	void Explode();
+	virtual void Explode() override;
 
 	void MoveTowardsTarget(float DeltaTime);
 	void RotateTowardsTarget(float DeltaTime);
 
-	UFUNCTION(NetMulticast, Reliable)
-	void SetParticle();
 };

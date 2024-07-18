@@ -47,6 +47,7 @@ public:
 
 	void SetMyParty(class UPartySystem* _MyParty);
 
+	virtual void ShotAttackCheck() override;
 protected:
 	void SetMesh(E_CharClass _ClassType);
 
@@ -84,6 +85,7 @@ protected:
 
 	UFUNCTION()
 	void OnRep_MeshPath();
+
 private:
 	class UPartySystem* MyParty;
 

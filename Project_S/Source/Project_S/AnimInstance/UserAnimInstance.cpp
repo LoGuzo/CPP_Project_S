@@ -17,6 +17,11 @@ UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 	{
 		OneHandSwordAM = ATTACK.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SATTACK(TEXT("AnimMontage'/Game/Mannequin/Animations/Infinity/Staff_Attack_Monatage.Staff_Attack_Monatage'"));
+	if (SATTACK.Succeeded())
+	{
+		OneHandStaffAM = SATTACK.Object;
+	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> WAKEUP(TEXT("AnimMontage'/Game/Mannequin/Animations/Infinity/WakeUp_Montage.WakeUp_Montage'"));
 	if (WAKEUP.Succeeded())
 	{
@@ -68,6 +73,7 @@ void UUserAnimInstance::ColliderNotify()
 		Player->ScopeAttackCheck(NowSkill->Range);
 		break;
 	case E_SkillType::E_Shot:
+		Player->ShotAttackCheck();
 		break;
 	default:
 		break;
@@ -110,6 +116,14 @@ void UUserAnimInstance::OnHandSwordPlayAM()
 	}
 }
 
+void UUserAnimInstance::OnHandStaffPlayAM()
+{
+	if (!Montage_IsPlaying(OneHandStaffAM))
+	{
+		Montage_Play(OneHandStaffAM, 1.f);
+	}
+}
+
 void UUserAnimInstance::WakeUpPlayAM()
 {
 	if (!Montage_IsPlaying(WakeUpAM))
@@ -118,10 +132,20 @@ void UUserAnimInstance::WakeUpPlayAM()
 	}
 }
 
-void UUserAnimInstance::JumpToSection(int32 _SectionIndex)
+void UUserAnimInstance::JumpToSection(int32 _SectionIndex, int32 Class)
 {
 	FName Name = GetAttackMontageName(_SectionIndex);
-	Montage_JumpToSection(Name, OneHandSwordAM);
+	switch (Class)
+	{
+	case 0:
+		Montage_JumpToSection(Name, OneHandSwordAM);
+		break;
+	case 1:
+		Montage_JumpToSection(Name, OneHandStaffAM);
+		break;
+	default:
+		break;
+	}
 }
 
 FName UUserAnimInstance::GetAttackMontageName(int32 _SectionIndex)
@@ -147,4 +171,9 @@ void UUserAnimInstance::AnimNotify_Collider()
 void UUserAnimInstance::AnimNotify_AnyMove()
 {
 	AnyMoveNotify();
+}
+
+void UUserAnimInstance::AnimNotify_Shot()
+{
+	Player->ShotAttackCheck();
 }
