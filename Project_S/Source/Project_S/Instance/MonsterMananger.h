@@ -12,6 +12,7 @@ class PROJECT_S_API MonsterMananger : public SGameManagerBase
 {
 public:
 	MonsterMananger();
+
 	~MonsterMananger();
 	TSharedPtr<FMonsterData> MyMonster;
 

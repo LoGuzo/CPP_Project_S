@@ -2,8 +2,10 @@
 
 
 #include "StaffWeapon.h"
+#include "Projectile_Fire.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Project_S/Character/FirstCharacter.h"
 
 AStaffWeapon::AStaffWeapon() {
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
@@ -41,4 +43,7 @@ void AStaffWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {
 
 void AStaffWeapon::Fire()
 {
+	FVector SpawnLocation = WeaponOwner->GetActorLocation() + WeaponOwner->GetActorForwardVector() * 100.f + WeaponOwner->GetActorUpVector() * 50.f;
+	auto Projectile = GetWorld()->SpawnActor<AProjectile_Fire>(SpawnLocation, WeaponOwner->GetActorRotation());
+	Projectile->SetOwner(WeaponOwner);
 }

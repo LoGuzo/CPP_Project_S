@@ -61,6 +61,7 @@ void AS_Projectile::ScopeAttackCheck(float _Range)
 	TArray<FHitResult> HitResults;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(Owner);
 	float AttackRange = _Range;
 	bool bResult = GetWorld()->SweepMultiByChannel(
 		HitResults,

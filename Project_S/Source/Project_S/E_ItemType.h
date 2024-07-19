@@ -45,6 +45,8 @@ enum class E_DataType : uint8
 	E_SpawnerData,
 	E_UserIDData,
 	E_CharClassData,
+	E_QuestInfo,
+	E_QuestData,
 };
 
 enum class E_Widget : uint8
@@ -69,4 +71,12 @@ enum class E_Spanwer : uint8
 {
 	E_Normal,
 	E_Boss,
+};
+
+UENUM()
+enum class E_QuestInfo : uint8
+{
+	E_Main,
+	E_Sub,
+	E_Event,
 };

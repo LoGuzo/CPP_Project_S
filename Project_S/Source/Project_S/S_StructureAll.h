@@ -321,6 +321,45 @@ struct FCharacterClass : public FTableRowBase
 };
 
 USTRUCT()
+struct FQuestData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 MonsterID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ClearValue;
+};
+
+USTRUCT()
+struct FQuestInfoData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	E_QuestInfo Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText QuestName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> SubQuestID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 QuestID;
+};
+
+USTRUCT()
 struct FResult : public FTableRowBase 
 {
 	GENERATED_BODY()

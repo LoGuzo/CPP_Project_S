@@ -46,6 +46,8 @@ public:
 	virtual void ShowHpBar();
 
 	virtual void RemoveWidget() {};
+
+	void SetMonsterID(int32 _MonsterID);
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
@@ -79,6 +81,8 @@ protected:
 
 	void SyncHpBar(AController* PlayerController);
 private:
+	int32 MonsterID;
+
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* HpBar;
 

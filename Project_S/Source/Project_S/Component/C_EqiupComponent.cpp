@@ -54,7 +54,6 @@ void UC_EqiupComponent::ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TS
 	if (_TargetIndex == 0)
 	{
 		if (_ItemClass != nullptr) {
-			UE_LOG(LogTemp, Warning, TEXT("ChangeWeapon"));
 			userCharacter->RemoveMyWeapon();
 		}
 		userCharacter->SetMyWeapon(Slots[_TargetIndex].ItemClass);

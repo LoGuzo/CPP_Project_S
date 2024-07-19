@@ -407,6 +407,7 @@ void AUserCharacter::Multi_SetMyWeapon_Implementation(TSubclassOf<class AA_Item>
 	{
 		MyWeapon = GetWorld()->SpawnActor<AWeaponActor>(*_MyWeapon);
 		MyWeapon->SetItem(Equip->GetSlot(0).ItemName.ToString());
+		MyWeapon->SetWeaponOwner(this);
 		OnRep_MyWeapon();
 	}
 }

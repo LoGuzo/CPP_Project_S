@@ -107,6 +107,7 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		case E_MonsterType::E_Normal:
 		{
 			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetMonsterID(_EnemyArray[i].ID);
 			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			AAStarAIController* NewAI = Cast<AAStarAIController>(SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType));
 			if (NewAI)
@@ -122,6 +123,7 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		case E_MonsterType::E_Aggressive:
 		{
 			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetMonsterID(_EnemyArray[i].ID);
 			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
@@ -132,6 +134,7 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		case E_MonsterType::E_Patrol:
 		{
 			AEnemyCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(AEnemyCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetMonsterID(_EnemyArray[i].ID);
 			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			APatrolAIController* NewAI = Cast<APatrolAIController>(SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType));
 			if (NewAI)
@@ -147,6 +150,7 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		case E_MonsterType::E_MiddleBoss:
 		{
 			AMiddleBossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<AMiddleBossCharacter>(AMiddleBossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetMonsterID(_EnemyArray[i].ID);
 			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
@@ -157,6 +161,7 @@ TArray<AEnemyCharacter*> AMonsterSpawner::SpawnEnemy(TArray<FSpawnMonsterData> _
 		case E_MonsterType::E_LastBoss:
 		{
 			ABossCharacter* SpawnNewEnemy = GetWorld()->SpawnActor<ABossCharacter>(ABossCharacter::StaticClass(), EnemyArray[i].SpawnLocation, FRotator::ZeroRotator);
+			SpawnNewEnemy->SetMonsterID(_EnemyArray[i].ID);
 			SpawnNewEnemy->SetCharID(EnemyArray[i].MonsterName.ToString());
 			SpawnEnemyAI(SpawnNewEnemy, EnemyArray[i].MonsterType);
 			SpawnNewEnemy->SetActorScale3D(EnemyArray[i].MonsterScale);
@@ -181,6 +186,7 @@ AAIController* AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterTy
 		NowAI->Destroy(); // 기존 AI 컨트롤러 삭제
 	}
 	AAIController* NewAI = nullptr;
+
 	switch (_MonsterType)
 	{
 	case E_MonsterType::E_Normal:
@@ -211,6 +217,7 @@ AAIController* AMonsterSpawner::SpawnEnemyAI(AEnemyCharacter* Enemy, E_MonsterTy
 	default:
 	break;
 	}
+
 	NewAI->Possess(Enemy);
 	Enemy->SetEtc();
 	Enemy->SetState(false);

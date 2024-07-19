@@ -63,15 +63,22 @@ void AEnemyCharacter::SetState(bool NowState)
 		UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
 
+void AEnemyCharacter::SetMonsterID(int32 _MonsterID)
+{
+	MonsterID = _MonsterID;
+}
+
 float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	if (IsDead)
 		return 0.f;
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
 	if (Type != E_MonsterType::E_LastBoss)
 	{
 		SyncHpBar(EventInstigator);
 	}
+
 	AFirstCharacter* User = Cast<AFirstCharacter>(DamageCauser);
 	if (Stat->GetHp() <= 0)
 	{
@@ -103,6 +110,7 @@ void AEnemyCharacter::SyncHpBar(AController* PlayerController)
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	SetActorEnableCollision(false);
 	SetActorTickEnabled(false);
 }
@@ -152,6 +160,7 @@ void AEnemyCharacter::OnRep_MeshPath()
 		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 		HpBar->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("HpBar"));
 	}
+
 	AnimInstance = Cast<UMonsterAnimInstance>(GetMesh()->GetAnimInstance());
 	if (AnimInstance)
 	{

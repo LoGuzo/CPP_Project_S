@@ -20,7 +20,10 @@ public:
 	virtual void SetProjectile() override;
 
 	virtual void Explode() override;
+
 protected:
+	virtual void BeginPlay() override;
+
 	class UParticleSystem* HitParticleEffect;
 
 	class UParticleSystem* ParticleEffect;

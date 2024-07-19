@@ -29,6 +29,9 @@ protected:
 
 	E_ItemType GetType() { return Type; }
 
+	UPROPERTY(VisibleAnywhere)
+	class AFirstCharacter* WeaponOwner;
+
 	UPROPERTY(VisibleAnywhere, Category = Component)
 	UC_ItemComponent* ItemCom;
 
@@ -41,6 +44,7 @@ protected:
 	UFUNCTION()
 	void EndOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 private:
+
 	void SetDrop();
 
 	UPROPERTY(ReplicatedUsing = OnRep_ItemSet)
@@ -62,4 +66,6 @@ public:
 	void SetItem(const FString& _ItemName);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	void SetWeaponOwner(class AFirstCharacter* _WeaponOwner);
 };

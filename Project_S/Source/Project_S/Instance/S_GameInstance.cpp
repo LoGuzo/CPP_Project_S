@@ -12,6 +12,8 @@
 #include "UserIDManager.h"
 #include "CharacterClassManager.h"
 #include "PartyManager.h"
+#include "QuestInfoManager.h"
+#include "QuestDataManager.h"
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -26,6 +28,8 @@ US_GameInstance::US_GameInstance()
 	MyDataManager.Emplace(E_DataType::E_SpawnerData, new SpawnerManager());
 	MyDataManager.Emplace(E_DataType::E_UserIDData, new UserIDManager());
 	MyDataManager.Emplace(E_DataType::E_CharClassData, new CharacterClassManager());
+	MyDataManager.Emplace(E_DataType::E_QuestInfo, new QuestInfoManager());
+	MyDataManager.Emplace(E_DataType::E_QuestData, new QuestDataManager());
 	PartyManager = NewObject<UPartyManager>();
 }
 

@@ -14,7 +14,9 @@ class AProject_SGameMode : public AGameModeBase
 	GENERATED_BODY()
 private:
 	TArray<FString> UserID;
+
 	int32 UserIndex;
+
 protected:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
