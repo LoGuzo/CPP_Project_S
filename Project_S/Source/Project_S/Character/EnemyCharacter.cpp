@@ -86,6 +86,7 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		IsReadySpawn = true;
 		UseSkill(Skill->GetSlot(1).ItemName.ToString());
 		User->GetStatCom()->SetExp(User->GetStatCom()->GetExp() + Stat->GetMaxExp());
+		OnUpdateQuest.Broadcast(MonsterID);
 	}
 	return DamageAmount;
 }

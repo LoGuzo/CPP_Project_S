@@ -89,6 +89,7 @@ void AA_Item::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AA_Item, Name);
+	DOREPLIFETIME(AA_Item, WeaponOwner);
 }
 
 void AA_Item::SetWeaponOwner(AFirstCharacter* _WeaponOwner)

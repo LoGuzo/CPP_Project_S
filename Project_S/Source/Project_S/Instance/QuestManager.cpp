@@ -5,17 +5,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Project_S/Instance/S_GameInstance.h"
 
-void UQuestManager::PostLoad()
+void UQuestManager::PostInitProperties()
 {
-	Super::PostLoad();
+	Super::PostInitProperties();
 
 	auto MyInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyInstance)
 	{
 		QuestInfoData = MyInstance->MyDataManager.FindRef(E_DataType::E_QuestInfo)->GetDataMap();
 		QuestRequiredData = MyInstance->MyDataManager.FindRef(E_DataType::E_QuestData)->GetDataMap();
+		NowQuest.Add(CreateQuestNode(1111111));
 	}
-	NowQuest.Add(CreateQuestNode(1111111));
 }
 
 void UQuestManager::BeginDestroy()
@@ -48,21 +48,29 @@ FQuestNode* UQuestManager::CreateQuestNode(int32 QuestID)
 	return NewNode;
 }
 
-void UQuestManager::UpdateQuestProgress(FQuestNode* QuestNode, int32 MonsterID)
+void UQuestManager::UpdateQuestProgress(int32 MonsterID)
 {
-	if (QuestNode && QuestNode->QuestData->MonsterID == MonsterID)
+	for (FQuestNode* QuestNode : NowQuest)
 	{
-		QuestNode->CurrentValue++;
-		if (QuestNode->IsComplete())
+		if (QuestNode && QuestNode->QuestData->MonsterID == MonsterID)
 		{
-			NowQuest.Remove(QuestNode);
+			QuestNode->CurrentValue++;
+			if (QuestNode->IsComplete())
+			{
+				NowQuest.Remove(QuestNode);
 
-			if (QuestNode->LeftChild)
-				NowQuest.Add(QuestNode->LeftChild);
-			if (QuestNode->RightChild)
-				NowQuest.Add(QuestNode->RightChild);
+				if (QuestNode->LeftChild)
+					NowQuest.Add(QuestNode->LeftChild);
+				if (QuestNode->RightChild)
+					NowQuest.Add(QuestNode->RightChild);
 
-			ZeroMemory(QuestNode);
+				ZeroMemory(QuestNode);
+			}
 		}
 	}
+}
+
+void UQuestManager::AddFirstData()
+{
+	NowQuest.Add(CreateQuestNode(1111111));
 }

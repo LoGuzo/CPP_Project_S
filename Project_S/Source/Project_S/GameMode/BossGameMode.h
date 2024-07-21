@@ -38,15 +38,13 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-private:
 	void SetDelegate();
 
+private:
 	UFUNCTION()
 	void BossDied();
 
 	TSubclassOf<class AActor> PotalBP;
-
-	TArray<class AEnemyCharacter*> EnemyClassArray;
 
 	void ActivateSlowMotion(float SlowMotionTime, float Duration); // 슬로우 모션함수
 

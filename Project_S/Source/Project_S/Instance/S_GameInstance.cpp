@@ -14,6 +14,7 @@
 #include "PartyManager.h"
 #include "QuestInfoManager.h"
 #include "QuestDataManager.h"
+#include "QuestManager.h"
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -50,6 +51,13 @@ void US_GameInstance::Shutdown()
 	}
 }
 
+void US_GameInstance::OnStart()
+{
+	Super::OnStart();
+
+	QuestManager = NewObject<UQuestManager>(this);
+}
+
 void US_GameInstance::SetUserData(const FUserID& _UserData)
 {
 	UserData = _UserData;
@@ -69,11 +77,16 @@ void US_GameInstance::NextLevel(const FString& _LevelName)
 {
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*_LevelName));
 }
-
+ 
 void US_GameInstance::NextLoadingLevel(const FString& _LevelName)
 {
 	NextLevelName = _LevelName;
 	UGameplayStatics::OpenLevel(GetWorld(), FName("LoadingMap"));
+}
+
+void US_GameInstance::SetQuestManager(UQuestManager* _QuestManager)
+{
+	QuestManager = _QuestManager;
 }
 
 void US_GameInstance::Hosting(const FString& MapName)

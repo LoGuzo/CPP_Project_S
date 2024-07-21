@@ -14,6 +14,7 @@ class UW_CharInfo;
 class UInventoryMenu;
 class UW_Equip;
 class UW_Skill;
+class UW_QuestSystem;
 class UW_QuickSlotMenu;
 class UC_QuickSlotComponent;
 class UW_Respawn;
@@ -43,8 +44,12 @@ public:
 	void RemoveRespawn() const;
 
 	const UInventoryMenu* GetInvetoryWidget() { return InventoryWidget; }
+
 	const UW_QuickSlotMenu* GetQuickWidget() { return PotionSlot; }
+
 	UW_CharInfo* GetCharInfo() { return WBP_CharInfo; }
+
+	UW_QuestSystem* GetQuestSystem() { return WBP_QuestSystem; }
 
 private:
 	class UDO_DragDrop* DO_Drag;
@@ -58,6 +63,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	UW_CharInfo* WBP_CharInfo;
+
+	UPROPERTY(meta = (BindWidget))
+	UW_QuestSystem* WBP_QuestSystem;
 
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 

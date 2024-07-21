@@ -24,6 +24,7 @@
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Widget/S_CharacterWidget.h"
 #include "Project_S/Widget/W_CharInfo.h"
+#include "Project_S/Widget/W_QuestSystem.h"
 
 AUserCharacter::AUserCharacter()
 {
@@ -155,11 +156,17 @@ void AUserCharacter::ShotAttackCheck()
 		MyWeapon->Fire();
 }
 
+void AUserCharacter::UpdateQuest(const TArray<FQuestNode*>& Slots)
+{
+	if (HUDWidget)
+	{
+		HUDWidget->GetQuestSystem()->UpdateSlots(Slots);
+	}
+}
+
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	//SetCharID("LogH"/*MyGameInstance->GetUserName()*/);
-	//LoadCharacterData();
 	SaveLocation = GetActorLocation();
 }
 
@@ -221,23 +228,22 @@ void AUserCharacter::ResetStat()
 void AUserCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
+	if (CharacterUI)
+	{
+		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
+	}
 }
 
 void AUserCharacter::SetUserWidget()
 {
-	if (CharacterUI)
+	if (HUDWidget)
 	{
-		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
-		if (HUDWidget)
-		{
-			HUDWidget->GetCharInfo()->BindLvl(Stat);
-			HUDWidget->GetCharInfo()->BindHp(Stat);
-			HUDWidget->GetCharInfo()->BindMp(Stat);
-			HUDWidget->GetCharInfo()->BindExp(Stat);
-			HUDWidget->ShowQuick(QuickSlot);
-			SetWidget();
-		}
+		HUDWidget->GetCharInfo()->BindLvl(Stat);
+		HUDWidget->GetCharInfo()->BindHp(Stat);
+		HUDWidget->GetCharInfo()->BindMp(Stat);
+		HUDWidget->GetCharInfo()->BindExp(Stat);
+		HUDWidget->ShowQuick(QuickSlot);
+		SetWidget();
 	}
 }
 

@@ -27,29 +27,34 @@ public:
 	US_GameInstance();
 
 	virtual void Init() override;
+
 	virtual void Shutdown() override;
 
 	TMap<E_DataType, SGameManagerBase*> MyDataManager;
 
 	void SetUserData(const FUserID& _UserData);
-
 	FUserID* GetUserData() { return &UserData; }
 
 	void SetUserName(const FString& _UserName);
-
 	FString GetUserName() { return UserName; }
 
 	void SetIndex(const int32 _SelectedSlotIndex);
-
-	FString GetNextLevelName() { return NextLevelName; }
-
 	int32 GetIndex() { return SelectedSlotIndex; }
+	
+	FString GetNextLevelName() { return NextLevelName; }
 
 	void NextLevel(const FString& _LevelName);
 	void NextLoadingLevel(const FString& _LevelName);
 
 	class UPartyManager* PartyManager;
 
+	class UQuestManager* QuestManager;
+
+	void SetQuestManager(class UQuestManager* _QuestManager);
+
 	UFUNCTION(Exec)
 	void Hosting(const FString& MapName);
+
+protected:
+	virtual void OnStart() override;
 };

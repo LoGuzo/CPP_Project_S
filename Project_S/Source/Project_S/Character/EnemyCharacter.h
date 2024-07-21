@@ -9,6 +9,7 @@
 #include "EnemyCharacter.generated.h"
 using namespace SUtils;
 DECLARE_MULTICAST_DELEGATE(FOnDied);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUpdateQuest, int32);
 /**
  * 
  */
@@ -42,6 +43,7 @@ public:
 	void SetState(bool NowState);
 
 	FOnDied OnDied;
+	FOnUpdateQuest OnUpdateQuest;
 
 	virtual void ShowHpBar();
 

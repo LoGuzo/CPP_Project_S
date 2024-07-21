@@ -360,6 +360,27 @@ struct FQuestInfoData : public FTableRowBase
 };
 
 USTRUCT()
+struct FQuestNode
+{
+	GENERATED_BODY()
+
+	FQuestInfoData* QuestInfo;
+
+	FQuestData* QuestData;
+
+	int32 CurrentValue = 0;
+
+	FQuestNode* LeftChild;
+
+	FQuestNode* RightChild;
+
+	bool IsComplete() const
+	{
+		return CurrentValue >= QuestData->ClearValue;
+	}
+};
+
+USTRUCT()
 struct FResult : public FTableRowBase 
 {
 	GENERATED_BODY()

@@ -29,7 +29,7 @@ protected:
 
 	E_ItemType GetType() { return Type; }
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(Replicated, VisibleAnywhere)
 	class AFirstCharacter* WeaponOwner;
 
 	UPROPERTY(VisibleAnywhere, Category = Component)

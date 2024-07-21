@@ -8,6 +8,7 @@
 #include "W_Equip.h"
 #include "W_Skill.h"
 #include "W_Respawn.h"
+#include "W_QuestSystem.h"
 #include "W_QuickSlotMenu.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialParameterCollection.h"
@@ -18,25 +19,28 @@
 
 US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FClassFinder<UInventoryMenu>UW_Inven(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
-	if (UW_Inven.Succeeded())
+	static ConstructorHelpers::FClassFinder<UInventoryMenu>Inven(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
+	if (Inven.Succeeded())
 	{
-		U_InventoryWidget = UW_Inven.Class;
+		U_InventoryWidget = Inven.Class;
 	}
-	static ConstructorHelpers::FClassFinder<UW_Equip>UW_Equip(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Equip.WBP_Equip_C'"));
-	if (UW_Equip.Succeeded())
+
+	static ConstructorHelpers::FClassFinder<UW_Equip>Equip(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Equip.WBP_Equip_C'"));
+	if (Equip.Succeeded())
 	{
-		U_EquipmentWidget = UW_Equip.Class;
+		U_EquipmentWidget = Equip.Class;
 	}
-	static ConstructorHelpers::FClassFinder<UW_Skill>UW_Sk(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Skill.WBP_Skill_C'"));
-	if (UW_Sk.Succeeded())
+
+	static ConstructorHelpers::FClassFinder<UW_Skill>Sk(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Skill.WBP_Skill_C'"));
+	if (Sk.Succeeded())
 	{
-		U_SkillWidget = UW_Sk.Class;
+		U_SkillWidget = Sk.Class;
 	}
-	static ConstructorHelpers::FClassFinder<UW_Respawn>UW_Respawn(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Respawn.WBP_Respawn_C'"));
-	if (UW_Respawn.Succeeded())
+
+	static ConstructorHelpers::FClassFinder<UW_Respawn>Respawn(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Respawn.WBP_Respawn_C'"));
+	if (Respawn.Succeeded())
 	{
-		U_RespawnWidget = UW_Respawn.Class;
+		U_RespawnWidget = Respawn.Class;
 	}
 }
 

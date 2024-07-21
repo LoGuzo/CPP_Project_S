@@ -9,26 +9,6 @@
 
 #define ZeroMemory(data){delete data; data = nullptr;}
 
-USTRUCT(BlueprintType)
-struct FQuestNode
-{
-	GENERATED_BODY()
-
-	FQuestInfoData* QuestInfo;
-
-	FQuestData* QuestData;
-
-	int32 CurrentValue;
-
-	FQuestNode* LeftChild;
-
-	FQuestNode* RightChild;
-
-	bool IsComplete() const
-	{
-		return CurrentValue >= QuestData->ClearValue;
-	}
-};
 /**
  * 
  */
@@ -37,6 +17,9 @@ class PROJECT_S_API UQuestManager : public UObject
 {
 	GENERATED_BODY()
 	
+/*public:
+	UQuestManager();
+	*/
 private:
 	TMap<int32, TSharedPtr<FTableRowBase>> QuestInfoData;
 	TMap<int32, TSharedPtr<FTableRowBase>> QuestRequiredData;
@@ -45,12 +28,14 @@ private:
 	FQuestNode* CreateQuestNode(int32 QuestID);
 
 protected:
-	virtual void PostLoad() override;
+	virtual void PostInitProperties() override;
 
 	virtual void BeginDestroy() override;
 
 public:
-	void UpdateQuestProgress(FQuestNode* QuestNode, int32 MonsterID);
+	void UpdateQuestProgress(int32 MonsterID);
 
 	TArray<FQuestNode*> GetNowQuest() { return NowQuest; }
+
+	void AddFirstData();
 };

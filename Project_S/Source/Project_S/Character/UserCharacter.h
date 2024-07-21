@@ -48,6 +48,8 @@ public:
 	void SetMyParty(class UPartySystem* _MyParty);
 
 	virtual void ShotAttackCheck() override;
+
+	void UpdateQuest(const TArray<FQuestNode*>& Slots);
 protected:
 	void SetMesh(E_CharClass _ClassType);
 

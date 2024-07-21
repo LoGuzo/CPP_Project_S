@@ -28,7 +28,6 @@ private:
 	TSubclassOf<class UW_Slot> W_Slot;
 	class UW_Slot* W_Slots2;
 
-
 	UFUNCTION()
 	void ClosePop();
 public:
