@@ -23,12 +23,14 @@ AEnemyCharacter::AEnemyCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
 	HpBar->SetWidgetSpace(EWidgetSpace::Screen);
+	HpBar->SetupAttachment(RootComponent);
 	MyCharType = E_CharacterType::E_Monster;
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_OnlyHpBar.WBP_OnlyHpBar_C'"));
 	if (UW.Succeeded())
 	{
 		HpBar->SetWidgetClass(UW.Class);
 		HpBar->SetDrawSize(FVector2D(200.f, 500.f));
+		HpBar->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	}
 	GetMesh()->SetRelativeLocationAndRotation(FVector(-20.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Monster/Animations/BP_MutantAnimInstance.BP_MutantAnimInstance_C'"));

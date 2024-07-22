@@ -14,6 +14,9 @@ class PROJECT_S_API UW_ChatBalloon : public UMainUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	void SetSpeechBubble(const FText& Message);
+
 private:
 	UPROPERTY(Meta = (BindWidget))
 	class UTextBlock* Txt_Bubble;

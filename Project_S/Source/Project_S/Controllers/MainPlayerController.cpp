@@ -19,6 +19,7 @@ void AMainPlayerController::SendMessage(const FText& Text)
 	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
 	if (UserCharacter)
 	{
+		UserCharacter->SetChatBalloon(Text);
 		FString UserName = UserCharacter->GetCharID();
 		FString Message = FString::Printf(TEXT("%s : %s"), *UserName, *Text.ToString());
 

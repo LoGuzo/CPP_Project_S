@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PlayerState.h"
@@ -24,6 +25,7 @@
 #include "Project_S/Instance/S_GameInstance.h"
 #include "Project_S/Widget/S_CharacterWidget.h"
 #include "Project_S/Widget/W_CharInfo.h"
+#include "Project_S/Widget/W_ChatBalloon.h"
 #include "Project_S/Widget/W_QuestSystem.h"
 
 AUserCharacter::AUserCharacter()
@@ -78,6 +80,17 @@ AUserCharacter::AUserCharacter()
 	{
 		TCameraShake = CS.Class;
 	}
+	
+	SpeechBubble = CreateDefaultSubobject<UWidgetComponent>(TEXT("SpeechBubble"));
+	SpeechBubble->SetWidgetSpace(EWidgetSpace::Screen);
+	SpeechBubble->SetupAttachment(RootComponent);
+	static ConstructorHelpers::FClassFinder<UUserWidget>SB(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_ChatBalloon.WBP_ChatBalloon_C'"));
+	if (SB.Succeeded())
+	{
+		SpeechBubble->SetWidgetClass(SB.Class);
+		SpeechBubble->SetDrawSize(FVector2D(500.f, 200.f));
+		SpeechBubble->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
+	}
 
 	bIsFlipFlopInventoryActive = false;
 	bIsFlipFlopEquipmentActive = false;
@@ -125,7 +138,7 @@ void AUserCharacter::SetMesh(E_CharClass _ClassType)
 		{
 			MeshPath = Cast<USkeletalMesh>(ClassData.Pin()->ClassMesh.LoadSynchronous());
 			//GetMesh()->SetAnimInstanceClass(ClassData.Pin()->ClassAnim.LoadSynchronous());
-			OnRep_MeshPath();
+			OnRep_MeshPath();	
 		}
 	}
 }
@@ -164,6 +177,17 @@ void AUserCharacter::UpdateQuest(const TArray<FQuestNode*>& Slots)
 	}
 }
 
+void AUserCharacter::SetChatBalloon(const FText& Message)
+{
+	if (ChatBalloon)
+	{
+		ChatBalloon->SetRenderOpacity(1.f);
+		ChatBalloon->SetSpeechBubble(Message);
+	}
+	GetWorldTimerManager().ClearTimer(CloseChatBalloon);
+	GetWorldTimerManager().SetTimer(CloseChatBalloon, this, &AUserCharacter::HideChatBalloon, 5.f, false);
+}
+
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -189,6 +213,7 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	RemoveMyWeapon();
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 	GetWorldTimerManager().ClearTimer(HitHandle);
+	GetWorldTimerManager().ClearTimer(CloseChatBalloon);
 }
 
 float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -229,9 +254,12 @@ void AUserCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	if (CharacterUI)
-	{
 		HUDWidget = CreateWidget<US_CharacterWidget>(GetWorld(), CharacterUI);
-	}
+
+	SpeechBubble->InitWidget();
+	ChatBalloon = Cast<UW_ChatBalloon>(SpeechBubble->GetUserWidgetObject());
+	if (ChatBalloon)
+		HideChatBalloon();
 }
 
 void AUserCharacter::SetUserWidget()
@@ -300,9 +328,7 @@ void AUserCharacter::DelayedLoadCharacterData()
 			for (const FS_Slot& slot : Equip->GetSlots())
 			{
 				if (slot.ItemClass != nullptr)
-				{
 					SetMyWeapon(slot.ItemClass);
-				}
 			}
 			QuickSlot->OnQuickUpdated.Broadcast();
 		}
@@ -365,6 +391,7 @@ void AUserCharacter::Multi_PickUpItem_Implementation()
 {
 	if (GetCurItem() != nullptr) {
 		GetCurItem()->GetC_ItemComponent()->Interact(this);
+
 		Inventory->OnInventoryUpdated.Broadcast();
 		QuickSlot->OnQuickUpdated.Broadcast();
 	}
@@ -779,6 +806,12 @@ void AUserCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AUserCharacter, MyWeapon);
 	DOREPLIFETIME(AUserCharacter, Inventory);
 	DOREPLIFETIME(AUserCharacter, QuickSlot);
+}
+
+void AUserCharacter::HideChatBalloon()
+{
+	if(ChatBalloon)
+		ChatBalloon->SetRenderOpacity(0.f);
 }
 
 float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation)

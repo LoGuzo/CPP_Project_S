@@ -50,6 +50,8 @@ public:
 	virtual void ShotAttackCheck() override;
 
 	void UpdateQuest(const TArray<FQuestNode*>& Slots);
+
+	void SetChatBalloon(const FText& Message);
 protected:
 	void SetMesh(E_CharClass _ClassType);
 
@@ -89,6 +91,11 @@ protected:
 	void OnRep_MeshPath();
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	class UWidgetComponent* SpeechBubble;
+
+	class UW_ChatBalloon* ChatBalloon;
+
 	class UPartySystem* MyParty;
 
 	UPROPERTY(Replicated)
@@ -148,6 +155,9 @@ private:
 	UPROPERTY()
 	FTimerHandle HitHandle;
 
+	UPROPERTY()
+	FTimerHandle CloseChatBalloon;
+
 	FTimeline CurveTimeLine;
 
 	UFUNCTION()
@@ -164,6 +174,8 @@ private:
 	void SetHitFalse();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	void HideChatBalloon();
 public:
 	class US_CharacterWidget* GetHUDWidget() { return HUDWidget; }
 
