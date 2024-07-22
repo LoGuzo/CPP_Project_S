@@ -50,6 +50,9 @@ FQuestNode* UQuestManager::CreateQuestNode(int32 QuestID)
 
 void UQuestManager::UpdateQuestProgress(int32 MonsterID)
 {
+	TArray<FQuestNode*> ToAdd;
+	TArray<FQuestNode*> ToRemove;
+
 	for (FQuestNode* QuestNode : NowQuest)
 	{
 		if (QuestNode && QuestNode->QuestData->MonsterID == MonsterID)
@@ -57,17 +60,20 @@ void UQuestManager::UpdateQuestProgress(int32 MonsterID)
 			QuestNode->CurrentValue++;
 			if (QuestNode->IsComplete())
 			{
-				NowQuest.Remove(QuestNode);
-
+				ToRemove.Add(QuestNode);
 				if (QuestNode->LeftChild)
-					NowQuest.Add(QuestNode->LeftChild);
+					ToAdd.Add(QuestNode->LeftChild);
 				if (QuestNode->RightChild)
-					NowQuest.Add(QuestNode->RightChild);
-
-				ZeroMemory(QuestNode);
+					ToAdd.Add(QuestNode->RightChild);
 			}
 		}
 	}
+	for (FQuestNode* Node : ToRemove)
+	{
+		NowQuest.Remove(Node);
+		ZeroMemory(Node);
+	}
+	NowQuest.Append(ToAdd);
 }
 
 void UQuestManager::AddFirstData()

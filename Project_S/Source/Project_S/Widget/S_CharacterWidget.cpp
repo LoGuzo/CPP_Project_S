@@ -5,6 +5,7 @@
 #include "DO_DragDrop.h"
 #include "InventoryMenu.h"
 #include "W_CharInfo.h"
+#include "W_Chat.h"
 #include "W_Equip.h"
 #include "W_Skill.h"
 #include "W_Respawn.h"
@@ -141,4 +142,16 @@ void US_CharacterWidget::RemoveRespawn() const
 		RespawnWidget->RemoveFromParent();
 		RespawnWidget->SetUser(nullptr);
 	}
+}
+
+TSharedPtr<class SWidget> US_CharacterWidget::GetChatInputTextObject()
+{
+	return WBP_Chat->GetChatInputTextObject();
+}
+
+void US_CharacterWidget::AddChatMessage(const FString& Message)
+{
+	if (!WBP_Chat) return;
+
+	WBP_Chat->AddChatMessage(Message);
 }

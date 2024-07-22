@@ -165,6 +165,8 @@ private:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 public:
+	class US_CharacterWidget* GetHUDWidget() { return HUDWidget; }
+
 	void UseQuickSlot();
 	
 	void AttackCheck();

@@ -12,6 +12,7 @@
 
 class UW_CharInfo;
 class UInventoryMenu;
+class UW_Chat;
 class UW_Equip;
 class UW_Skill;
 class UW_QuestSystem;
@@ -19,6 +20,7 @@ class UW_QuickSlotMenu;
 class UC_QuickSlotComponent;
 class UW_Respawn;
 class AUserCharacter;
+
 
 UCLASS()
 class PROJECT_S_API US_CharacterWidget : public UUserWidget
@@ -51,6 +53,10 @@ public:
 
 	UW_QuestSystem* GetQuestSystem() { return WBP_QuestSystem; }
 
+	TSharedPtr<class SWidget> GetChatInputTextObject();
+
+	void AddChatMessage(const FString& Message);
+
 private:
 	class UDO_DragDrop* DO_Drag;
 	TWeakObjectPtr<UC_QuickSlotComponent> QuickComponent;
@@ -66,6 +72,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	UW_QuestSystem* WBP_QuestSystem;
+
+	UPROPERTY(meta = (BindWidget))
+	UW_Chat* WBP_Chat;
 
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
 
