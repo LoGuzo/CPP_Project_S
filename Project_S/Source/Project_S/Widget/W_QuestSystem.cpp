@@ -9,9 +9,7 @@ UW_QuestSystem::UW_QuestSystem(const FObjectInitializer& ObjectInitializer) : Su
 {
 	static ConstructorHelpers::FClassFinder<UW_QuestSlot>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBp_QuestSlot.WBP_QuestSlot_C'"));
 	if (UW.Succeeded())
-	{
 		TW_QuestSlot = UW.Class;
-	}
 }
 
 void UW_QuestSystem::UpdateSlots(const TArray<FQuestNode*>& Slots)

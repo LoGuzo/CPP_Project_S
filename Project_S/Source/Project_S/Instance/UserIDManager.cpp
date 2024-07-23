@@ -13,9 +13,7 @@ UserIDManager::UserIDManager()
 UserIDManager::~UserIDManager()
 {
 	if (MyCharacter != nullptr)
-	{
 		MyCharacter.Reset();
-	}
 }
 
 const TSharedPtr<FTableRowBase> UserIDManager::GetMyData(FString _Init)
@@ -25,6 +23,7 @@ const TSharedPtr<FTableRowBase> UserIDManager::GetMyData(FString _Init)
 		MyCharacter = MakeShared<FUserID>(*myCharacter);
 	else
 		MyCharacter.Reset();
+
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

@@ -27,6 +27,7 @@ public:
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void Tick(float DeltaSeconds) override;
@@ -38,10 +39,10 @@ private:
 	NowState WalkStop;
 
 	int32 PathIndex;
-
 	int32 DetailPathIndex;
 
 	class APathFinder* PathFinder;
+
 protected:
 	virtual void AIMove() override; // ¿Ãµø
 
@@ -51,6 +52,7 @@ protected:
 	void MoveToLocationUsingAStar(const FVector& TargetLocation);
 
 	void MoveFoward(float DeltaTime);
+
 public:
 	void SetLocation(const TArray<FVector>& _Location);
 };

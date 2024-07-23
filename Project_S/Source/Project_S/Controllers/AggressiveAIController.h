@@ -17,6 +17,7 @@ class PROJECT_S_API AAggressiveAIController : public AEnemyAIController
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void AISerach() override; // ÀûÅ½»ö

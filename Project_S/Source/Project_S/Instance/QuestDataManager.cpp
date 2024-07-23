@@ -13,9 +13,7 @@ QuestDataManager::QuestDataManager()
 QuestDataManager::~QuestDataManager()
 {
 	if (MyQuest != nullptr)
-	{
 		MyQuest.Reset();
-	}
 }
 
 const TSharedPtr<FTableRowBase> QuestDataManager::GetMyData(FString _Init)
@@ -25,6 +23,7 @@ const TSharedPtr<FTableRowBase> QuestDataManager::GetMyData(FString _Init)
 		MyQuest = MakeShared<FQuestData>(*myCharacter);
 	else
 		MyQuest.Reset();
+
 	return MyQuest.IsValid() ? MyQuest : nullptr;
 }
 
@@ -32,6 +31,7 @@ TMap<int32, TSharedPtr<FTableRowBase>> QuestDataManager::GetDataMap()
 {
 	const TArray<FName> row = MyData->GetRowNames();
 	TMap<int32, TSharedPtr<FTableRowBase>> DataMap;
+
 	for (int i = 0; i < row.Num(); ++i)
 	{
 		const auto data = MyData->FindRow<FQuestData>(row[i], row[i].ToString(), false);
@@ -43,5 +43,6 @@ TMap<int32, TSharedPtr<FTableRowBase>> QuestDataManager::GetDataMap()
 		else
 			MyQuest.Reset();
 	}
+
 	return DataMap;
 }

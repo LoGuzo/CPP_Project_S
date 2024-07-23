@@ -18,8 +18,10 @@ class PROJECT_S_API UW_QuickSlotMenu : public UUserWidget
 	
 public:
 	UW_QuickSlotMenu(const FObjectInitializer& ObjectInitializer);
+
 	void UpdateSkillSlots(const TArray<FS_Slot>& _Slots);
 	void UpdatePotionSlots(const TArray<FS_Slot>& _Slots);
+
 	void ShowQSkillWidget(UC_QuickSlotComponent* _QuickSlotCom);
 	void ShowQPotionWidget(UC_QuickSlotComponent* _QuickSlotCom);
 

@@ -23,11 +23,14 @@ public:
 	void SetCharName(FString _CharName);
 	void SetIndex(int32 _SlotIndex);
 	void SetCharacterImage(UTextureRenderTarget2D* RenderTarget);
+
 	FOnUpDateButton OnUpDateButton;
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativePreConstruct() override;
 	virtual void NativeDestruct() override;
+
 private:
 	UFUNCTION()
 	void GoToCreate();

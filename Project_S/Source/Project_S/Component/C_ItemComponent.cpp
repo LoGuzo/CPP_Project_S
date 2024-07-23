@@ -16,17 +16,6 @@ UC_ItemComponent::UC_ItemComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 	ItemAmount = 1;
-	// ...
-}
-
-
-// Called when the game starts
-void UC_ItemComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-
 }
 
 void UC_ItemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -34,13 +23,10 @@ void UC_ItemComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	if (ItemData.IsValid())
-	{
 		ItemData.Reset();
-	}
+
 	if (ItemMesh.IsValid())
-	{
 		ItemMesh.Reset();
-	}
 }
 
 

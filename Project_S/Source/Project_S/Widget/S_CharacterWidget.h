@@ -77,18 +77,14 @@ private:
 	UW_Chat* WBP_Chat;
 
 	TSubclassOf<UInventoryMenu> U_InventoryWidget;
-
 	UInventoryMenu* InventoryWidget;
 
 	TSubclassOf<UW_Equip> U_EquipmentWidget;
-
 	UW_Equip* EquipmentWidget;
 
 	TSubclassOf<UW_Skill> U_SkillWidget;
-
 	UW_Skill* SkillWidget;
 
 	TSubclassOf<UW_Respawn> U_RespawnWidget;
-
 	UW_Respawn* RespawnWidget;
 };

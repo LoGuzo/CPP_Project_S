@@ -10,18 +10,13 @@
 AStaffWeapon::AStaffWeapon() {
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
 	Weapon->SetupAttachment(RootComponent);
+	
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/InfinityBladeEffects/Effects/FX_Mobile/Fire/combat/P_AOE_Fire_CircleAttack.P_AOE_Fire_CircleAttack'"));
 	if (AttackP.Succeeded())
-	{
 		ParticleEffect = AttackP.Object;
-	}
+
 	WeaponParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("WeaponParticle"));
 	WeaponParticle->SetupAttachment(RootComponent);
-}
-
-void AStaffWeapon::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void AStaffWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {
@@ -31,7 +26,6 @@ void AStaffWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {
 		Weapon->SetSkeletalMesh(MeshPath);
 	}
 	Weapon->SetCollisionProfileName(TEXT("NoCollision"));
-
 
 	if (ParticleEffect)
 	{
@@ -44,6 +38,7 @@ void AStaffWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {
 void AStaffWeapon::Fire()
 {
 	FVector SpawnLocation = WeaponOwner->GetActorLocation() + WeaponOwner->GetActorForwardVector() * 100.f + WeaponOwner->GetActorUpVector() * 50.f;
+
 	auto Projectile = GetWorld()->SpawnActor<AProjectile_Fire>(SpawnLocation, WeaponOwner->GetActorRotation());
 	Projectile->SetOwner(WeaponOwner);
 }

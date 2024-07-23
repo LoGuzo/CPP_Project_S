@@ -34,6 +34,7 @@ public:
 	void SetSpeed(const float _Speed);
 
 	void PlaySome(TSharedPtr<FMonsterPattern>_Data);
+
 	void ColliderNotify();
 
 	void SetMonster(AEnemyCharacter* _Monster);

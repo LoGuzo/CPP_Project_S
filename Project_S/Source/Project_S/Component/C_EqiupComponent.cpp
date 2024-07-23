@@ -12,7 +12,6 @@ UC_EqiupComponent::UC_EqiupComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
 	// ...
 }
 
@@ -37,12 +36,14 @@ void UC_EqiupComponent::SetSlot(int32 _Index, FS_Slot _Slot)
 void UC_EqiupComponent::InvenToEquip(int32 _BeforeIndex, int32 _TargetIndex, UC_InventoryComponent* _InvenCom)
 {
 	LocalSlot = _InvenCom->GetSlot(_BeforeIndex);
+
 	if (_TargetIndex >= 0)
 	{
 		_InvenCom->SetSlot(_BeforeIndex, Slots[_TargetIndex]);
 		Slots[_TargetIndex] = LocalSlot;
 		ExchangeEquip(_BeforeIndex, _TargetIndex, _InvenCom->GetSlot(_BeforeIndex).ItemClass);
 	}
+
 	OnEquipUpdated.Broadcast();
 	_InvenCom->OnInventoryUpdated.Broadcast();
 
@@ -53,9 +54,8 @@ void UC_EqiupComponent::ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex, TS
 	auto userCharacter = Cast<AUserCharacter>(GetOwner());
 	if (_TargetIndex == 0)
 	{
-		if (_ItemClass != nullptr) {
+		if (_ItemClass != nullptr)
 			userCharacter->RemoveMyWeapon();
-		}
 		userCharacter->SetMyWeapon(Slots[_TargetIndex].ItemClass);
 	}
 	else

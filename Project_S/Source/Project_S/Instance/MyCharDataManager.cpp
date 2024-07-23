@@ -12,9 +12,7 @@ MyCharDataManager::MyCharDataManager()
 MyCharDataManager::~MyCharDataManager()
 {
 	if (MyCharacter != nullptr)
-	{
 		MyCharacter.Reset();
-	}
 }
 
 const TSharedPtr<FTableRowBase> MyCharDataManager::GetMyData(FString _Init)
@@ -24,6 +22,7 @@ const TSharedPtr<FTableRowBase> MyCharDataManager::GetMyData(FString _Init)
 		MyCharacter = MakeShared<FMyCharacterData>(*myCharacter);
 	else
 		MyCharacter.Reset();
+
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 

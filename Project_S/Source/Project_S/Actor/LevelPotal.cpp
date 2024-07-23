@@ -47,22 +47,27 @@ void ALevelPotal::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 	if(ParticleComponent)
 		ParticleComponent->ReleaseToPool();
+
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 }
 
 void ALevelPotal::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
+
 	ACharacter* character = Cast<ACharacter>(OtherActor);
 	if (!character)
 		return;
+
 	BPFunction();
+
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ALevelPotal::NextLevel, 3.f, false);
 }
 
 void ALevelPotal::BPFunction()
 {
 	FString str = "FadeFunc";
+
 	FOutputDeviceNull ar;
 	CallFunctionByNameWithArguments(*str, ar, nullptr, true);
 }

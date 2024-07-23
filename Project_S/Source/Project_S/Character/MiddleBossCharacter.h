@@ -17,14 +17,14 @@ class PROJECT_S_API AMiddleBossCharacter : public AEnemyCharacter
 public:
 	AMiddleBossCharacter();
 
-	virtual void LoadCharacterData() override;
-
 	virtual void ShowHpBar() override;
-
 	virtual void RemoveWidget() override;
+
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 	virtual void PostInitializeComponents() override;
+
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:

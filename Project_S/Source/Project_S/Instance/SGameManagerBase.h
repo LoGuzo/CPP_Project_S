@@ -15,6 +15,7 @@ protected:
 public:
 	SGameManagerBase() {};
 	virtual ~SGameManagerBase() {};
+
 	virtual const TSharedPtr<FTableRowBase> GetMyData(FString _Init) = 0;
 	//TWeakPtr 참조자 Pin으로 접근
 

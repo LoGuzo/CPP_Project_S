@@ -30,6 +30,7 @@ public:
 
 	void ShowEquip(class UC_EqiupComponent* _EquipCom);
 	void ShowEquipDrop();
+
 	void UpdateEquip(const TArray<FS_Slot>& _Slots);
 private:
 

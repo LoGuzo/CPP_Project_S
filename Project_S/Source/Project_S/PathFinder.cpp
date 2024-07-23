@@ -15,7 +15,9 @@ bool APathFinder::FindPath(const FVector& StartLocation, const FVector& EndLocat
 {
     if (!NavMesh)
         return false;
+
     FVector Extent = FVector(50.f, 50.f, 250.f);
+
     NavNodeRef StartID = NavMesh->FindNearestPoly(StartLocation, Extent);
     NavNodeRef EndID = NavMesh->FindNearestPoly(EndLocation, Extent);
 
@@ -45,14 +47,11 @@ bool APathFinder::FindPath(const FVector& StartLocation, const FVector& EndLocat
             }
             OutPath[0] = StartLocation;
             if (OutPath.Num() == 1)
-            {
                 OutPath.Add(EndLocation);
-            }
             else
-            {
                 OutPath.Last() = EndLocation;
-            }
             OutPath = ClearingPath(OutPath);
+
             return true;
         }
         NavNodeRef ClosedID = NavMesh->FindNearestPoly(CurrentNode->PolyLocation, Extent);
@@ -95,9 +94,7 @@ TArray<FVector> APathFinder::FindPolyPoint(const FVector& FindLoc)
     if (NavMesh->GetPolyVerts(CurID, PolyVerts))
     {
         for (const FVector& PolyVert : PolyVerts)
-        {
             AllPoint.Add(PolyVert);
-        }
     }
 
     return AllPoint;
@@ -107,10 +104,14 @@ TArray<FVector> APathFinder::ClearingPath(const TArray<FVector> OutPath)
 {
     if (!NavMesh)
         return TArray<FVector>();
+
     TArray<FVector> ClearPath;
     TArray<FVector> Paths = OutPath;
+
     FVector DummyVector;
+
     int32 NowLoc = 0;
+
     ClearPath.Add(OutPath[NowLoc]);
     for (const FVector OutPa : OutPath)
     {
@@ -118,10 +119,9 @@ TArray<FVector> APathFinder::ClearingPath(const TArray<FVector> OutPath)
 
         Pathss = FindPolyPoint(OutPa);
         for (const FVector Path1 : Pathss)
-        {
             Paths.Add(Path1);
-        }
     }
+
     Paths.Insert(OutPath[0], 0);
     Paths.Insert(OutPath.Last(), Paths.Num());
     while (NowLoc < Paths.Num() - 1)
@@ -151,10 +151,10 @@ TArray<FVector> APathFinder::ClearingPath(const TArray<FVector> OutPath)
         if(!ClearPath.Contains(Paths[NowLoc]))
             ClearPath.Add(Paths[NowLoc]);
     }
+
     ClearPath.RemoveAt(0);
     if (ClearPath.Last() != Paths.Last())
-    {
         ClearPath.Add(Paths.Last());
-    }
+
     return ClearPath;
 }

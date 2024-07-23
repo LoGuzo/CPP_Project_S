@@ -33,11 +33,15 @@ protected :
 	virtual void AISerach() {}; // 적탐색
 	virtual void AIMove() {}; // 이동
 	virtual void Attack() {}; // 공격
+
 	void ResetFirst(); // 초기화
+
 public:
 	bool IsDead;
-	E_State ChkState;
 	bool IsBackToTheHome;
+
+	E_State ChkState;
+
 	int32 CountSearch;
 	virtual void Tick(float DeltaTime) override;
 

@@ -15,11 +15,10 @@
 UW_CharacterLobby::UW_CharacterLobby(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	Type = E_Widget::E_HUD;
+
 	static ConstructorHelpers::FClassFinder<UUserWidget>W_Lobby(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_LobbySlot.WBP_LobbySlot_C'"));
 	if (W_Lobby.Succeeded())
-	{
 		UW_LobbyWidget = W_Lobby.Class;
-	}
 }
 
 void UW_CharacterLobby::UpdateSlots(const TArray<FString>& Slots)
@@ -43,6 +42,7 @@ void UW_CharacterLobby::UpdateSlots(const TArray<FString>& Slots)
 void UW_CharacterLobby::NativeConstruct()
 {
 	Super::NativeConstruct();
+
 	if (Btn_Start)
 	{
 		Btn_Start->SetIsEnabled(false);
@@ -58,6 +58,7 @@ void UW_CharacterLobby::NativeConstruct()
 void UW_CharacterLobby::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
@@ -68,11 +69,6 @@ void UW_CharacterLobby::NativePreConstruct()
 				UpdateSlots(HaveChar);
 		}
 	}
-}
-
-void UW_CharacterLobby::NativeDestruct()
-{
-	Super::NativeDestruct();
 }
 
 void UW_CharacterLobby::GameStart()

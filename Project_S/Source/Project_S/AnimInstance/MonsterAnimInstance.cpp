@@ -32,9 +32,7 @@ void UMonsterAnimInstance::PlaySome(TSharedPtr<FMonsterPattern>_Data)
 	if (NowPattern->AnimMontage != nullptr)
 	{
 		if (!Montage_IsPlaying(NowPattern->AnimMontage))
-		{
 			Montage_Play(NowPattern->AnimMontage, 1.f);
-		}
 	}
 }
 
@@ -83,23 +81,17 @@ void UMonsterAnimInstance::AnimNotify_AttackEnd()
 void UMonsterAnimInstance::AnimNotify_Died()
 {
 	if (Monster != nullptr)
-	{
 		Monster->DiedEnemy();
-	}
 }
 
 void UMonsterAnimInstance::AnimNotify_AnyMove()
 {
 	if (Monster != nullptr)
-	{
 		Monster->AnyMove();
-	}
 }
 
 void UMonsterAnimInstance::AnimNotify_Make_Projectile()
 {
 	if (Monster != nullptr)
-	{
 		Monster->Set_Projectile();
-	}
 }

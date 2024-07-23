@@ -13,15 +13,15 @@ AMakeCharController::AMakeCharController()
 	bShowMouseCursor = true;
 	static ConstructorHelpers::FClassFinder<UUserWidget> MakeWidget(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_MakeChar.WBP_MakeChar_C'"));
 	if (MakeWidget.Class)
-	{
 		UW_MakeCharWidget = MakeWidget.Class;
-	}
 }
 
 void AMakeCharController::BeginPlay()
 {
 	Super::BeginPlay();
+
 	BPFunction();
+
 	if (UW_MakeCharWidget)
 	{
 		W_MakeCharacter = CreateWidget<UW_MakeCharacter>(GetWorld(), UW_MakeCharWidget);

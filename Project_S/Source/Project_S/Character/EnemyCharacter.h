@@ -22,12 +22,13 @@ class PROJECT_S_API AEnemyCharacter : public AFirstCharacter
 public:
 	AEnemyCharacter();
 
+	E_MonsterType Type;
+
 	void DiedEnemy();
 
 	virtual void AnyMove() {};
 
 	virtual void Make_Projectile() {};
-
 	virtual void Set_Projectile() {};
 
 	virtual void ResetStat() override;
@@ -38,18 +39,16 @@ public:
 
 	void SetEtc();
 
-	E_MonsterType Type;
-
 	void SetState(bool NowState);
 
 	FOnDied OnDied;
 	FOnUpdateQuest OnUpdateQuest;
 
 	virtual void ShowHpBar();
-
 	virtual void RemoveWidget() {};
 
 	void SetMonsterID(int32 _MonsterID);
+
 protected:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
@@ -65,20 +64,17 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_MeshPath)
 	USkeletalMesh* MeshPath;
-
 	UPROPERTY(ReplicatedUsing = OnRep_MaterialPath)
 	UMaterialInstance* MaterialPath;
 
 	UFUNCTION()
 	void OnRep_MeshPath();
-
 	UFUNCTION()
 	void OnRep_MaterialPath();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void Multi_UseSkill(const FString& _SkillName) override;
-
 	virtual void Multi_UseSkill_Implementation(const FString& SkillName) override;
 
 	void SyncHpBar(AController* PlayerController);

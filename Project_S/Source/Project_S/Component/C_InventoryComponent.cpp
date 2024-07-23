@@ -14,8 +14,6 @@ UC_InventoryComponent::UC_InventoryComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
 	InventorySize = 16;
 }
 
@@ -24,10 +22,7 @@ UC_InventoryComponent::UC_InventoryComponent()
 void UC_InventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	Slots.SetNum(InventorySize);
-	
 }
 
 void UC_InventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -35,9 +30,7 @@ void UC_InventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	if (ItemData != nullptr)
-	{
 		ItemData.Reset();
-	}
 }
 
 void UC_InventoryComponent::SetSlots(const TArray<FS_Slot>& _Slots)
@@ -55,9 +48,8 @@ void UC_InventoryComponent::UsePotionSlot(int32 _Index)
 {
 	Slots[_Index].Amount--;
 	if (Slots[_Index].Amount < 1)
-	{
 		Slots[_Index] = FS_Slot();
-	}
+
 	OnInventoryUpdated.Broadcast();
 }
 
@@ -68,7 +60,8 @@ void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, E_ItemType _I
 	while (AmountLeft > 0 && !IsAddFailed)
 	{
 		result =  FindSlot(_ItemKey);
-		if (result.IsFindItem) {
+		if (result.IsFindItem) 
+		{
 			IncreaseSlotStack(result.Index, 1);
 			AmountLeft--;
 		}
@@ -81,9 +74,7 @@ void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, E_ItemType _I
 				AmountLeft--;
 			}
 			else 
-			{
 				IsAddFailed = true;
-			}
 		}
 	}
 }
@@ -91,7 +82,9 @@ void UC_InventoryComponent::AddItem(int32 _Amount, FName _ItemKey, E_ItemType _I
 FResult UC_InventoryComponent::FindSlot(FName _ItemKey)
 {
 	int32 index = 0;
+
 	FResult result;
+
 	for (const FS_Slot& Slot : Slots) {
 		if (Slot.ItemName == _ItemKey)
 		{
@@ -104,10 +97,11 @@ FResult UC_InventoryComponent::FindSlot(FName _ItemKey)
 		}
 		index++;
 	}
+
 	result.Index = -1;
 	result.IsFindItem = false;
-	return result;
 
+	return result;
 }
 
 int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
@@ -118,9 +112,7 @@ int32 UC_InventoryComponent::GetStackSize(FName _ItemKey)
 		if (_ItemKey.ToString() != "None") {
 			ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(_ItemKey.ToString()));
 			if (ItemData.IsValid())
-			{
 				return ItemData.Pin()->StackSize;
-			}
 		}
 	}
 	return -1;
@@ -134,7 +126,9 @@ void UC_InventoryComponent::IncreaseSlotStack(int32 _Index, int32 _Amount)
 FResult UC_InventoryComponent::CheckSlotEmpty()
 {
 	int32 index = 0;
+
 	FResult result;
+
 	for (const FS_Slot& Slot : Slots) {
 		if (Slot.Amount == 0)
 		{
@@ -144,8 +138,10 @@ FResult UC_InventoryComponent::CheckSlotEmpty()
 		}
 		index++;
 	}
+
 	result.Index = -1;
 	result.IsFindItem = false;
+
 	return result;
 }
 
@@ -153,6 +149,7 @@ void UC_InventoryComponent::AddToNewSlot(FName _ItemKey, int32 _Amount, E_ItemTy
 {
 	FResult result;
 	result = CheckSlotEmpty();
+
 	Slots[result.Index].ItemName = _ItemKey;
 	Slots[result.Index].Amount = _Amount;
 	Slots[result.Index].ItemConName = _ItemConName;
@@ -175,6 +172,7 @@ void UC_InventoryComponent::ChangeSlot(int32 _BeforeIndex, int32 _TargetIndex, U
 			Slots[_TargetIndex] = LocalSlot;
 		}
 	}
+
 	OnInventoryUpdated.Broadcast();
 }
 
@@ -198,7 +196,8 @@ void UC_InventoryComponent::ExchangeEquip(int32 _BeforeIndex, int32 _TargetIndex
 	if (_BeforeIndex == 0)
 	{
 		userCharacter->RemoveMyWeapon();
-		if (_ItemClass != nullptr) {
+		if (_ItemClass != nullptr) 
+		{
 			UE_LOG(LogTemp, Warning, TEXT("ChangeWeapon"));
 			userCharacter->SetMyWeapon(Slots[_TargetIndex].ItemClass);
 		}

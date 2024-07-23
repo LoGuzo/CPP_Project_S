@@ -39,11 +39,19 @@ AUserCharacter::AUserCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	bIsFlipFlopInventoryActive = false;
+	bIsFlipFlopEquipmentActive = false;
+	bIsFlipFlopSkillWidgetActive = false;
+	IsAttacking = false;
+
+	MyWeapon = nullptr;
+
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
+
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
 
@@ -62,24 +70,19 @@ AUserCharacter::AUserCharacter()
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Animations/Infinity/BP_WarriorAnim.BP_WarriorAnim_C'"));
 	if (ANIM.Succeeded())
-	{
 		GetMesh()->SetAnimInstanceClass(ANIM.Class);
-	}
 
 	Inventory = CreateDefaultSubobject<UC_InventoryComponent>(TEXT("INVENTORY"));
 	Equip = CreateDefaultSubobject<UC_EqiupComponent>(TEXT("EQUIP"));
 	QuickSlot = CreateDefaultSubobject<UC_QuickSlotComponent>(TEXT("QUICK"));
+
 	static ConstructorHelpers::FClassFinder<US_CharacterWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_UserWidget.WBP_UserWidget_C'"));
 	if (UW.Succeeded())
-	{
 		CharacterUI = UW.Class;
-	}
 
 	static ConstructorHelpers::FClassFinder<UCameraShakeBase>CS(TEXT("Blueprint'/Game/ThirdPersonCPP/Blueprints/BP_UserCameraShake.BP_UserCameraShake_C'"));
 	if (CS.Succeeded())
-	{
 		TCameraShake = CS.Class;
-	}
 	
 	SpeechBubble = CreateDefaultSubobject<UWidgetComponent>(TEXT("SpeechBubble"));
 	SpeechBubble->SetWidgetSpace(EWidgetSpace::Screen);
@@ -91,12 +94,6 @@ AUserCharacter::AUserCharacter()
 		SpeechBubble->SetDrawSize(FVector2D(500.f, 200.f));
 		SpeechBubble->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	}
-
-	bIsFlipFlopInventoryActive = false;
-	bIsFlipFlopEquipmentActive = false;
-	bIsFlipFlopSkillWidgetActive = false;
-	IsAttacking = false;
-	MyWeapon = nullptr;
 }
 
 void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -117,6 +114,7 @@ void AUserCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AUserCharacter::OnEquipmentKeyPressed);
 	PlayerInputComponent->BindAction("PickUp", IE_Pressed, this, &AUserCharacter::PickUpItem);
 	PlayerInputComponent->BindAction("SkillWidget", IE_Pressed, this, &AUserCharacter::OnSkillWidgetKeyPressed);
+
 	PlayerInputComponent->BindAction("Quick1", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
 	PlayerInputComponent->BindAction("Quick2", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
 	PlayerInputComponent->BindAction("Quick3", IE_Pressed, this, &AUserCharacter::UseQuickSlot);
@@ -150,6 +148,7 @@ void AUserCharacter::OnRep_MeshPath()
 		GetMesh()->SetSkeletalMesh(MeshPath);
 		GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	}
+
 	AnimInstance = Cast<UUserAnimInstance>(GetMesh()->GetAnimInstance());
 	if (AnimInstance)
 	{
@@ -157,10 +156,9 @@ void AUserCharacter::OnRep_MeshPath()
 		AnimInstance->OnAttackHit.AddUObject(this, &AUserCharacter::AttackCheck);
 		AnimInstance->OnMontageEnded.AddDynamic(this, &AUserCharacter::OnAttackMontageEnd);
 	}
+
 	if (HUDWidget)
-	{
 		HUDWidget->GetCharInfo()->SetImg(ClassType);
-	}
 }
 
 void AUserCharacter::ShotAttackCheck()
@@ -172,9 +170,7 @@ void AUserCharacter::ShotAttackCheck()
 void AUserCharacter::UpdateQuest(const TArray<FQuestNode*>& Slots)
 {
 	if (HUDWidget)
-	{
 		HUDWidget->GetQuestSystem()->UpdateSlots(Slots);
-	}
 }
 
 void AUserCharacter::SetChatBalloon(const FText& Message)
@@ -184,6 +180,7 @@ void AUserCharacter::SetChatBalloon(const FText& Message)
 		ChatBalloon->SetRenderOpacity(1.f);
 		ChatBalloon->SetSpeechBubble(Message);
 	}
+
 	GetWorldTimerManager().ClearTimer(CloseChatBalloon);
 	GetWorldTimerManager().SetTimer(CloseChatBalloon, this, &AUserCharacter::HideChatBalloon, 5.f, false);
 }
@@ -191,6 +188,7 @@ void AUserCharacter::SetChatBalloon(const FText& Message)
 void AUserCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	SaveLocation = GetActorLocation();
 }
 
@@ -198,19 +196,18 @@ void AUserCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	SaveCharacterData();
+
 	if (LoadData.IsValid())
-	{
 		LoadData.Reset();
-	}
+
 	if (NowSkill.IsValid())
-	{
 		NowSkill.Reset();
-	}
+
 	if (ClassData.IsValid())
-	{
 		ClassData.Reset();
-	}
+
 	RemoveMyWeapon();
+
 	GetWorldTimerManager().ClearTimer(UnusedHandle);
 	GetWorldTimerManager().ClearTimer(HitHandle);
 	GetWorldTimerManager().ClearTimer(CloseChatBalloon);
@@ -228,9 +225,7 @@ float AUserCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 		PlayCameraShake(TCameraShake);
 
 	if (HUDWidget && HUDWidget->GetCharInfo())
-	{
 		HUDWidget->GetCharInfo()->ShakeHealthBar();
-	}
 
 	if (DamageCauser)
 	{
@@ -295,9 +290,8 @@ void AUserCharacter::SaveCharacterData()
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
 	{
-		if (GetCharID() != "") {
+		if (GetCharID() != "")
 			MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->SetMyData(GetCharID(), &NowCharData);
-		}
 	}
 }
 
@@ -325,11 +319,13 @@ void AUserCharacter::DelayedLoadCharacterData()
 				QuickSlot->SetSkillSlots(LoadData.Pin()->MySkillQuick);
 				QuickSlot->SetPotionSlots(LoadData.Pin()->MyPotionQuick);
 			}
+
 			for (const FS_Slot& slot : Equip->GetSlots())
 			{
 				if (slot.ItemClass != nullptr)
 					SetMyWeapon(slot.ItemClass);
 			}
+
 			QuickSlot->OnQuickUpdated.Broadcast();
 		}
 	}
@@ -391,7 +387,7 @@ void AUserCharacter::Multi_PickUpItem_Implementation()
 {
 	if (GetCurItem() != nullptr) {
 		GetCurItem()->GetC_ItemComponent()->Interact(this);
-
+		
 		Inventory->OnInventoryUpdated.Broadcast();
 		QuickSlot->OnQuickUpdated.Broadcast();
 	}
@@ -399,13 +395,9 @@ void AUserCharacter::Multi_PickUpItem_Implementation()
 void AUserCharacter::PickUpItem()
 {
 	if (HasAuthority())
-	{
 		Multi_PickUpItem();
-	}
 	else
-	{
 		Server_PickUpItem();
-	}
 }
 
 void AUserCharacter::TimelineProgress(float _Value)
@@ -454,10 +446,9 @@ void AUserCharacter::OnRep_MyWeapon()
 		MyWeapon->GetBoxCollision()->SetCollisionProfileName(TEXT("NoCollision"));
 		MyWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSocket);
 		MyWeapon->SetOwner(this);
+
 		if (AnimInstance)
-		{
 			AnimInstance->SetHaveWeapon(true);
-		}
 	}
 }
 
@@ -488,10 +479,9 @@ void AUserCharacter::Multi_RemoveMyWeapon_Implementation()
 		MyWeapon->Destroy();
 		MyWeapon = nullptr;
 	}
+
 	if (AnimInstance)
-	{
 		AnimInstance->SetHaveWeapon(false);
-	}
 }
 
 void AUserCharacter::Attack()
@@ -500,6 +490,7 @@ void AUserCharacter::Attack()
 	{
 		if (IsAttacking)
 			return;
+
 		AttackMontage();
 		IsAttacking = true;
 	}
@@ -527,6 +518,7 @@ void AUserCharacter::Multi_AttackMontage_Implementation()
 {
 	if (!AnimInstance)
 		return;
+
 	switch (ClassType)
 	{
 	case E_CharClass::E_Warrior:
@@ -538,6 +530,7 @@ void AUserCharacter::Multi_AttackMontage_Implementation()
 		AnimInstance->JumpToSection(AttackIndex, 1);
 		break;
 	}
+
 	AttackIndex = (AttackIndex + 1) % 3;
 }
 
@@ -554,46 +547,34 @@ void AUserCharacter::UseQuickSlot()
 		if (PlayerController->IsInputKeyDown(EKeys::One))
 		{
 			if (QuickSlot->GetSkillSlot(0) != "None")
-			{
 				UseSkill(QuickSlot->GetSkillSlot(0));
-			}
 		}
 		if (PlayerController->IsInputKeyDown(EKeys::Two))
 		{
 			if (QuickSlot->GetSkillSlot(1) != "None")
-			{
 				UseSkill(QuickSlot->GetSkillSlot(1));
-			}
 		}
 		if (PlayerController->IsInputKeyDown(EKeys::Three))
 		{
 			if (QuickSlot->GetSkillSlot(2) != "None")
-			{
 				UseSkill(QuickSlot->GetSkillSlot(2));
-			}
 		}
 		if (PlayerController->IsInputKeyDown(EKeys::Four))
 		{
 			if (QuickSlot->GetSkillSlot(3) != "None")
-			{
 				UseSkill(QuickSlot->GetSkillSlot(3));
-			}
 		}
 		if (PlayerController->IsInputKeyDown(EKeys::Five))
 		{
 			if (QuickSlot->GetSkillSlot(4) != "None")
-			{
 				UseSkill(QuickSlot->GetSkillSlot(4));
-			}
 		}
 		if (PlayerController->IsInputKeyDown(EKeys::Six))
 		{
 			if (Stat->GetHp() <= Stat->GetMaxHp())
 			{
 				if (QuickSlot->GetPotionSlot(0) != "None")
-				{
 					UseItem(0);
-				}
 			}
 		}
 		if (PlayerController->IsInputKeyDown(EKeys::Seven))
@@ -601,9 +582,7 @@ void AUserCharacter::UseQuickSlot()
 			if (Stat->GetMp() <= Stat->GetMaxMp())
 			{
 				if (QuickSlot->GetPotionSlot(1) != "None")
-				{
 					UseItem(1);
-				}
 			}
 		}
 	}
@@ -671,9 +650,9 @@ void AUserCharacter::AnyMove(UCurveBase* _SkillCurve)
 	{
 		FOnTimelineFloat TimelineProgress;
 		TimelineProgress.BindUFunction(this, FName("TimelineProgress"));
+
 		CurveTimeLine.AddInterpFloat(SkillCurve, TimelineProgress);
 		CurveTimeLine.SetLooping(false);
-
 		CurveTimeLine.PlayFromStart();
 	}
 }
@@ -684,9 +663,7 @@ void AUserCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> ShakeClass)
 	{
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 		if (PlayerController && PlayerController->PlayerCameraManager)
-		{
 			PlayerController->PlayerCameraManager->StartCameraShake(ShakeClass);
-		}
 	}
 }
 
@@ -711,32 +688,29 @@ void AUserCharacter::Multi_Dash_Implementation()
 {
 	FVector LastInputVector = GetCharacterMovement()->GetLastInputVector();
 	if (LastInputVector.IsNearlyZero())
-	{
 		LastInputVector = GetActorForwardVector();
-	}
 	else
-	{
 		LastInputVector = LastInputVector.GetSafeNormal();
-	}
 	LastInputVector.Z = 0;
 
 	GetCharacterMovement()->BrakingFrictionFactor = 0.f;
 	LaunchCharacter(LastInputVector * 5000.f, true, true);
 
 	if (AnimInstance)
-	{
 		AnimInstance->SetOnDash(true);
-	}
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
+
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::StopDashing, 0.1f, false);
 }
 
 void AUserCharacter::StopDashing() {
 	GetCharacterMovement()->StopMovementImmediately();
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
-	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::ResetDash, 0.1f, false);
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f;
+	
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
+
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AUserCharacter::ResetDash, 0.1f, false);
 }
 
 void AUserCharacter::ResetDash()
@@ -778,9 +752,7 @@ void AUserCharacter::UsePotion(const int32 StackSize, const FString& ItemName)
 		if (slot.ItemName.ToString() == ItemName)
 		{
 			if (slot.Amount <= StackSize)
-			{
 				LeastIndex = index;
-			}
 		}
 		index++;
 	}
@@ -834,12 +806,14 @@ float AUserCharacter::CalculateHitDirectionAngle(const FVector& AttackerLocation
 void AUserCharacter::UserDied()
 {
 	IsDead = true;
+
 	if (HUDWidget)
 		HUDWidget->ShowRespawn(this);
+
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("NoCollision"));
+
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
-
 	GetMesh()->bPauseAnims = true;
 
 	GetCharacterMovement()->StopMovementImmediately();
@@ -849,16 +823,22 @@ void AUserCharacter::UserDied()
 void AUserCharacter::UserReset()
 {
 	IsDead = false;
+
 	if(AnimInstance)
 		AnimInstance->WakeUpPlayAM();
+
 	if (HUDWidget)
+
 		HUDWidget->RemoveRespawn();
+
 	GetMesh()->SetSimulatePhysics(false);
 	GetMesh()->bPauseAnims = false;
-
 	GetMesh()->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
+	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Pawn"));
 
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 

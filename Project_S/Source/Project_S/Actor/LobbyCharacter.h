@@ -32,7 +32,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class USceneCaptureComponent2D* SceneCapture;
-
 	class UTextureRenderTarget2D* RenderTarget;
 
 	TWeakPtr<FCharacterClass> ClassData;

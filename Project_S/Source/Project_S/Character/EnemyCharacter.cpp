@@ -21,10 +21,13 @@ AEnemyCharacter::AEnemyCharacter()
 {
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
+
 	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBAR"));
 	HpBar->SetWidgetSpace(EWidgetSpace::Screen);
 	HpBar->SetupAttachment(RootComponent);
+
 	MyCharType = E_CharacterType::E_Monster;
+
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_OnlyHpBar.WBP_OnlyHpBar_C'"));
 	if (UW.Succeeded())
 	{
@@ -32,12 +35,15 @@ AEnemyCharacter::AEnemyCharacter()
 		HpBar->SetDrawSize(FVector2D(200.f, 500.f));
 		HpBar->SetRelativeLocation(FVector(0.f, 0.f, 150.f));
 	}
+
 	GetMesh()->SetRelativeLocationAndRotation(FVector(-20.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Mannequin/Monster/Animations/BP_MutantAnimInstance.BP_MutantAnimInstance_C'"));
 	if (ANIM.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(ANIM.Class);
 	}
+
 	IsDead = false;
 	IsReadySpawn = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -50,6 +56,7 @@ void AEnemyCharacter::SetState(bool NowState)
 	SetActorHiddenInGame(!NowState);
 	SetActorEnableCollision(NowState);
 	SetActorTickEnabled(NowState);
+
 	if (NowState)
 	{
 		GetCharacterMovement()->GravityScale = 1.f;
@@ -61,6 +68,7 @@ void AEnemyCharacter::SetState(bool NowState)
 		if (HasAuthority())
 			NowAIController->UnPossess();
 	}
+
 	if (Skill->GetSlots().Num() > 2 && Type != E_MonsterType::E_LastBoss)
 		UseSkill(Skill->GetSlot(2).ItemName.ToString());
 }
@@ -74,6 +82,7 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 {
 	if (IsDead)
 		return 0.f;
+
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	if (Type != E_MonsterType::E_LastBoss)
@@ -90,24 +99,21 @@ float AEnemyCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 		User->GetStatCom()->SetExp(User->GetStatCom()->GetExp() + Stat->GetMaxExp());
 		OnUpdateQuest.Broadcast(MonsterID);
 	}
+
 	return DamageAmount;
 }
 
 void AEnemyCharacter::ShowHpBar()
 {
 	if (OnlyHpBar)
-	{
 		OnlyHpBar->SetRenderOpacity(1.f);
-	}
 }
 
 void AEnemyCharacter::SyncHpBar(AController* PlayerController)
 {
 	AUserPlayerController* UserPlayerController = Cast<AUserPlayerController>(PlayerController);
 	if (UserPlayerController)
-	{
 		UserPlayerController->SyncEnemyHpBar(this);
-	}
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -133,6 +139,7 @@ void AEnemyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AEnemyCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
 	HpBar->InitWidget();
 
 	OnlyHpBar = Cast<UOnlyHpBar>(HpBar->GetUserWidgetObject());
@@ -262,10 +269,9 @@ void AEnemyCharacter::Multi_UseSkill_Implementation(const FString& _SkillName)
 	{
 		const auto PatternData = StaticCastSharedPtr<FMonsterPattern>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MonsterPattern)->GetMyData(_SkillName));
 		NowPattern = PatternData;
+
 		if (AnimInstance)
-		{
 			AnimInstance->PlaySome(PatternData);
-		}
 	}
 }
 
@@ -279,9 +285,7 @@ void AEnemyCharacter::DiedEnemy()
 	if (Type != E_MonsterType::E_LastBoss)
 	{
 		if (IsReadySpawn)
-		{
 			GetWorldTimerManager().SetTimer(UnusedHandle, this, &AEnemyCharacter::ResetStat, 10.f, false);
-		}
 	}
 }
 

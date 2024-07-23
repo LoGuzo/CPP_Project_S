@@ -11,8 +11,3 @@ UW_PartySystem::UW_PartySystem(const FObjectInitializer& ObjectInitializer) :Sup
 		TW_PartySlot = UW.Class;
 	}
 }
-
-void UW_PartySystem::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-}

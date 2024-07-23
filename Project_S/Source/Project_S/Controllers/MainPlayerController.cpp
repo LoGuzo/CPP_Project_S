@@ -56,9 +56,7 @@ void AMainPlayerController::Server_SendMessage_Implementation(const FString& Mes
 	{
 		AMainPlayerController* UserPlayerController = Cast<AMainPlayerController>(OutActor);
 		if (UserPlayerController)
-		{
 			UserPlayerController->Client_SendMessage(Message);
-		}
 	}
 }
 
@@ -69,8 +67,6 @@ void AMainPlayerController::Client_SendMessage_Implementation(const FString& Mes
 	{
 		US_CharacterWidget* CharacterWidget = UserCharacter->GetHUDWidget();
 		if (CharacterWidget)
-		{
 			CharacterWidget->AddChatMessage(Message);
-		}
 	}
 }

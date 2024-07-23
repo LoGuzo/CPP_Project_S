@@ -17,8 +17,6 @@ class PROJECT_S_API AStaffWeapon : public AWeaponActor
 public:
 	AStaffWeapon();
 
-	virtual void BeginPlay() override;
-
 	virtual void SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) override;
 
 	virtual void Fire() override;

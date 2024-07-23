@@ -17,9 +17,7 @@ void AMiddleBossAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (SDistance(FirstLocation, GetPawn()->GetActorLocation()) > 5000.f)
-	{
 		ChkState = E_State::E_Reset;
-	}
 }
 
 
@@ -27,16 +25,20 @@ void AMiddleBossAIController::AISerach()
 {
 	if (IsMoving == true)
 		return;
+
 	SetMaxSpeed(150.f);
+
 	auto CurrentPawn = GetPawn();
 	if (CurrentPawn == nullptr)
 		return;
+
 	UWorld* World = CurrentPawn->GetWorld();
 	FVector Center = CurrentPawn->GetActorLocation();
 	float SearchRadius = 500.f*GetPawn()->GetActorScale3D().X;
 
 	if (World == nullptr)
 		return;
+
 	TArray<FHitResult>HItResults;
 	FCollisionQueryParams QueryParams(NAME_None, false, CurrentPawn);
 	bool bResult = World->SweepMultiByChannel(
@@ -72,8 +74,8 @@ void AMiddleBossAIController::AISerach()
 			return;
 		}
 	}
-	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
 
+	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
 }
 
 void AMiddleBossAIController::Attack()
@@ -83,7 +85,9 @@ void AMiddleBossAIController::Attack()
 		const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 		if (Enemy->IsAttacking == true)
 			return;
+
 		LookAtPlayer(User->GetActorLocation());
+
 		float ToUserDistance = SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation());
 		if (ToUserDistance <= 200.f * GetPawn()->GetActorScale3D().X)
 		{
@@ -102,6 +106,7 @@ void AMiddleBossAIController::Attack()
 			}
 		}
 	}
+
 	ChkState = E_State::E_Search;
 }
 
@@ -109,15 +114,18 @@ void AMiddleBossAIController::AIMove()
 {
 	if (IsMoving == true)
 		return;
+
 	SetMaxSpeed(600.f);
+
 	IsMoving = true;
 	IsMoveAtFirst = true;
+
 	MoveToActor(User, 200.f* GetPawn()->GetActorScale3D().X);
+
 	ChkState = E_State::E_Attack;
 }
 
 void AMiddleBossAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) {
-	if (Result.IsSuccess()) {
+	if (Result.IsSuccess())
 		IsMoving = false;
-	}
 }

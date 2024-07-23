@@ -19,8 +19,10 @@ class PROJECT_S_API UW_Drag : public UUserWidget
 private:
 	FName ItemKey;
 	FName SkillKey;
+
 	TWeakPtr<FS_Item> ItemData;
 	TWeakPtr<FSkillTable> SkillData;
+
 public:
 	virtual void NativePreConstruct() override;
 

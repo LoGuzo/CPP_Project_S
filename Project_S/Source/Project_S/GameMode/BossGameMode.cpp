@@ -18,30 +18,27 @@ ABossGameMode::ABossGameMode()
 {
 	// set default pawn class to our Blueprinted character
 	DefaultPawnClass = AUserCharacter::StaticClass();
-
 	PlayerControllerClass = AUserPlayerController::StaticClass();
 
 	static ConstructorHelpers::FClassFinder<AActor> BP_Potal(TEXT("Blueprint'/Game/ThirdPersonCPP/Blueprints/BP_LevelPotal.BP_LevelPotal_C'"));
 	if (BP_Potal.Succeeded())
-	{
 		PotalBP = BP_Potal.Class;
-	}
 
 	static ConstructorHelpers::FObjectFinder<ULevelSequence> Boss_Seq(TEXT("LevelSequence'/Game/Ancient_Golem/BossSequence.BossSequence'"));
 	if (Boss_Seq.Succeeded())
-	{
 		BossSequence = Boss_Seq.Object;
-	}
 }
 void ABossGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	GetWorld()->GetTimerManager().SetTimer(ResetTimer, this, &ABossGameMode::DelayedStart, 2.f, false);
+
+	GetWorld()->GetTimerManager().SetTimer(ResetTimer, this, &ABossGameMode::DelayedStart, 5.f, false);
 }
 
 void ABossGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
 	if (EnemyClassArray.Num() != 0)
 		EnemyClassArray.Reset();
 	if (ConnectedPlayers.Num() != 0)
@@ -53,7 +50,6 @@ void ABossGameMode::MonsterFactory()
 	if (HasAuthority()) // 서버에서만 실행되도록 확인
 	{
 		auto Data = static_cast<FSpawnData*>(SpawnerData.FindRef(112).Get());
-
 		if (Data)
 		{
 			AMonsterSpawner* ASpawner = GetWorld()->SpawnActor<AMonsterSpawner>(Data->SpawnerLocation, FRotator(0.f, 30.f, 0.f));
@@ -66,7 +62,9 @@ void ABossGameMode::MonsterFactory()
 
 void ABossGameMode::MulticastPlayLevelSequence_Implementation()
 {
-	if (!BossSequence) return; // Check if the sequence is loaded
+	if (!BossSequence) 
+		return;
+
 	ALevelSequenceActor* ContextActor = nullptr;
 	ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), BossSequence, FMovieSceneSequencePlaybackSettings(), ContextActor);
 
@@ -94,9 +92,7 @@ void ABossGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 	if (NewPlayer)
-	{
 		ConnectedPlayers.Add(NewPlayer); 
-	}
 }
 
 void ABossGameMode::Logout(AController* Exiting)
@@ -105,9 +101,7 @@ void ABossGameMode::Logout(AController* Exiting)
 
 	AUserPlayerController* ExitingPlayer = Cast<AUserPlayerController>(Exiting);
 	if (ExitingPlayer)
-	{
 		ConnectedPlayers.Remove(ExitingPlayer);
-	}
 }
 
 void ABossGameMode::OnCinematicFinished()
@@ -117,6 +111,7 @@ void ABossGameMode::OnCinematicFinished()
 		AUserCharacter* UserCharacter = Cast<AUserCharacter>(PlayerController->GetPawn());
 		UserCharacter->SetWidget();
 	}
+
 	for (AEnemyCharacter* Enemy : EnemyClassArray)
 	{
 		BossCharacter = Cast<ABossCharacter>(Enemy);

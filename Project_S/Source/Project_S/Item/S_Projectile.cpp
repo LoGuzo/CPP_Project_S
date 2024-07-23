@@ -20,19 +20,23 @@ AS_Projectile::AS_Projectile()
 	bReplicates = true;
 	bAlwaysRelevant = true;
 	SetReplicateMovement(true);
+
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	CollisionComponent->InitSphereRadius(30.f);
 	CollisionComponent->SetCollisionProfileName(TEXT("Projectile"));
 	RootComponent = CollisionComponent;
+
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComponent->SetupAttachment(RootComponent);
 	AudioComponent->bAutoActivate = false;
+
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
 	ProjectileMovementComponent->InitialSpeed = 2500.f;
 	ProjectileMovementComponent->MaxSpeed = 2500.f;
 	ProjectileMovementComponent->bAutoActivate = false;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
+
 	SetActorHiddenInGame(true);
 }
 
@@ -40,6 +44,7 @@ AS_Projectile::AS_Projectile()
 void AS_Projectile::BeginPlay()
 {
 	Super::BeginPlay();
+
 	SetActorEnableCollision(false);
 	SetActorTickEnabled(false);
 }
@@ -102,6 +107,7 @@ void AS_Projectile::ScopeAttackCheck(float _Range)
 			}
 		}
 	}
+
 	DrawDebugSphere(GetWorld(), Center, AttackRange, 10, DrawColor, false, 2.f);
 }
 
@@ -109,7 +115,5 @@ void AS_Projectile::SetParticle_Implementation()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
 	if (AudioComponent)
-	{
 		AudioComponent->Play();
-	}
 }

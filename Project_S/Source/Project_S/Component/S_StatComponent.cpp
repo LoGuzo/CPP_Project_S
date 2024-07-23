@@ -16,8 +16,7 @@ US_StatComponent::US_StatComponent()
 	SetIsReplicatedByDefault(true);
 	// ...
 	bWantsInitializeComponent = true;
-	Level = 1;
-
+	Level = 3;
 }
 
 
@@ -26,7 +25,6 @@ void US_StatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
 	SetLevel(Level);
 }
 
@@ -35,9 +33,7 @@ void US_StatComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	if (StatData != nullptr)
-	{
 		StatData.Reset();
-	}
 }
 
 void US_StatComponent::SetLevel(int32 _Level)
@@ -103,14 +99,13 @@ void US_StatComponent::SetExp(float _Exp)
 	{
 		Exp = _Exp;
 		if (Exp >= MaxExp)
-		{
 			SetLevel(Level + 1);
-		}
 	}
 	else
 	{
 		Exp = 0;
 	}
+
 	OnExpChanged.Broadcast();
 }
 

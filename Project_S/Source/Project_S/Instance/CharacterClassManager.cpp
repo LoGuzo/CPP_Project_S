@@ -13,9 +13,7 @@ CharacterClassManager::CharacterClassManager()
 CharacterClassManager::~CharacterClassManager()
 {
 	if (MyCharacter.IsValid())
-	{
 		MyCharacter.Reset();
-	}
 }
 const TSharedPtr<FTableRowBase> CharacterClassManager::GetMyData(FString _Init)
 {
@@ -24,5 +22,6 @@ const TSharedPtr<FTableRowBase> CharacterClassManager::GetMyData(FString _Init)
 		MyCharacter = MakeShared<FCharacterClass>(*myCharacter);
 	else
 		MyCharacter.Reset();
+
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }

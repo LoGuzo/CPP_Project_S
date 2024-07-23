@@ -14,33 +14,27 @@ AUserPlayerController::AUserPlayerController()
 void AUserPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
 	FInputModeGameOnly InputMode;
 	SetInputMode(InputMode);
+
 	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
 	if (UserCharacter)
-	{
 		UserCharacter->SetUserWidget();
-	}
 }
 
 void AUserPlayerController::SetUserWidget()
 {
 	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
-
 	if (UserCharacter)
-	{
 		UserCharacter->SetWidget();
-	}
 }
 
 void AUserPlayerController::RemoveUserWidget()
 {
 	AUserCharacter* UserCharacter = Cast<AUserCharacter>(GetPawn());
-
 	if (UserCharacter)
-	{
 		UserCharacter->RemoveWidget();
-	}
 }
 
 void AUserPlayerController::SyncEnemyHpBar_Implementation(AEnemyCharacter* _Enemy)
@@ -53,7 +47,5 @@ void AUserPlayerController::SyncEnemyHpBar_Implementation(AEnemyCharacter* _Enem
 void AUserPlayerController::SyncRemoveEnemyHpBar_Implementation(AEnemyCharacter* _Enemy)
 {
 	if (_Enemy)
-	{
 		_Enemy->RemoveWidget();
-	}
 }

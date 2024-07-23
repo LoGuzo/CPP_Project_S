@@ -17,14 +17,12 @@ class PROJECT_S_API UQuestManager : public UObject
 {
 	GENERATED_BODY()
 	
-/*public:
-	UQuestManager();
-	*/
 private:
 	TMap<int32, TSharedPtr<FTableRowBase>> QuestInfoData;
 	TMap<int32, TSharedPtr<FTableRowBase>> QuestRequiredData;
 
 	TArray<FQuestNode*> NowQuest;
+
 	FQuestNode* CreateQuestNode(int32 QuestID);
 
 protected:

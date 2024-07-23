@@ -22,27 +22,19 @@ US_CharacterWidget::US_CharacterWidget(const FObjectInitializer& ObjectInitializ
 {
 	static ConstructorHelpers::FClassFinder<UInventoryMenu>Inven(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_InventoryMenu.WBP_InventoryMenu_C'"));
 	if (Inven.Succeeded())
-	{
 		U_InventoryWidget = Inven.Class;
-	}
 
 	static ConstructorHelpers::FClassFinder<UW_Equip>Equip(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Equip.WBP_Equip_C'"));
 	if (Equip.Succeeded())
-	{
 		U_EquipmentWidget = Equip.Class;
-	}
 
 	static ConstructorHelpers::FClassFinder<UW_Skill>Sk(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Skill.WBP_Skill_C'"));
 	if (Sk.Succeeded())
-	{
 		U_SkillWidget = Sk.Class;
-	}
 
 	static ConstructorHelpers::FClassFinder<UW_Respawn>Respawn(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Respawn.WBP_Respawn_C'"));
 	if (Respawn.Succeeded())
-	{
 		U_RespawnWidget = Respawn.Class;
-	}
 }
 
 void US_CharacterWidget::ShowInventory()
@@ -50,18 +42,14 @@ void US_CharacterWidget::ShowInventory()
 	if (U_InventoryWidget) {
 		InventoryWidget = CreateWidget<UInventoryMenu>(GetWorld(), U_InventoryWidget);
 		if (InventoryWidget)
-		{
 			InventoryWidget->AddToViewport();
-		}
 	}
 }
 
 void US_CharacterWidget::RemoveInventory() const
 {
 	if (InventoryWidget)
-	{
 		InventoryWidget->RemoveFromParent();
-	}
 }
 
 void US_CharacterWidget::ShowEquip()
@@ -69,18 +57,14 @@ void US_CharacterWidget::ShowEquip()
 	if (U_EquipmentWidget) {
 		EquipmentWidget = CreateWidget<UW_Equip>(GetWorld(), U_EquipmentWidget);
 		if (EquipmentWidget)
-		{
 			EquipmentWidget->AddToViewport();
-		}
 	}
 }
 
 void US_CharacterWidget::RemoveEquip() const
 {
 	if (EquipmentWidget)
-	{
 		EquipmentWidget->RemoveFromParent();
-	}
 }
 
 void US_CharacterWidget::ShowSkillW()
@@ -88,18 +72,14 @@ void US_CharacterWidget::ShowSkillW()
 	if (U_SkillWidget) {
 		SkillWidget = CreateWidget<UW_Skill>(GetWorld(), U_SkillWidget);
 		if (SkillWidget)
-		{
 			SkillWidget->AddToViewport();
-		}
 	}
 }
 
 void US_CharacterWidget::RemoveSillW() const
 {
 	if (SkillWidget)
-	{
 		SkillWidget->RemoveFromParent();
-	}
 }
 
 void US_CharacterWidget::ShowQuick(UC_QuickSlotComponent* _QuickComponent)

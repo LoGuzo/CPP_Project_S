@@ -17,8 +17,6 @@ class PROJECT_S_API ARedPotionActor : public AA_Item
 public:
 	ARedPotionActor();
 
-	virtual void BeginPlay() override;
-
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	UStaticMeshComponent* ItemMesh;
 

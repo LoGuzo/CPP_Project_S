@@ -14,27 +14,19 @@ UUserAnimInstance::UUserAnimInstance() : NowSkill(nullptr), Player(nullptr)
 	bIsHit = false;
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK(TEXT("AnimMontage'/Game/Mannequin/Animations/OneHandSword_Attack_Montage.OneHandSword_Attack_Montage'"));
 	if (ATTACK.Succeeded())
-	{
 		OneHandSwordAM = ATTACK.Object;
-	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SATTACK(TEXT("AnimMontage'/Game/Mannequin/Animations/Infinity/Staff_Attack_Monatage.Staff_Attack_Monatage'"));
 	if (SATTACK.Succeeded())
-	{
 		OneHandStaffAM = SATTACK.Object;
-	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> WAKEUP(TEXT("AnimMontage'/Game/Mannequin/Animations/Infinity/WakeUp_Montage.WakeUp_Montage'"));
 	if (WAKEUP.Succeeded())
-	{
 		WakeUpAM = WAKEUP.Object;
-	}
 }
 
 UUserAnimInstance::~UUserAnimInstance()
 {
 	if (NowSkill != nullptr)
-	{
 		NowSkill = nullptr;
-	}
 }
 
 void UUserAnimInstance::SetDirection(const float _Direction)
@@ -48,9 +40,7 @@ void UUserAnimInstance::PlaySome(TSharedPtr<FSkillTable>_Data)
 	if (NowSkill->AnimMontage != nullptr)
 	{
 		if (!Montage_IsPlaying(NowSkill->AnimMontage))
-		{
 			Montage_Play(NowSkill->AnimMontage);
-		}
 	}
 }
 
@@ -58,9 +48,7 @@ void UUserAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	if (::IsValid(Player))
-	{
 		Speed = Player->GetVelocity().Size();
-	}
 }
 
 void UUserAnimInstance::ColliderNotify()
@@ -83,9 +71,7 @@ void UUserAnimInstance::ColliderNotify()
 void UUserAnimInstance::AnyMoveNotify()
 {
 	if (NowSkill)
-	{
 		Player->AnyMove(NowSkill->AnimCurve);
-	}
 }
 
 void UUserAnimInstance::SetSpeed(float _Speed)
@@ -111,25 +97,19 @@ void UUserAnimInstance::SetIsHit(const bool _bIsHit)
 void UUserAnimInstance::OnHandSwordPlayAM()
 {
 	if (!Montage_IsPlaying(OneHandSwordAM))
-	{
 		Montage_Play(OneHandSwordAM, 1.f);
-	}
 }
 
 void UUserAnimInstance::OnHandStaffPlayAM()
 {
 	if (!Montage_IsPlaying(OneHandStaffAM))
-	{
 		Montage_Play(OneHandStaffAM, 1.f);
-	}
 }
 
 void UUserAnimInstance::WakeUpPlayAM()
 {
 	if (!Montage_IsPlaying(WakeUpAM))
-	{
 		Montage_Play(WakeUpAM);
-	}
 }
 
 void UUserAnimInstance::JumpToSection(int32 _SectionIndex, int32 Class)

@@ -15,14 +15,12 @@ ABossCharacter::ABossCharacter()
 	SetBossMesh();
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_BossHP.WBP_BossHp_C'"));
 	if (UW.Succeeded())
-	{
 		U_BossHp = UW.Class;
-	}
+
 	static ConstructorHelpers::FObjectFinder<USoundWave> SoundObject(TEXT("SoundWave'/Game/Ancient_Golem/Sound/metal-hit-91-200421.metal-hit-91-200421'"));
 	if (SoundObject.Succeeded())
-	{
 		ParticleSound = SoundObject.Object;
-	}
+
 	CntMissile = 0;
 	ProjectileClass = AProjectile_Missle::StaticClass();
 }
@@ -33,41 +31,39 @@ void ABossCharacter::SetBossMesh()
 	GetMesh()->SetCollisionProfileName(TEXT("NoCollision"));
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -300.f), FRotator(0.f, -90.f, 0.f));
 	GetMesh()->SetRelativeScale3D(FVector(1.f, 1.f, 3.f));
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance>ANIM(TEXT("AnimBlueprint'/Game/Ancient_Golem/Demo/Boss_AnimBP.Boss_AnimBP_C'"));
 	if (ANIM.Succeeded())
-	{
 		GetMesh()->SetAnimInstanceClass(ANIM.Class);
-	}
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MainAsset(TEXT("SkeletalMesh'/Game/Ancient_Golem/Mesh/SK_Ancient_Golem.SK_Ancient_Golem'"));
 	if (MainAsset.Succeeded())
-	{
 		GetMesh()->SetSkeletalMesh(MainAsset.Object);
-	}
+
 	HeadWheel = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HeadWheel"));
+
 	Drill = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Drill"));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WheelAsset(TEXT("SkeletalMesh'/Game/Ancient_Golem/Mesh/SK_Ancient_Golem_Head_Wheel.SK_Ancient_Golem_Head_Wheel'"));
 	if (WheelAsset.Succeeded())
-	{
 		HeadWheel->SetSkeletalMesh(WheelAsset.Object);
-	}
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> DrillAsset(TEXT("SkeletalMesh'/Game/Ancient_Golem/Mesh/SK_Ancient_Golem_Moving_Wheels.SK_Ancient_Golem_Moving_Wheels'"));
 	if (DrillAsset.Succeeded())
-	{
 		Drill->SetSkeletalMesh(DrillAsset.Object);
-	}
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance> WheelAnimAsset(TEXT("AnimBlueprint'/Game/Ancient_Golem/Animation/SK_Ancient_Golem_Head_Wheel_Skeleton_AnimBlueprint.SK_Ancient_Golem_Head_Wheel_Skeleton_AnimBlueprint_C'"));
 	if (WheelAnimAsset.Succeeded())
-	{
 		HeadWheel->SetAnimInstanceClass(WheelAnimAsset.Class);
-	}
+
 	HeadWheel->SetupAttachment(GetMesh(), TEXT("headSocket"));
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance> DrillAnimAsset(TEXT("AnimBlueprint'/Game/Ancient_Golem/Animation/SK_Ancient_Golem_Moving_Wheels_Skeleton_AnimBlueprint.SK_Ancient_Golem_Moving_Wheels_Skeleton_AnimBlueprint_C'"));
 	if (DrillAnimAsset.Succeeded())
-	{
 		Drill->SetAnimInstanceClass(DrillAnimAsset.Class);
-	}
+
 	Drill->SetupAttachment(GetMesh(), TEXT("spine_03Socket"));
+
 	BossDied = false;
 }
 
@@ -96,9 +92,7 @@ void ABossCharacter::ShowHpBar()
 void ABossCharacter::RemoveWidget()
 {
 	if (W_BossHp && W_BossHp->IsInViewport())
-	{
 		W_BossHp->RemoveFromViewport();
-	}
 }
 
 float ABossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -123,9 +117,7 @@ void ABossCharacter::PostInitializeComponents()
 	if (W_BossHp)
 	{
 		if (Stat)
-		{
 			W_BossHp->BindHp(Stat);
-		}
 	}
 }
 
@@ -192,7 +184,5 @@ FVector ABossCharacter::SetMissleLocation()
 void ABossCharacter::StartAISearch()
 {
 	if (NowAIController)
-	{
 		NowAIController->StartAISearch();
-	}
 }

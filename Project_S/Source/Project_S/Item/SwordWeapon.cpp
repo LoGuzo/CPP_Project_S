@@ -13,17 +13,9 @@ ASwordWeapon::ASwordWeapon() {
 	Weapon->SetupAttachment(RootComponent);
 }
 
-void ASwordWeapon::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void ASwordWeapon::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) {
 	USkeletalMesh* MeshPath =  Cast<USkeletalMesh>(_ItemMesh.LoadSynchronous());
     if (MeshPath)
-    {
         Weapon->SetSkeletalMesh(MeshPath);
-    }
     Weapon->SetCollisionProfileName(TEXT("NoCollision"));
-	
 }

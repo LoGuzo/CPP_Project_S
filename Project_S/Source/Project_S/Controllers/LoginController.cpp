@@ -10,9 +10,7 @@ ALoginController::ALoginController()
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> LoginWidget(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Login.WBP_Login_C'"));
 	if (LoginWidget.Class)
-	{
 		ULogin_Widget = LoginWidget.Class;
-	}
 }
 
 void ALoginController::LoginSuccessful(const FUserID& UserData)

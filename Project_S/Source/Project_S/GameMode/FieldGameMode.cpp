@@ -11,7 +11,6 @@
 AFieldGameMode::AFieldGameMode()
 {
 	DefaultPawnClass = AUserCharacter::StaticClass();
-
 	PlayerControllerClass = AUserPlayerController::StaticClass();
 }
 

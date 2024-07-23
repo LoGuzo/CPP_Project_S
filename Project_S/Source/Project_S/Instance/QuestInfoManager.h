@@ -12,7 +12,6 @@ class PROJECT_S_API QuestInfoManager : public SGameManagerBase
 {
 public:
 	QuestInfoManager();
-
 	~QuestInfoManager();
 
 	TSharedPtr<FQuestInfoData> MyQuestInfo;

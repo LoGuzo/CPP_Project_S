@@ -21,24 +21,25 @@ public:
 	UC_QuickSlotComponent();
 
 	FOnQuickUpdated OnQuickUpdated;
+
 private:
 	TArray<FS_Slot> SkillSlots;
 	TArray<FS_Slot> PotionSlots;
 
 	FS_Slot LocalSlot;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 public:	
 	TArray<FS_Slot> GetSkillSlots() { return SkillSlots; }
-	TArray<FS_Slot> GetPotionSlots() { return PotionSlots; }
-	FString GetSkillSlot(int32 _Index) { return SkillSlots[_Index].ItemName.ToString(); }
-	FString GetPotionSlot(int32 _Index) { return PotionSlots[_Index].ItemName.ToString(); }
-	void UsePotionSlot(int32 _Index);
 	void SetSkillSlots(const TArray<FS_Slot>& _Slots);
+
+	TArray<FS_Slot> GetPotionSlots() { return PotionSlots; }
 	void SetPotionSlots(const TArray<FS_Slot>& _Slots);
+
+	FString GetSkillSlot(int32 _Index) { return SkillSlots[_Index].ItemName.ToString(); }
+
+	FString GetPotionSlot(int32 _Index) { return PotionSlots[_Index].ItemName.ToString(); }
+
+	void UsePotionSlot(int32 _Index);
 
 	void SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, class UC_SkillComponent* _SkillCom);
 	void InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, class UC_InventoryComponent* _InvenCom);

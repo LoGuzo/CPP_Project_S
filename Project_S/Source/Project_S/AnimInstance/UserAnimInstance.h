@@ -28,12 +28,16 @@ public:
 private:
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	float Speed;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	bool HaveWeapon;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	bool OnDash;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	bool bIsHit;
+
 	UPROPERTY(EditAnyWhere, BluePrintReadOnly, Category = Character, Meta = (AllowPrivateAccess = true))
 	float Direction;
 
@@ -72,6 +76,7 @@ public:
 	void WakeUpPlayAM();
 	void OnHandSwordPlayAM();
 	void OnHandStaffPlayAM();
+
 	void JumpToSection(int32 _SectionIndex, int32 Class);
 	FName GetAttackMontageName(int32 _SectionIndex);
 

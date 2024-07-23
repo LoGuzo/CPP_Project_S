@@ -8,12 +8,5 @@ UW_PartyHp::UW_PartyHp(const FObjectInitializer& ObjectInitalizer) :Super(Object
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_PartyHpSlot.WBP_PartyHpSlot_C'"));
 	if (UW.Succeeded())
-	{
 		TW_PartyHpSlot = UW.Class;
-	}
-}
-
-void UW_PartyHp::NativePreConstruct()
-{
-	Super::NativePreConstruct();
 }

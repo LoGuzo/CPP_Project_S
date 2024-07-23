@@ -14,9 +14,7 @@ UW_Login::UW_Login(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 {
     static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_AddUser.WBP_AddUser_C'"));
     if (UW.Succeeded())
-    {
         UAddUser_Widget = UW.Class;
-    }
 }
 
 void UW_Login::NativeConstruct()
@@ -55,9 +53,7 @@ void UW_Login::ValidateLogin(const FString& Username, const FString& Password)
             {
                 ALoginController* PlayerController = Cast<ALoginController>(UGameplayStatics::GetPlayerController(this, 0));
                 if (PlayerController)
-                {
                     PlayerController->LoginSuccessful(*UserData.Get());
-                }
             }
         }
     }
@@ -66,9 +62,7 @@ void UW_Login::ValidateLogin(const FString& Username, const FString& Password)
 void UW_Login::IDCommitted(const FText& Text, ETextCommit::Type CommitMethod)
 {
     if (CommitMethod == ETextCommit::OnEnter)
-    {
         OnLogin();
-    }
 }
 
 void UW_Login::OnLogin()
@@ -77,9 +71,7 @@ void UW_Login::OnLogin()
     FString Password = Text_Pass->GetText().ToString();
 
     if (Username != "" && Password != "")
-    {
         ValidateLogin(Username, Password);
-    }
 }
 void UW_Login::OnAddUser()
 {
@@ -87,9 +79,7 @@ void UW_Login::OnAddUser()
     {
         W_AddUser = CreateWidget<UW_AddUser>(GetWorld(), UAddUser_Widget);
         if (W_AddUser)
-        {
             W_AddUser->AddToViewport();
-        }
     }
 }
 

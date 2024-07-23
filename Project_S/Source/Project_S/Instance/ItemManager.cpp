@@ -13,9 +13,7 @@ ItemManager::ItemManager()
 ItemManager::~ItemManager()
 {
 	if (MyCharacter != nullptr)
-	{
 		MyCharacter.Reset();
-	}
 }
 
 const TSharedPtr<FTableRowBase> ItemManager::GetMyData(FString _Init)
@@ -25,6 +23,7 @@ const TSharedPtr<FTableRowBase> ItemManager::GetMyData(FString _Init)
 		MyCharacter = MakeShared<FS_Item>(*myCharacter);
 	else
 		MyCharacter.Reset();
+
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 
@@ -32,6 +31,7 @@ TMap<int32, TSharedPtr<FTableRowBase>> ItemManager::GetDataMap()
 {
 	const TArray<FName> row = MyData->GetRowNames();
 	TMap<int32, TSharedPtr<FTableRowBase>> DataMap;
+
 	for (int i = 0; i < row.Num(); ++i)
 	{
 		const auto data = MyData->FindRow<FS_Item>(row[i], row[i].ToString(), false);
@@ -43,6 +43,7 @@ TMap<int32, TSharedPtr<FTableRowBase>> ItemManager::GetDataMap()
 		else
 			MyCharacter.Reset();
 	}
+
 	return DataMap;
 }
 

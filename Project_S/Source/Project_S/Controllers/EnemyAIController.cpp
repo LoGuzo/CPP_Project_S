@@ -10,20 +10,26 @@
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
 	SetActorTickEnabled(true);
+
 	CountSearch = 0;
 	IsMoving = false;
+	IsDead = false;
 	IsBackToTheHome = false;
+
 	FirstLocation = GetPawn()->GetActorLocation();
+
 	StartTime = GetWorld()->GetDeltaSeconds();
 	EndTime = GetWorld()->GetDeltaSeconds();
+
 	PlayTime = 1.f;
-	IsDead = false;
 }
 
 void AEnemyAIController::OnUnPossess()
 {
 	Super::OnUnPossess();
+
 	SetActorTickEnabled(false);
 	SetFocus(nullptr);
 }
@@ -31,6 +37,7 @@ void AEnemyAIController::OnUnPossess()
 void AEnemyAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	EndTime += DeltaTime;
 	if (!IsBackToTheHome)
 	{
@@ -50,8 +57,10 @@ void AEnemyAIController::ResetFirst()
 	// Reset Location , Rotator;
 	SetMaxSpeed(1200.f);
 	MoveToLocation(FirstLocation, 10);
+
 	IsMoving = true;
 	IsMoveAtFirst = false;
+
 	CountSearch = 0;
 	ChkState = E_State::E_Search;
 }
@@ -80,9 +89,7 @@ void AEnemyAIController::SetMaxSpeed(float NewMaxSpeed)
 	if (APawn* ControlledPawn = GetPawn())
 	{
 		if (ACharacter* ControlledCharacter = Cast<ACharacter>(ControlledPawn))
-		{
 			ControlledCharacter->GetCharacterMovement()->MaxWalkSpeed = NewMaxSpeed;
-		}
 	}
 }
 

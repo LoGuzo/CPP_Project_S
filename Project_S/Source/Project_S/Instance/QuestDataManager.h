@@ -11,7 +11,6 @@ class PROJECT_S_API QuestDataManager : public SGameManagerBase
 {
 public:
 	QuestDataManager();
-
 	~QuestDataManager();
 
 	TSharedPtr<FQuestData> MyQuest;

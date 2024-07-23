@@ -12,12 +12,11 @@
 
 ALoadingGameMode::ALoadingGameMode()
 {
+	PlayerControllerClass = ALoadingController::StaticClass();
+
 	static ConstructorHelpers::FClassFinder<UUserWidget> LoadScene(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Loading.WBP_Loading_C'"));
 	if (LoadScene.Class)
-	{
 		W_LoadingScene = LoadScene.Class;
-	}
-	PlayerControllerClass = ALoadingController::StaticClass();
 }
 
 void ALoadingGameMode::BeginPlay()

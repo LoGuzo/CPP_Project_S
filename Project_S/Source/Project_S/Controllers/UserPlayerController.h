@@ -29,6 +29,4 @@ public:
 
 	void SetUserWidget();
 	void RemoveUserWidget();
-
-	//void SetCharacterName
 };

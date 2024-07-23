@@ -34,34 +34,41 @@ public:
 	FOnLvlChanged OnLvlChanged;
 
 	void SetLevel(int32 _Level);
+	int32 GetLevel() { return Level; }
+
 	void SetMonsterLevel(int32 _Level);
+
 	UFUNCTION(NetMultiCast, Reliable)
 	void SetHp(float _Hp);
+	float GetHp() { return Hp; }
+
 	UFUNCTION(NetMultiCast, Reliable)
 	void SetMaxHp(float _MaxHp);
+	float GetMaxHp() { return MaxHp; }
+
 	void SetMp(float _Mp);
+	float GetMp() { return Mp; }
+
 	void SetMaxMp(float _MaxMp);
+	float GetMaxMp() { return MaxMp; }
+
 	void SetExp(float _Exp);
+	float GetExp() { return Exp; }
+
 	void SetMaxExp(float _MaxExp);
+	float GetMaxExp() { return MaxExp; }
 	void OnAttacked(float DamageAmount);
 	void SetArmor(float _Armor);
-	void SetAttack(float _Attack);
-
-	int32 GetLevel() { return Level; }
-	float GetHp() { return Hp; }
-	float GetMaxHp() { return MaxHp; }
-	float GetHpRatio() { return Hp / MaxHp; }
-	float GetMp() { return Mp; }
-	float GetMaxMp() { return MaxMp; }
-	float GetMpRatio() { return Mp / MaxMp; }
-	float GetExp() { return Exp; }
-	float GetMaxExp() { return MaxExp; }
-	float GetExpRatio() { return Exp / MaxExp; }	
 	float GetArmor() { return Armor; }
+
+	void SetAttack(float _Attack);
 	float GetAttack() { return Attack; }
 
-private:
+	float GetHpRatio() { return Hp / MaxHp; }
+	float GetMpRatio() { return Mp / MaxMp; }
+	float GetExpRatio() { return Exp / MaxExp; }	
 
+private:
 	// Level
 	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
 	int32 MaxLevel;

@@ -22,6 +22,7 @@ protected:
 
 	UFUNCTION()
 	void BPFunction();
+
 private:
 	TSubclassOf<class UUserWidget> UW_MakeCharWidget;
 	class UW_MakeCharacter* W_MakeCharacter;

@@ -16,6 +16,4 @@ class PROJECT_S_API ALoginGameMode : public AGameModeBase
 	
 public:
 	ALoginGameMode();
-
-
 };

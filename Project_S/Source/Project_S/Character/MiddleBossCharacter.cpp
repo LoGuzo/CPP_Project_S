@@ -10,9 +10,7 @@ AMiddleBossCharacter::AMiddleBossCharacter()
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_BossHP.WBP_BossHp_C'"));
 	if (UW.Succeeded())
-	{
 		U_BossHp = UW.Class;
-	}
 }
 
 float AMiddleBossCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -42,12 +40,6 @@ void AMiddleBossCharacter::ShowHpBar()
 	}
 }
 
-void AMiddleBossCharacter::LoadCharacterData()
-{
-	Super::LoadCharacterData();
-}
-
-
 void AMiddleBossCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -55,9 +47,7 @@ void AMiddleBossCharacter::PostInitializeComponents()
 	if (W_BossHp)
 	{
 		if (Stat)
-		{
 			W_BossHp->BindHp(Stat);
-		}
 	}
 }
 
@@ -70,16 +60,12 @@ void AMiddleBossCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AMiddleBossCharacter::RemoveWidget()
 {
 	if (W_BossHp && W_BossHp->IsInViewport())
-	{
 		W_BossHp->RemoveFromViewport();
-	}
 }
 
 void AMiddleBossCharacter::SyncRemoveWidget(AController* PlayerController)
 {
 	AUserPlayerController* UserPlayerController = Cast<AUserPlayerController>(PlayerController);
 	if (UserPlayerController)
-	{
 		UserPlayerController->SyncRemoveEnemyHpBar(this);
-	}
 }

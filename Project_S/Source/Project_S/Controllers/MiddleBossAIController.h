@@ -17,7 +17,9 @@ class PROJECT_S_API AMiddleBossAIController : public AEnemyAIController
 	
 protected:
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
+
 	virtual void OnPossess(APawn* InPawn) override;
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void AISerach() override; // ÀûÅ½»ö

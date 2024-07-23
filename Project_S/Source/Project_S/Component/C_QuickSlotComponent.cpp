@@ -11,26 +11,16 @@ UC_QuickSlotComponent::UC_QuickSlotComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
-	// ...
 	SkillSlots.SetNum(5);
 	PotionSlots.SetNum(2);
-}
-
-
-// Called when the game starts
-void UC_QuickSlotComponent::BeginPlay()
-{
-	Super::BeginPlay();
-	// ...
 }
 
 void UC_QuickSlotComponent::UsePotionSlot(int32 _Index)
 {
 	PotionSlots[_Index].Amount--;
 	if (PotionSlots[_Index].Amount < 1)
-	{
 		PotionSlots[_Index] = FS_Slot();
-	}
+
 	OnQuickUpdated.Broadcast();
 }
 
@@ -52,9 +42,7 @@ void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, 
 	if (!SkillSlots.ContainsByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; }))
 	{
 		if (_TargetIndex >= 0)
-		{
 			SkillSlots[_TargetIndex] = LocalSlot;
-		}
 	}
 	else {
 		int32 Index = SkillSlots.IndexOfByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; });
@@ -67,6 +55,7 @@ void UC_QuickSlotComponent::SkillToQuick(int32 _SkillIndex, int32 _TargetIndex, 
 			}
 		}
 	}
+
 	OnQuickUpdated.Broadcast();
 }
 
@@ -77,17 +66,13 @@ void UC_QuickSlotComponent::InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, 
 	for (const FS_Slot& slot : _InvenCom->GetSlots())
 	{
 		if (slot.ItemName == LocalSlot.ItemName)
-		{
 			SumSize += slot.Amount;
-		}
 	}
 	LocalSlot.Amount = SumSize;
 	if (!PotionSlots.ContainsByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; }))
 	{
 		if (_TargetIndex >= 0)
-		{
 			PotionSlots[_TargetIndex] = LocalSlot;
-		}
 	}
 	else {
 		int32 Index = PotionSlots.IndexOfByPredicate([&](const FS_Slot& Slot) { return Slot.ItemName == LocalSlot.ItemName; });
@@ -100,5 +85,6 @@ void UC_QuickSlotComponent::InvenToQuick(int32 _InvenIndex, int32 _TargetIndex, 
 			}
 		}
 	}
+
 	OnQuickUpdated.Broadcast();
 }

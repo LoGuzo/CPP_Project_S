@@ -13,9 +13,7 @@ MonsterPatternManager::MonsterPatternManager()
 MonsterPatternManager::~MonsterPatternManager()
 {
 	if (MyCharacter != nullptr)
-	{
 		MyCharacter.Reset();
-	}
 }
 const TSharedPtr<FTableRowBase> MonsterPatternManager::GetMyData(FString _Init)
 {
@@ -24,6 +22,7 @@ const TSharedPtr<FTableRowBase> MonsterPatternManager::GetMyData(FString _Init)
 		MyCharacter = MakeShared<FMonsterPattern>(*myCharacter);
 	else
 		MyCharacter.Reset();
+
 	return MyCharacter.IsValid() ? MyCharacter : nullptr;
 }
 
@@ -31,6 +30,7 @@ TMap<int32, TSharedPtr<FTableRowBase>> MonsterPatternManager::GetDataMap()
 {
 	const TArray<FName> row = MyData->GetRowNames();
 	TMap<int32, TSharedPtr<FTableRowBase>> DataMap;
+
 	for (int i = 0; i < row.Num(); ++i)
 	{
 		const auto data = MyData->FindRow<FMonsterPattern>(row[i], row[i].ToString(), false);
@@ -42,5 +42,6 @@ TMap<int32, TSharedPtr<FTableRowBase>> MonsterPatternManager::GetDataMap()
 		else
 			MyCharacter.Reset();
 	}
+
 	return DataMap;
 }

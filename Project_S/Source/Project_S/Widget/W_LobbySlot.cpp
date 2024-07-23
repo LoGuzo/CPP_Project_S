@@ -17,9 +17,7 @@ UW_LobbySlot::UW_LobbySlot(const FObjectInitializer& ObjectInitializer) : Super(
 {
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> MaterialFinder(TEXT("Material'/Game/ThirdPersonCPP/Blueprints/Material/M_RenderTarget.M_RenderTarget'"));
 	if (MaterialFinder.Succeeded())
-	{
 		RenderTargetMaterial = MaterialFinder.Object;
-	}
 }
 void UW_LobbySlot::SetCharName(FString _CharName)
 {
@@ -39,7 +37,6 @@ void UW_LobbySlot::SetCharacterImage(UTextureRenderTarget2D* RenderTarget)
 		if (DynamicMaterial)
 		{
 			DynamicMaterial->SetTextureParameterValue(FName("RenderTarget"), RenderTarget);
-
 			Img_Char->SetBrushFromMaterial(DynamicMaterial);
 		}
 	}
@@ -103,9 +100,8 @@ void UW_LobbySlot::SetInstanceIndex()
 {
 	US_GameInstance* GameInstance = Cast<US_GameInstance>(GetGameInstance());
 	if (GameInstance)
-	{
 		GameInstance->SetIndex(SlotIndex);
-	}
+
 	OnUpDateButton.Broadcast();
 }
 

@@ -34,11 +34,6 @@ US_GameInstance::US_GameInstance()
 	PartyManager = NewObject<UPartyManager>();
 }
 
-void US_GameInstance::Init()
-{
-	Super::Init();
-}
-
 void US_GameInstance::Shutdown()
 {
 	Super::Shutdown();

@@ -17,9 +17,7 @@ void UW_Drag::NativePreConstruct()
 		{
 			ItemData = StaticCastSharedPtr<FS_Item>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_Item)->GetMyData(ItemKey.ToString()));
 			if (ItemData.IsValid())
-			{
 				Img_Drag->SetBrushFromTexture(ItemData.Pin()->ItemImage);
-			}
 		}
 		else if (SkillKey.ToString() != "None")
 		{
@@ -27,9 +25,7 @@ void UW_Drag::NativePreConstruct()
 			if (SkillData.IsValid())
 			{
 				if (SkillData.IsValid())
-				{
 					Img_Drag->SetBrushFromTexture(SkillData.Pin()->Skill_Img);
-				}
 			}
 		}
 	}

@@ -11,9 +11,7 @@ UW_QuickSlotMenu::UW_QuickSlotMenu(const FObjectInitializer& ObjectInitializer) 
 {
 	static ConstructorHelpers::FClassFinder<UW_QuickSlot>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_QuickSlot.WBP_QuickSlot_C'"));
 	if (UW.Succeeded())
-	{
 		W_Slot = UW.Class;
-	}
 }
 
 void UW_QuickSlotMenu::UpdateSkillSlots(const TArray<FS_Slot>& _Slots)

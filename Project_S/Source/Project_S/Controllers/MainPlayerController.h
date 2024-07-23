@@ -28,7 +28,6 @@ public:
 private:
 	UFUNCTION(Server, Unreliable)
 	void Server_SendMessage(const FString& Message);
-
 	UFUNCTION(Client, Unreliable)
 	void Client_SendMessage(const FString& Message);
 };

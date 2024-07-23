@@ -49,13 +49,10 @@ void UW_QuickSlot::NativeDestruct()
 	Super::NativeDestruct();
 
 	if (ItemData != nullptr)
-	{
 		ItemData.Reset();
-	}
+
 	if (SkillData != nullptr)
-	{
 		SkillData.Reset();
-	}
 }
 
 void UW_QuickSlot::SetConIndex(int32 _ContentIndex)
@@ -103,17 +100,13 @@ bool UW_QuickSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 			if (DO_Drag->GetItemConName() == E_ItemType::E_Cunsumalbe)
 			{
 				if (DO_Drag->GetInvenCom() != nullptr)
-				{
 					QuickSlotCom->InvenToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
-				}
 			}
 		}
 		else if (DO_Drag->GetConName() == "Skill")
 		{
 			if (DO_Drag->GetSkillCom() != nullptr)
-			{
 				QuickSlotCom->SkillToQuick(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetSkillCom());
-			}
 		}
 	}
 

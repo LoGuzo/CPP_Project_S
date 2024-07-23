@@ -12,18 +12,14 @@ UW_Inventory::UW_Inventory(const FObjectInitializer& ObjectInitializer) : Super(
 {
 	static ConstructorHelpers::FClassFinder<UW_Slot>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Slot.WBP_Slot_C'"));
 	if (UW.Succeeded())
-	{
 		W_Slot = UW.Class;
-	}
 }
 
 void UW_Inventory::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	if (InventoryCom)
-	{
 		UpdateSlots(InventoryCom->GetSlots());
-	}
 }
 
 void UW_Inventory::ShowInventory(UC_InventoryComponent* _InventoryCom)

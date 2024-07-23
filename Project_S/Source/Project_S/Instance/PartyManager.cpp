@@ -9,6 +9,7 @@ UPartySystem* UPartyManager::CreateParty(AUserCharacter* Member)
 	UPartySystem* NewParty = NewObject<UPartySystem>();
 	NewParty->AddUser(Member);
 	Parties.Add(NewParty);
+
 	return NewParty;
 }
 

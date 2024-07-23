@@ -38,15 +38,14 @@ void AProject_SGameMode::UpdateQuest(int32 MonsterID)
 	{
 		QuestManager->UpdateQuestProgress(MonsterID);
 		for (AUserCharacter* UserCharacter : UserCharacters)
-		{
 			UserCharacter->UpdateQuest(QuestManager->GetNowQuest());
-		}
 	}
 }
 
 void AProject_SGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
+
 	auto MyInstance = Cast<US_GameInstance>(GetGameInstance());
 	if (MyInstance)
 	{
@@ -67,7 +66,7 @@ void AProject_SGameMode::PostLogin(APlayerController* NewPlayer)
 		{
 			UserCharacter->SetCharID(UserID[UserIndex]);
 			UserCharacter->LoadCharacterData();
-			UserCharacter->UpdateQuest(QuestManager->GetNowQuest());
+			//UserCharacter->UpdateQuest(QuestManager->GetNowQuest());
 			UserCharacters.Add(UserCharacter);
 		}
 		UserIndex = (UserIndex + 1) % UserID.Num();

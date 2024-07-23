@@ -33,43 +33,41 @@ private:
 	TWeakObjectPtr<class US_StatComponent> SStatComponent;
 
 	UPROPERTY(meta = (BindWidget))
-		class UHorizontalBox* Box_Info;
+	class UHorizontalBox* Box_Info;
 
 	UPROPERTY(meta = (BindWidget))
-		class UImage* Img_Char;
+	class UImage* Img_Char;
 
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* PB_Hp;
+	class UProgressBar* PB_Hp;
 
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* PB_Mp;
+	class UProgressBar* PB_Mp;
 
 	UPROPERTY(meta = (BindWidget))
-		class UProgressBar* PB_Exp;
+	class UProgressBar* PB_Exp;
 
 	UPROPERTY(meta = (BindWidget))
-		class UTextBlock* Txt_Lvl;
+	class UTextBlock* Txt_Lvl;
 
 	UPROPERTY()
-		FTimerHandle ShakeTimerHandle;
+	FTimerHandle ShakeTimerHandle;
+	UPROPERTY()
+	FTimerHandle EndShakeHandle;
+	UPROPERTY()
+	FTimerHandle HealthUpdateTimerHandle;
 
 	UPROPERTY()
-		FTimerHandle EndShakeHandle;
+	float HealthUpdateDuration;
 
 	UPROPERTY()
-		FTimerHandle HealthUpdateTimerHandle;
+	float HealthUpdateTime;
 
 	UPROPERTY()
-		float HealthUpdateDuration;
+	float CurrentHealth;
 
 	UPROPERTY()
-		float HealthUpdateTime;
-
-	UPROPERTY()
-		float CurrentHealth;
-
-	UPROPERTY()
-		float TargetHealth;
+	float TargetHealth;
 
 protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)

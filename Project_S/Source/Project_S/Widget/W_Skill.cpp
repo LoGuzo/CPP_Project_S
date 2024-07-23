@@ -14,13 +14,13 @@ UW_Skill::UW_Skill(const FObjectInitializer& ObjectInitializer) : Super(ObjectIn
 {
 	static ConstructorHelpers::FClassFinder<UW_SkillSlot>UW(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Skill_Slot.WBP_Skill_Slot_C'"));
 	if (UW.Succeeded())
-	{
 		TW_SkillSlot = UW.Class;
-	}
 }
 
 void UW_Skill::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (playerController) {
 
@@ -36,6 +36,7 @@ void UW_Skill::NativeConstruct()
 void UW_Skill::NativeDestruct()
 {
 	Super::NativeDestruct();
+
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (playerController) {
 
@@ -48,14 +49,13 @@ void UW_Skill::NativeDestruct()
 void UW_Skill::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+
 	ACharacter* playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (playerCharacter)
 	{
 		SkillCom = playerCharacter->FindComponentByClass<UC_SkillComponent>();
 		if (SkillCom)
-		{
 			ShowSkillWidget(SkillCom);
-		}
 	}
 }
 

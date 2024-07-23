@@ -8,6 +8,7 @@
 #include "C_EqiupComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnEquipUpdated);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_S_API UC_EqiupComponent : public UActorComponent
 {

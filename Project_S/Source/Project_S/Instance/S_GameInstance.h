@@ -26,8 +26,6 @@ private:
 public:
 	US_GameInstance();
 
-	virtual void Init() override;
-
 	virtual void Shutdown() override;
 
 	TMap<E_DataType, SGameManagerBase*> MyDataManager;

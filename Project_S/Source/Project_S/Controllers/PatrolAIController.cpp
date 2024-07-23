@@ -10,23 +10,20 @@
 void APatrolAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	PathIndex = 0;
-	IsFindEnemy = false;
-	ChkState = E_State::E_Search;
-}
 
-void APatrolAIController::OnUnPossess()
-{
-	Super::OnUnPossess();
+	PathIndex = 0;
+
+	IsFindEnemy = false;
+
+	ChkState = E_State::E_Search;
 }
 
 void APatrolAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
 	if (Location.Num() != 0)
-	{
 		Location.Reset();
-	}
 }
 
 void APatrolAIController::AISerach()
@@ -34,12 +31,14 @@ void APatrolAIController::AISerach()
 	auto CurrentPawn = GetPawn();
 	if (CurrentPawn == nullptr)
 		return;
+
 	UWorld* World = CurrentPawn->GetWorld();
+	if (World == nullptr)
+		return;
+
 	FVector Center = CurrentPawn->GetActorLocation();
 	float SearchRadius = 500.f;
 
-	if (World == nullptr)
-		return;
 	TArray<FHitResult>HItResults;
 	FCollisionQueryParams QueryParams(NAME_None, false, CurrentPawn);
 	bool bResult = World->SweepMultiByChannel(
@@ -65,9 +64,12 @@ void APatrolAIController::AISerach()
 			}
 		}
 	}
+
 	SetMaxSpeed(150.f);
-	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
+
 	ChkState = E_State::E_Move;
+
+	DrawDebugSphere(World, Center, SearchRadius, 10, FColor::Red, false, 0.2f);
 }
 
 void APatrolAIController::AIMove()
@@ -80,33 +82,35 @@ void APatrolAIController::Attack()
 {
 	if (IsMoving == true)
 		return;
+
 	if (User && !IsDead)
 	{
 		LookAtPlayer(User->GetActorLocation());
 		if (SDistance(User->GetActorLocation(), GetPawn()->GetActorLocation()) <= 200.f)
 		{
 			const auto Enemy = Cast<AFirstCharacter>(GetPawn());
-			if (Enemy) {
+			if (Enemy) 
+			{
 				Enemy->UseSkill(Enemy->GetSkillCom()->GetSlot(0).ItemName.ToString());
 				return;
 			}
 		}
 	}
+
 	ChkState = E_State::E_Search;
 }
 
 void APatrolAIController::MoveToNextPatrolPoint()
 {
 	if (Location.Num() == 0)
-	{
 		return;
-	}
+
 	MoveToLocation(Location[PathIndex]);
+
 	IsMoving = true;
+
 	if (SDistance(Location[PathIndex], GetPawn()->GetActorLocation()) < 50.f)
-	{
 		PathIndex = (PathIndex + 1) % Location.Num();
-	}
 }
 
 void APatrolAIController::SetLocation(TArray<FVector> _Location)

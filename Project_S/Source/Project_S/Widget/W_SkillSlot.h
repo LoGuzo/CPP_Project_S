@@ -16,7 +16,9 @@ class PROJECT_S_API UW_SkillSlot : public UUserWidget
 	
 public:
 	UW_SkillSlot(const FObjectInitializer& ObjectInitializer);
+
 	virtual void NativeConstruct() override;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UWrapBox* Wrap_Skill;
@@ -45,11 +47,16 @@ private:
 	void SetTextPlus();
 	UFUNCTION()
 	void SetTextMinus();
+
 public:
-	int32 GetSkillPoint() { return SkillPoint; }
-	void SetMaxPoint(const int32 _MaxPoint);
-	void SetSkillCom(class UC_SkillComponent* _SkillCom);
-	void UpdateImg(const FName _SkillName);
 	void SetTextBlock(const int32 _SkillPoint);
+	int32 GetSkillPoint() { return SkillPoint; }
+
+	void SetMaxPoint(const int32 _MaxPoint);
+
+	void SetSkillCom(class UC_SkillComponent* _SkillCom);
+
+	void UpdateImg(const FName _SkillName);
+
 	void SetSlotIndex(const int32 _SlotIndex);
 };

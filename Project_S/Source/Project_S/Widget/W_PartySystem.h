@@ -16,9 +16,6 @@ class PROJECT_S_API UW_PartySystem : public UMainUserWidget
 public:
 	UW_PartySystem(const FObjectInitializer& ObjectInitializer);
 
-protected:
-	virtual void NativePreConstruct() override;
-
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Make;

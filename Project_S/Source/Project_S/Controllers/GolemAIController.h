@@ -19,8 +19,10 @@ private:
 
 	UPROPERTY()
 	FTimerHandle SearchHandle;
+
 	UPROPERTY()
 	TArray<FTimerHandle> SkillCooldownHandles;
+
 	TArray<class AUserCharacter*> SearchChacter;
 
 protected:

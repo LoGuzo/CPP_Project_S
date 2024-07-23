@@ -13,10 +13,9 @@
 void AGolemAIController::OnUnPossess()
 {
 	Super::OnUnPossess();
+
 	for(int i = 0; i < SkillCooldownHandles.Num(); i++)
-	{
 		GetWorldTimerManager().ClearTimer(SkillCooldownHandles[i]);
-	}
 }
 
 
@@ -28,15 +27,15 @@ void AGolemAIController::AISerach()
 		SkillCooldownHandles.SetNum(Enemy->GetSkillCom()->GetSlots().Num());
 		CoolTime.SetNum(Enemy->GetSkillCom()->GetSlots().Num());
 		for (int i = 0; i < Enemy->GetSkillCom()->GetSlots().Num(); i++)
-		{
 			CoolTime[i] = Enemy->GetSkillCom()->GetSlot(i).Amount;
-		}
 	}
+
 	for (TActorIterator<AUserCharacter> It(GetWorld()); It; ++It)
 	{
 		AUserCharacter* SaveUser = *It;
 		SearchChacter.Add(SaveUser);
 	}
+
 	SetRandomCharacter();
 }
 
@@ -45,10 +44,10 @@ void AGolemAIController::Attack()
 	const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 	if (Enemy->IsAttacking || IsMoving)
 		return;
+
 	if (User->GetIsDead())
-	{
 		SetRandomCharacter();
-	}
+
 	if (User && !IsDead)
 	{
 		int32 RandomPattern = RandRange(1, 3);
@@ -56,6 +55,7 @@ void AGolemAIController::Attack()
 		{
 			LookAtPlayer(User->GetActorLocation());
 			Enemy->GetCapsuleComponent()->SetCollisionProfileName(TEXT("Dash"));
+
 			switch (RandomPattern)
 			{
 			case 1:
@@ -97,7 +97,9 @@ void AGolemAIController::Attack()
 			}
 		}
 	}
+
 	IsMoving = false;
+
 	ChkState = E_State::E_Move;
 }
 
@@ -105,13 +107,16 @@ void AGolemAIController::SetRandomCharacter()
 {
 	if (!SearchChacter.IsValidIndex(0))
 		return;
+
 	int32 RandomPattern = RandRange(0, SearchChacter.Num()-1);
 	User = SearchChacter[RandomPattern];
+
 	auto Boss = Cast<AEnemyCharacter>(GetPawn());
 	if (Boss)
 	{
 		if (Boss->GetIsDead())
 			return;
+
 		if (!User->GetIsDead())
 		{
 			Boss->SetTarget(User);
@@ -132,25 +137,25 @@ void AGolemAIController::AIMove()
 	const auto Enemy = Cast<AFirstCharacter>(GetPawn());
 	if (IsMoving || Enemy->IsAttacking)
 		return;
+
 	IsMoving = true;
 	IsMoveAtFirst = true;
+
 	MoveToActor(User, 300.f * GetPawn()->GetActorScale3D().X);
+
 	ChkState = E_State::E_Attack;
 }
 
 void AGolemAIController::OnSkillCooldownComplete(int32 SkillIndex)
 {
 	if (SkillCooldownHandles.IsValidIndex(SkillIndex))
-	{
 		SkillCooldownHandles[SkillIndex].Invalidate();
-	}
 }
 
 bool AGolemAIController::IsSkillOnCooldown(int32 SkillIndex) const
 {
 	if (SkillCooldownHandles.IsValidIndex(SkillIndex))
-	{
 		return SkillCooldownHandles[SkillIndex].IsValid();
-	}
+
 	return false;
 }

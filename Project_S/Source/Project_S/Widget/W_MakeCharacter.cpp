@@ -12,6 +12,7 @@
 void UW_MakeCharacter::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+
 	if (Btn_Warrior)
 		Btn_Warrior->OnClicked.AddDynamic(this, &UW_MakeCharacter::SetWarrior);
 	if (Btn_Mage)
@@ -27,6 +28,7 @@ void UW_MakeCharacter::NativePreConstruct()
 void UW_MakeCharacter::NativeConstruct()
 {
 	Super::NativeConstruct();
+
 	NowPawn = Cast<AMakeCharacterPawn>(GetOwningPlayerPawn());
 	SetWarrior();
 	bIsRotating = false;
@@ -41,6 +43,7 @@ void UW_MakeCharacter::SetWarrior()
 		NowPawn->LoadData("Warrior");
 		auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	}
+
 	NowCharClass = E_CharClass::E_Warrior;
 }
 
@@ -51,6 +54,7 @@ void UW_MakeCharacter::SetMage()
 		NowPawn->SetMeshRotation();
 		NowPawn->LoadData("Magician");
 	}
+
 	NowCharClass = E_CharClass::E_Magician;
 }
 
@@ -61,6 +65,7 @@ void UW_MakeCharacter::SetHealer()
 		NowPawn->SetMeshRotation();
 		NowPawn->LoadData("Healer");
 	}
+
 	NowCharClass = E_CharClass::E_Healer;
 }
 
@@ -74,9 +79,7 @@ void UW_MakeCharacter::GoToBack()
 {
 	auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (MyGameInstance)
-	{
 		MyGameInstance->NextLevel("LobbyMap");
-	}
 }
 
 void UW_MakeCharacter::ValidateID(const FString& Username)
@@ -86,9 +89,7 @@ void UW_MakeCharacter::ValidateID(const FString& Username)
 	{
 		auto UserData = StaticCastSharedPtr<FMyCharacterData>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_MyChar)->GetMyData(Username));
 		if (UserData.IsValid())
-		{
 			UE_LOG(LogTemp, Warning, TEXT("No"))
-		}
 		else
 		{
 			FMyCharacterData NewCharacterData;
@@ -116,6 +117,7 @@ FReply UW_MakeCharacter::NativeOnMouseButtonDown(const FGeometry& InGeometry, co
 		LastMousePosition = InMouseEvent.GetScreenSpacePosition();
 		return FReply::Handled();
 	}
+
 	return FReply::Unhandled();
 }
 
@@ -126,6 +128,7 @@ FReply UW_MakeCharacter::NativeOnMouseButtonUp(const FGeometry& InGeometry, cons
 		bIsRotating = false;
 		return FReply::Handled();
 	}
+
 	return FReply::Unhandled();
 }
 
@@ -141,6 +144,7 @@ FReply UW_MakeCharacter::NativeOnMouseMove(const FGeometry& InGeometry, const FP
 		LastMousePosition = CurrentMousePosition;
 		return FReply::Handled();
 	}
+
 	return FReply::Unhandled();
 }
 

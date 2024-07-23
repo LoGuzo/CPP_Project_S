@@ -20,7 +20,6 @@ public:
 	class UPartySystem* CreateParty(class AUserCharacter* Member);
 
 	void AddMemberToParty(class UPartySystem* Party, class AUserCharacter* NewMember);
-
 	void RemoveMemberFromParty(class UPartySystem* Party, class AUserCharacter* Member);
 
 	void DisbandParty(class UPartySystem* Party);

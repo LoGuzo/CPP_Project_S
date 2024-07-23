@@ -11,11 +11,10 @@
 ALobbyController::ALobbyController()
 {
 	bShowMouseCursor = true;
+
 	static ConstructorHelpers::FClassFinder<UUserWidget> LobbyWidget(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_CharacterLobby.WBP_CharacterLobby_C'"));
 	if (LobbyWidget.Class)
-	{
 		ULobby_Widget = LobbyWidget.Class;
-	}
 }
 
 void ALobbyController::BeginPlay()

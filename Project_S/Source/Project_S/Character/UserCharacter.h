@@ -36,13 +36,15 @@ public:
 	void SaveCharacterData();
 	void LoadCharacterData();
 	void DelayedLoadCharacterData();
+
 	void SetClass(E_CharClass _ClassType);
 
+	void PickUpItem();
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_PickUpItem();
 	UFUNCTION(NetMulticast, Reliable)
 	void Multi_PickUpItem();
-	void PickUpItem();
+
 	void SetUserWidget();
 
 	void SetMyParty(class UPartySystem* _MyParty);
@@ -57,7 +59,6 @@ protected:
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
-
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
@@ -81,7 +82,6 @@ protected:
 	void UserDied();
 
 	virtual void Multi_UseSkill(const FString& _SkillName) override;
-
 	virtual void Multi_UseSkill_Implementation(const FString& SkillName) override;
 
 	UPROPERTY(ReplicatedUsing = OnRep_MeshPath)
@@ -151,10 +151,8 @@ private:
 
 	UPROPERTY()
 	FTimerHandle UnusedHandle;
-
 	UPROPERTY()
 	FTimerHandle HitHandle;
-
 	UPROPERTY()
 	FTimerHandle CloseChatBalloon;
 
@@ -190,39 +188,30 @@ public:
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);
-
 	UFUNCTION(NetMulticast, Reliable)
 	void Multi_SetMyWeapon(TSubclassOf<class AA_Item> _MyWeapon);
 
 	void RemoveMyWeapon();
-
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_RemoveMyWeapon();
-
 	UFUNCTION(NetMulticast, Reliable)
 	void Multi_RemoveMyWeapon();
 
 	void Attack();
-	
 	void AttackMontage();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_AttackMontage();
-
 	UFUNCTION(NetMulticast, Reliable)
 	void Multi_AttackMontage();
-	
 	UFUNCTION()
 	void OnAttackMontageEnd(UAnimMontage* Montage, bool bInterrupted);
 
 	UC_InventoryComponent* GetInventoryCom() const { return Inventory; }
-
 	UC_EqiupComponent* GetEquipCom() const { return Equip; }
 
 	void OnInventoryKeyPressed();
-
 	void OnEquipmentKeyPressed();
-
 	void OnSkillWidgetKeyPressed();
 
 	AA_Item* GetCurItem() const { return Curitem; }
@@ -239,6 +228,5 @@ public:
 	void UserReset();
 
 	void SetWidget();
-
 	void RemoveWidget();
 };

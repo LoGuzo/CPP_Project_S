@@ -8,6 +8,7 @@
 AMakeCharGameMode::AMakeCharGameMode()
 {
 	DefaultPawnClass = AMakeCharacterPawn::StaticClass();
+
 	static ConstructorHelpers::FClassFinder<APlayerController>PC(TEXT("Blueprint'/Game/ThirdPersonCPP/Blueprints/BP_MakeCharController.BP_MakeCharController_C'"));
 	if (PC.Succeeded())
 		PlayerControllerClass = PC.Class;

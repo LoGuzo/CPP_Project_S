@@ -39,11 +39,10 @@ public:
 
 	TArray<FS_Slot> GetSlots() { return Slots; }
 
+	void SetSlot(int32 _Index, FS_Slot _Slot);
 	FS_Slot GetSlot(int32 _Index) { return Slots[_Index]; }
 
 	void SetSlots(const TArray<FS_Slot>& _Slots);
-
-	void SetSlot(int32 _Index, FS_Slot _Slot);
 
 	void UsePotionSlot(int32 _Index);
 

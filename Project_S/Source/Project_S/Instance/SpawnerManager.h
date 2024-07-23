@@ -12,7 +12,6 @@ class PROJECT_S_API SpawnerManager : public SGameManagerBase
 {
 public:
 	SpawnerManager();
-
 	~SpawnerManager();
 
 	TSharedPtr<FSpawnData> MySpawner;

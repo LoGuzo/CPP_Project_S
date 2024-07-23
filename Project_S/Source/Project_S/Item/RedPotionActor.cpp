@@ -9,17 +9,11 @@ ARedPotionActor::ARedPotionActor()
     ItemMesh->SetupAttachment(RootComponent);
 }
 
-void ARedPotionActor::BeginPlay()
-{
-    Super::BeginPlay();
-}
-
 void ARedPotionActor::SetW_Mesh(TSoftObjectPtr<UStreamableRenderAsset> _ItemMesh) 
 {
     UStaticMesh* MeshPath = Cast<UStaticMesh>(_ItemMesh.LoadSynchronous());
     if (MeshPath)
-    {
         ItemMesh->SetStaticMesh(MeshPath);
-    }
+
     ItemMesh->SetCollisionProfileName(TEXT("NoCollision"));
 }

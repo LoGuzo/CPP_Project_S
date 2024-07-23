@@ -11,6 +11,7 @@
 void UInventoryMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
+
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (playerController) {
 
@@ -26,6 +27,7 @@ void UInventoryMenu::NativeConstruct()
 void UInventoryMenu::NativeDestruct()
 {
 	Super::NativeDestruct();
+
 	APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (playerController) {
 
@@ -38,13 +40,12 @@ void UInventoryMenu::NativeDestruct()
 void UInventoryMenu::NativePreConstruct()
 {
 	Super::NativePreConstruct();
+
 	ACharacter* playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (playerCharacter)
 	{
 		UC_InventoryComponent* inventoryComponent = playerCharacter->FindComponentByClass<UC_InventoryComponent>();
 		if (inventoryComponent)
-		{
 			WBP_Inventory->ShowInventory(inventoryComponent);
-		}
 	}
 }

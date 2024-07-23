@@ -16,43 +16,50 @@ AFirstCharacter::AFirstCharacter()
 {
 	bReplicates = true;
 	bAlwaysRelevant = true;
-	SetReplicateMovement(true);
-	GetMesh()->SetIsReplicated(true);
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	IsAttacking = false;
+
+	SetReplicateMovement(true);
+	GetMesh()->SetIsReplicated(true);
+
 	Stat = CreateDefaultSubobject<US_StatComponent>(TEXT("STAT"));
+
 	Skill = CreateDefaultSubobject<UC_SkillComponent>(TEXT("SKILL"));
+
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 	AudioComponent->SetupAttachment(RootComponent);
 	AudioComponent->bAutoActivate = false;
+
 	static ConstructorHelpers::FObjectFinder<USoundWave> SoundObject(TEXT("SoundWave'/Game/Mannequin/Animations/Sound/hit_sound.hit_sound'"));
 	if (SoundObject.Succeeded())
-	{
 		ParticleSound = SoundObject.Object;
-	}
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/ParagonGreystone/FX/Particles/Greystone/Abilities/Deflect/FX/P_Greystone_Deflect_Remove.P_Greystone_Deflect_Remove'"));
 	if (AttackP.Succeeded())
-	{
 		HitParticleEffect = AttackP.Object;
-	}
 }
 
 float AFirstCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	if (IsDead)
 		return 0.f;
+
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
 	Stat->OnAttacked(DamageAmount);
+
 	if (Stat->GetHp() <= 0)
 		IsDead = true;
+
 	if (HitParticleEffect)
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticleEffect, GetActorLocation());
+
 	if (ParticleSound && AudioComponent)
 	{
 		AudioComponent->SetSound(ParticleSound);
 		AudioComponent->Play();
 	}
+
 	return DamageAmount;
 }
 
@@ -192,7 +199,7 @@ void AFirstCharacter::ScopeAttackCheck(float _Range)
 
 void AFirstCharacter::ShotAttackCheck()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Chk"));
+	
 }
 
 void AFirstCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

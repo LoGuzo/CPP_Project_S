@@ -15,10 +15,13 @@ void UW_AddUser::NativeConstruct()
     Super::NativeConstruct();
     if (Btn_ChkID)
         Btn_ChkID->OnClicked.AddDynamic(this, &UW_AddUser::FindID);
+
     if (Btn_Add)
         Btn_Add->OnClicked.AddDynamic(this, &UW_AddUser::SignUp);
+
     if (Btn_X)
         Btn_X->OnClicked.AddDynamic(this, &UW_AddUser::Back);
+
     if (Txt_ID)
     {
         Txt_ID->OnTextChanged.Clear();
@@ -49,21 +52,18 @@ void UW_AddUser::FindID()
     if (Username != "")
     {
         if (!ValidateID(Username))
-        {
-            UE_LOG(LogTemp, Warning, TEXT("OK"));
-        }
+            UE_LOG(LogTemp, Warning, TEXT("OK"))
         else
-        {
             Txt_ID->SetText(FText::FromString(TEXT("")));
-        }
     }
 }
 
 void UW_AddUser::SignUp()
 {
-    FUserID NowUserIDData;
     FString Username = Txt_ID->GetText().ToString();
     FString Password = Txt_Pass->GetText().ToString();
+
+    FUserID NowUserIDData;
     NowUserIDData.ID = Username;
     NowUserIDData.Password = Password;
     NowUserIDData.HaveChar.SetNum(4);
@@ -72,10 +72,9 @@ void UW_AddUser::SignUp()
     {
         auto MyGameInstance = Cast<US_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
         if (MyGameInstance)
-        {
             MyGameInstance->MyDataManager.FindRef(E_DataType::E_UserIDData)->SetMyData(Username, &NowUserIDData);
-        }
     }
+
     Back();
 }
 
@@ -91,7 +90,6 @@ void UW_AddUser::ValidateIDText(const FText& Text)
     const FRegexPattern pattern = FRegexPattern(FString(TEXT("^[A-Za-z0-9]+$")));
 
     FRegexMatcher matcher(pattern, str);
-
     bool bMatch = matcher.FindNext();
 
     if (!bMatch)

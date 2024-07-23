@@ -59,15 +59,11 @@ public:
 
 	virtual void UseSkill(const FString& _SkillName);
 
-
 	void MeleeAttackCheck(float _Range);
-
 	void ScopeAttackCheck(float _Range);
-
 	virtual void ShotAttackCheck();
 
 	FString GetCharID() { return CharID; }
-
 	void SetCharID(const FString& _CharID);
 
 	void SetSaveLocation(FVector _SaveLocation);
@@ -80,10 +76,8 @@ public:
 protected:
 	UFUNCTION(Server, Reliable, WithValidation)
 	virtual void Server_UseSkill(const FString& _SkillName);
-
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void Multi_UseSkill(const FString& _SkillName);
-
 	virtual void Multi_UseSkill_Implementation(const FString& SkillName);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

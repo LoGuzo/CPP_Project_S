@@ -25,6 +25,7 @@ protected:
 	void SetMage();
 	UFUNCTION()
 	void SetHealer();
+
 	UFUNCTION()
 	void GoToMake();
 	UFUNCTION()
@@ -35,6 +36,7 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseMove(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
 private:
 	bool bIsRotating;
 

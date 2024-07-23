@@ -19,10 +19,8 @@ public:
 	// Sets default values for this component's properties
 	UC_ItemComponent();
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 private:
 	UPROPERTY(EditAnywhere, Category = Item, Meta = (AllowPrivateAccess = true))
 	FName RowName;
@@ -59,8 +57,8 @@ private:
 public:	
 	virtual void Interact(class AUserCharacter* _UserCharacter) override;
 	void SetItem(const FString& _ItemName);
-
 	FString GetItemName() { return ItemName.ToString(); }
+
 	TSoftObjectPtr<UStreamableRenderAsset> GetItemMesh() { return ItemMesh; }
 	E_ItemType GetType() { return ItemType; }
 		

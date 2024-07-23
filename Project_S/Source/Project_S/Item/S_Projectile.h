@@ -24,6 +24,7 @@ protected:
 
 	UPROPERTY(Replicated, VisibleAnywhere, Category = Weapon)
 	USkeletalMeshComponent* ProjectileMesh;
+
 	class AFirstCharacter* Owner;
 	void ScopeAttackCheck(float _Range);
 

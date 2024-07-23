@@ -20,6 +20,7 @@ public:
 	ALoginController();
 
 	void LoginSuccessful(const FUserID& UserData);
+
 protected:
 	virtual void BeginPlay() override;
 

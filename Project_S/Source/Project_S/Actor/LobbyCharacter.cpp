@@ -14,6 +14,7 @@ ALobbyCharacter::ALobbyCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
+
 	SceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("SceneCapture"));
 	SceneCapture->SetRelativeLocation(FVector(0.f, 200.f, 140.f));
 	SceneCapture->SetRelativeRotation(FRotator(-10.f, -90.f, 0.f));

@@ -35,10 +35,10 @@ public:
 	
 	UFUNCTION()
 	void BPFunction();
+
 	void NextLevel();
 
 	UPROPERTY()
 	class UParticleSystem* Particle;
-
 	class UParticleSystemComponent* ParticleComponent;
 };

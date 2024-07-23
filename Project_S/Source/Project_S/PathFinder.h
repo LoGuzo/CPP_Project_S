@@ -40,9 +40,7 @@ public:
 private:
     class ARecastNavMesh* NavMesh;
 
-    float Heuristic(FVector a, FVector b) {
-        return FVector::Dist(a, b) * 0.999f;
-    }
+    float Heuristic(FVector a, FVector b) { return FVector::Dist(a, b) * 0.999f; }
 
     TArray<FVector> FindPolyPoint(const FVector& FindLoc);
 

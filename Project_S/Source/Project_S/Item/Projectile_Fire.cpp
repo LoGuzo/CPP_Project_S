@@ -12,20 +12,20 @@ AProjectile_Fire::AProjectile_Fire()
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> AttackP(TEXT("ParticleSystem'/Game/InfinityBladeEffects/Effects/FX_Mobile/Fire/combat/P_Circle_ChargeUp_Fire.P_Circle_ChargeUp_Fire'"));
 	if (AttackP.Succeeded())
-	{
 		ParticleEffect = AttackP.Object;
-	}
 }
 
 void AProjectile_Fire::SetProjectile()
 {
 	if (ParticleEffect)
 	{
-		ProjectileMovementComponent->InitialSpeed = 50.f;
-		ProjectileMovementComponent->MaxSpeed = 1000.f;
 		SetActorHiddenInGame(false);
+
 		ProjectileParticle->SetTemplate(ParticleEffect);
 		ProjectileParticle->Activate();
+
+		ProjectileMovementComponent->InitialSpeed = 50.f;
+		ProjectileMovementComponent->MaxSpeed = 1000.f;
 		ProjectileMovementComponent->Activate();
 	}
 
@@ -36,13 +36,17 @@ void AProjectile_Fire::SetProjectile()
 void AProjectile_Fire::Explode()
 {
 	ScopeAttackCheck(100);
+
 	SetParticle();
+
 	ProjectileMovementComponent->StopMovementImmediately();
+
 	Destroy();
 }
 
 void AProjectile_Fire::BeginPlay()
 {
 	Super::BeginPlay();
+
 	SetProjectile();
 }

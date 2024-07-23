@@ -21,14 +21,11 @@ UW_Slot::UW_Slot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInit
 {
 	static ConstructorHelpers::FClassFinder<UW_Drag>BP_Drag(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_Drag.WBP_Drag_C'"));
 	if (BP_Drag.Succeeded())
-	{
 		U_DragImg = BP_Drag.Class;
-	}
+
 	static ConstructorHelpers::FClassFinder<UW_ItemPop>BP_ItemPop(TEXT("WidgetBlueprint'/Game/ThirdPersonCPP/Blueprints/Widget/WBP_ItemPop.WBP_ItemPop_C'"));
 	if (BP_ItemPop.Succeeded())
-	{
 		U_ItemPop = BP_ItemPop.Class;
-	}
 }
 
 void UW_Slot::NativePreConstruct()
@@ -76,14 +73,12 @@ void UW_Slot::NativePreConstruct()
 void UW_Slot::NativeDestruct()
 {
 	Super::NativeDestruct();
+
 	if (ItemData != nullptr)
-	{
 		ItemData.Reset();
-	}
 	if (SkillData != nullptr)
-	{
 		SkillData.Reset();
-	}
+
 	ClosePop();
 }
 
@@ -162,14 +157,10 @@ FReply UW_Slot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, cons
 			return FReply::Handled();
 		}
 		else
-		{
 			return FReply::Unhandled();
-		}
 	}
 	else
-	{
 		return FReply::Unhandled();
-	}
 }
 
 bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -180,16 +171,12 @@ bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& In
 		if (DO_Drag->GetConName() == GetConName())
 		{
 			if (DO_Drag->GetConIndex() != ContentIndex || DO_Drag->GetInvenCom() != InventoryCom)
-			{
 				InventoryCom->ChangeSlot(DO_Drag->GetConIndex(), ContentIndex, InventoryCom);
-			}
 		}
 		else
 		{
 			if (ItemKey.ToString() == "None" || DO_Drag->GetItemConName() == GetItemConName())
-			{
 				EquipCom->InvenToEquip(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetInvenCom());
-			}
 		}
 	}
 	else
@@ -199,12 +186,9 @@ bool UW_Slot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& In
 			if (GetConName() == "Inventory")
 			{
 				if (ItemKey.ToString() == "None" || DO_Drag->GetItemConName() == GetItemConName())
-				{
 					InventoryCom->EquipToInven(DO_Drag->GetConIndex(), ContentIndex, DO_Drag->GetEquipCom());
-				}
 			}
 		}
-
 	}
 	return false;
 }
@@ -220,32 +204,27 @@ void UW_Slot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 			if (DragImg)
 			{
 				if (ItemKey.ToString() != "None")
-				{
 					DragImg->SetItemKey(ItemKey);
-				}
 				else if (SkillKey.ToString() != "None")
-				{
 					DragImg->SetSkillKey(SkillKey);
-				}
 			}
 		}
+
 		DO_Drag = NewObject<UDO_DragDrop>();
 		OutOperation = DO_Drag;
 		if (DO_Drag)
 		{
 			DO_Drag->SetConIndex(ContentIndex);
+
 			if (InventoryCom != nullptr)
-			{
 				DO_Drag->SetInvenCom(InventoryCom);
-			}
+
 			if (EquipCom != nullptr)
-			{
 				DO_Drag->SetEquipCom(EquipCom);
-			}
+
 			if (SkillCom != nullptr)
-			{
 				DO_Drag->SetSkillCom(SkillCom);
-			}
+
 			DO_Drag->SetConName(GetConName());
 			DO_Drag->SetItemConName(GetItemConName());
 			DO_Drag->DefaultDragVisual = DragImg;
@@ -266,5 +245,6 @@ bool UW_Slot::ClosePop()
 		ItemPop = nullptr;
 		return true;
 	}
+
 	return false;
 }

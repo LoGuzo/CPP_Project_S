@@ -36,6 +36,7 @@ protected:
 	TArray<class AEnemyCharacter*> EnemyClassArray;
 
 	void SetQuestCnt();
+
 public:
 	AProject_SGameMode();
 

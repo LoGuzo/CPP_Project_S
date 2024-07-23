@@ -16,7 +16,6 @@ class PROJECT_S_API APatrolAIController : public AEnemyAIController
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
-	virtual void OnUnPossess() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
@@ -32,6 +31,7 @@ protected:
 	virtual void Attack() override; // АјАн
 
 	void MoveToNextPatrolPoint();
+
 public:
 	void SetLocation(TArray<FVector> _Location);
 };

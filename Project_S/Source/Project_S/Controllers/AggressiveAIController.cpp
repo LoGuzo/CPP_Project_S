@@ -10,32 +10,36 @@
 void AAggressiveAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
 	ChkState = E_State::E_Search;
 }
 
 void AAggressiveAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	if (SDistance(FirstLocation, GetPawn()->GetActorLocation()) > 2000.f)
-	{
 		ChkState = E_State::E_Reset;
-	}
 }
 
 void AAggressiveAIController::AISerach()
 {
 	if (IsMoving == true)
 		return;
+
 	SetMaxSpeed(150.f);
+
 	auto CurrentPawn = GetPawn();
 	if (CurrentPawn == nullptr)
 		return;
+
 	UWorld* World = CurrentPawn->GetWorld();
 	FVector Center = CurrentPawn->GetActorLocation();
 	float SearchRadius = 500.f;
 
 	if (World == nullptr)
 		return;
+
 	TArray<FHitResult>HItResults;
 	FCollisionQueryParams QueryParams(NAME_None, false, CurrentPawn);
 	bool bResult = World->SweepMultiByChannel(
@@ -78,6 +82,7 @@ void AAggressiveAIController::Attack()
 {
 	if (IsMoving == true)
 		return;
+
 	if (User && !IsDead)
 	{
 		LookAtPlayer(User->GetActorLocation());
@@ -90,6 +95,7 @@ void AAggressiveAIController::Attack()
 			}
 		}
 	}
+
 	ChkState = E_State::E_Search;
 }
 
@@ -97,9 +103,13 @@ void AAggressiveAIController::AIMove()
 {
 	if (IsMoving == true)
 		return;
+
 	SetMaxSpeed(600.f);
+
 	IsMoving = true;
 	IsMoveAtFirst = true;
+
 	MoveToActor(User, 100.f);
+
 	ChkState = E_State::E_Attack;
 }

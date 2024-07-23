@@ -25,7 +25,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	class UParticleSystem* HitParticleEffect;
-
 	class UParticleSystem* ParticleEffect;
 
 	UPROPERTY(VisibleAnywhere, Category = Projectile)

@@ -22,15 +22,14 @@ private:
 	FS_Slot LocalSlot;
 
 	int32 SkillCnt = 2;
+
 protected:
 	virtual void BeginPlay() override;
 
 public:
 	TArray<FS_Slot> GetSlots() { return Slots; }
-
-	FS_Slot GetSlot(int32 _Index) { return Slots[_Index]; }
-
 	void SetSlots(const TArray<FS_Slot>& _Slots);
 
+	FS_Slot GetSlot(int32 _Index) { return Slots[_Index]; }
 	void SetSlot(int32 _Index, int32 _SkillPoint);
 };

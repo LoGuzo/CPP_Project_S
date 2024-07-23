@@ -36,9 +36,7 @@ void UW_CharInfo::SetImg(E_CharClass CharClass)
 	{
 		auto ClassData = StaticCastSharedPtr<FCharacterClass>(MyGameInstance->MyDataManager.FindRef(E_DataType::E_CharClassData)->GetMyData(CharMap.FindRef(CharClass)));
 		if (ClassData.IsValid())
-		{
 			Img_Char->SetBrushFromTexture(ClassData.Get()->Img_Class);
-		}
 	}
 }
 
@@ -57,6 +55,7 @@ void UW_CharInfo::UpdateHp()
 		HealthUpdateDuration = 1.f;
 		HealthUpdateTime = 0.f;
 	}
+
 	GetWorld()->GetTimerManager().SetTimer(HealthUpdateTimerHandle, this, &UW_CharInfo::AnimateHealthBar, 0.016f, true);
 }
 
@@ -87,9 +86,7 @@ void UW_CharInfo::UpdateExp()
 void UW_CharInfo::ShakeHealthBar()
 {
 	if (Shake_Hp)
-	{
 		PlayAnimation(Shake_Hp);
-	}
 }
 
 void UW_CharInfo::AnimateHealthBar()

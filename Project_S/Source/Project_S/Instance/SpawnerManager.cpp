@@ -13,9 +13,7 @@ SpawnerManager::SpawnerManager()
 SpawnerManager::~SpawnerManager()
 {
 	if (MySpawner.IsValid())
-	{
 		MySpawner.Reset();
-	}
 }
 
 const TSharedPtr<FTableRowBase> SpawnerManager::GetMyData(FString _Init)
@@ -25,6 +23,7 @@ const TSharedPtr<FTableRowBase> SpawnerManager::GetMyData(FString _Init)
 		MySpawner = MakeShared<FSpawnData>(*myCharacter);
 	else
 		MySpawner.Reset();
+
 	return MySpawner.IsValid() ? MySpawner : nullptr;
 }
 
@@ -32,6 +31,7 @@ TMap<int32, TSharedPtr<FTableRowBase>> SpawnerManager::GetDataMap()
 {
 	const TArray<FName> row = MyData->GetRowNames();
 	TMap<int32, TSharedPtr<FTableRowBase>> DataMap;
+
 	for (int i = 0; i < row.Num(); ++i)
 	{
 		const auto data = MyData->FindRow<FSpawnData>(row[i], row[i].ToString(), false);
@@ -43,5 +43,6 @@ TMap<int32, TSharedPtr<FTableRowBase>> SpawnerManager::GetDataMap()
 		else
 			MySpawner.Reset();
 	}
+
 	return DataMap;
 }
